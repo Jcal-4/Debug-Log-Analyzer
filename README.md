@@ -64,3 +64,4 @@ You can author your README using Visual Studio Code.  Here are some useful edito
 
 **Enjoy!**
 # Debug-Log-Analyzer
+# Debug-Log-Analyzer
