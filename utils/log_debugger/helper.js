@@ -62,6 +62,12 @@ function retrieveComponents(fileContent) {
     ];
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
+        if (line.includes("CODE_UNIT_STARTED")) {
+            const parts = line.split("|");
+            let methodDetails = parts[parts.length - 1];
+            methodDetails = "CODE_UNIT_STARTED: " + methodDetails;
+            executedComponents.push(methodDetails);
+        }
         if (line.includes("METHOD_ENTRY")) {
             const parts = line.split("|");
             const methodDetails = parts[parts.length - 1];
@@ -76,6 +82,12 @@ function retrieveComponents(fileContent) {
             if (shouldIgnore) {
                 continue;
             }
+            executedComponents.push(methodDetails);
+        }
+        if (line.includes("CODE_UNIT_FINISHED")) {
+            const parts = line.split("|");
+            let methodDetails = parts[parts.length - 1];
+            methodDetails = "CODE_UNIT_FINISHED: " + methodDetails;
             executedComponents.push(methodDetails);
         }
     }
