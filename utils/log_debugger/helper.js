@@ -20,8 +20,12 @@ function analyzeDebugLog() {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
                     console.log(executedComponents);
-                    for (let i = 0; i < executedComponents.length; i++) {
-                        console.log(executedComponents[i]);
+                    // for (let i = 0; i < executedComponents.length; i++) {
+                    //     console.log(executedComponents[i]);
+                    // }
+                    let resultMap = executedComponents[0];
+                    for (let [key, value] of resultMap.entries()) {
+                        console.log(`${key}: ${value}`);
                     }
                 }
                 // return data;
@@ -100,7 +104,8 @@ function retrieveComponents(fileContent) {
                 }
             }
             if (stack.length === 0) {
-                executedComponents.push(Object.fromEntries(codeUnitMap));
+                // executedComponents.push(Object.fromEntries(codeUnitMap));
+                executedComponents.push(new Map(codeUnitMap));
                 codeUnitMap.clear();
                 counter = 0;
             }
