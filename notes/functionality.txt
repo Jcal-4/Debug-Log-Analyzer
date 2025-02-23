@@ -7,3 +7,5 @@ the component execution pipeline
 actual logs so much easier)
 Example pull out the values from here that were passed into applyDiscount method:
 [3]|01p4100000HR623|HelloWorld.applyDiscount(List<Book__c>)
+5. Dynamically choose what I want to retrieve exactly from the logs (make it possible for User to select what
+to look for in logs like apex, flow, variables, etc)

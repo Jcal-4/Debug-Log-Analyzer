@@ -1,3 +1,4 @@
+https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_debugging_system_log_console.htm
 https://help.salesforce.com/s/articleView?id=platform.code_debug_log.htm&type=5
 
 METHOD_ENTRY (apex class)
@@ -17,23 +18,6 @@ CODE_UNIT_STARTED|[EXTERNAL]execute_anonymous_apex
 CODE_UNIT_STARTED|[EXTERNAL]MyTrigger on Account trigger event BeforeInsert for [new]|__sfdc_trigger/MyTrigger
 CODE_UNIT_FINISHED <-- The trigger ends
 CODE_UNIT_FINISHED <-- The executeAnonymous ends
-
-```
-Units of code include, but are not limited to, the following:
-Triggers
-Workflow invocations and time-based workflow
-Validation rules
-Approval processes
-Apex lead convert
-@future method invocations
-Web service invocations
-executeAnonymous calls
-Visualforce property accesses on Apex controllers
-Visualforce actions on Apex controllers
-Execution of the batch Apex start and finish methods, and each execution of the execute method
-Execution of the Apex System.Schedule execute method
-Incoming email handling
-```
 
 EXECUTION_STARTED
 EXECUTION_FINISHED
@@ -57,4 +41,4 @@ USER_DEBUG
 
 VARIABLE_ASSIGNMENT
 05:02:13.0 (3484434)|VARIABLE_ASSIGNMENT|[2]|books|[{"IsDeleted":false,"OwnerId":"00541000001zI0KAAU","Price__c":
-100.00,   
+100.00,
