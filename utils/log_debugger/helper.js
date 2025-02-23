@@ -10,6 +10,7 @@ function analyzeDebugLog() {
     } else {
         // Get current file URI
         const fileUri = editor.document.uri;
+        console.log("fileUri: ", fileUri);
         try {
             readFile(fileUri).then((fileData) => {
                 const fileContent = new TextDecoder().decode(fileData);
@@ -19,9 +20,9 @@ function analyzeDebugLog() {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
                     console.log(executedComponents);
-                    // for (let i = 0; i < executedComponents.length; i++) {
-                    //     console.log("executedComponent --> ", executedComponents[i]);
-                    // }
+                    for (let i = 0; i < executedComponents.length; i++) {
+                        console.log(executedComponents[i]);
+                    }
                 }
                 // return data;
             });
@@ -61,21 +62,22 @@ function retrieveComponents(fileContent) {
         "LoggerScenarioRule.",
         "TriggerHandler.afterInsert()"
     ];
-    let codeUnitObj = {};
+    let stack = [];
+    let codeUnitMap = new Map();
+    let counter = 0;
     for (let i = 0; i < lines.length; i++) {
-        let counter = 0;
-        const line = lines[i];
+        let line = lines[i];
         if (line.includes("CODE_UNIT_STARTED")) {
-            const parts = line.split("|");
-            let methodDetails = parts[parts.length - 1];
-            methodDetails = "CODE_UNIT_STARTED: " + methodDetails;
-            // executedComponents.push(methodDetails);
-        }
-        if (line.includes("METHOD_ENTRY")) {
             counter += 1;
-            const parts = line.split("|");
-            const methodDetails = parts[parts.length - 1];
-            const methodDetailsLowercase = methodDetails.toLowerCase();
+            let parts = line.split("|");
+            let methodDetails = parts[parts.length - 1];
+            codeUnitMap.set("CODE_UNIT_STARTED_" + counter, methodDetails);
+            stack.push(methodDetails);
+        } else if (line.includes("METHOD_ENTRY")) {
+            counter += 1;
+            let parts = line.split("|");
+            let methodDetails = parts[parts.length - 1];
+            let methodDetailsLowercase = methodDetails.toLowerCase();
             let shouldIgnore = false;
             ignoreList.forEach((ignoreItem) => {
                 if (methodDetailsLowercase.includes(ignoreItem.toLowerCase())) {
@@ -86,17 +88,22 @@ function retrieveComponents(fileContent) {
             if (shouldIgnore) {
                 continue;
             }
-            codeUnitObj["METHOD_ENTRY_" + counter] = methodDetails;
-            // executedComponents.push(methodDetails);
-        }
-        if (line.includes("CODE_UNIT_FINISHED")) {
-            const parts = line.split("|");
+            codeUnitMap.set("METHOD_ENTRY_" + counter, methodDetails);
+        } else if (line.includes("CODE_UNIT_FINISHED")) {
+            counter += 1;
+            let parts = line.split("|");
             let methodDetails = parts[parts.length - 1];
-            methodDetails = "CODE_UNIT_FINISHED: " + methodDetails;
-            executedComponents.push(codeUnitObj);
-            codeUnitObj = {};
-            counter = 0;
-            // executedComponents.push(methodDetails);
+            if (stack.length > 0) {
+                let lastMethod = stack.pop();
+                if (lastMethod == methodDetails) {
+                    codeUnitMap.set("CODE_UNIT_FINISHED_" + counter, methodDetails);
+                }
+            }
+            if (stack.length === 0) {
+                executedComponents.push(Object.fromEntries(codeUnitMap));
+                codeUnitMap.clear();
+                counter = 0;
+            }
         }
     }
     return executedComponents;
