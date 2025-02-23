@@ -37,7 +37,29 @@ async function readFile(URI) {
 function retrieveComponents(fileContent) {
     const lines = fileContent.split("\n");
     let executedComponents = [];
-    let ignoreList = ["system.", ".bulkBefore", ".bulkAfter", "Logger.", "Math.", "LoggerParameter.", "EncodingUtil.", "EventServices."];
+    let ignoreList = [
+        "system.",
+        ".bulkBefore",
+        ".bulkAfter",
+        "Logger.",
+        "Math.",
+        "LoggerParameter.",
+        "EncodingUtil.",
+        "EventServices.",
+        "TriggerFactory.",
+        "AccessLevel.",
+        "Database.QueryLocatorIterator",
+        "JSON.",
+        "Crypto.",
+        "Url",
+        "Request.",
+        "UserServices.",
+        "Constants.",
+        "TriggerHandler()",
+        "AccountService.",
+        "LoggerScenarioRule.",
+        "TriggerHandler.afterInsert()"
+    ];
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         if (line.includes("METHOD_ENTRY")) {
@@ -47,7 +69,7 @@ function retrieveComponents(fileContent) {
             let shouldIgnore = false;
             ignoreList.forEach((ignoreItem) => {
                 if (methodDetailsLowercase.includes(ignoreItem.toLowerCase())) {
-                    console.log("Ignoring method: ", methodDetailsLowercase, " due to ignore item: ", ignoreItem);
+                    // console.log("Ignoring method: ", methodDetailsLowercase, " due to ignore item: ", ignoreItem);
                     shouldIgnore = true;
                 }
             });
