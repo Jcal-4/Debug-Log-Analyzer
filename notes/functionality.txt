@@ -1,0 +1,9 @@
+1. While going through when something starts (executed/unit start, etc) we also need
+to be able to keep track of when that same code exits/ends to be able to better display
+the component execution pipeline
+2. Figure out every example of components that we need to grab
+3. Start to pull value of commands that are executed
+4. Figure out data that is passed into anything that is called (this will make debugging
+actual logs so much easier)
+Example pull out the values from here that were passed into applyDiscount method:
+[3]|01p4100000HR623|HelloWorld.applyDiscount(List<Book__c>)
