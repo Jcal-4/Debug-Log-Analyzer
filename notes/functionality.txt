@@ -16,3 +16,5 @@ to look for in logs like apex, flow, variables, etc)
 Next time work on add all the other in betweens things that happens between code units
 
 Also the Split part may need to be made into a helper method to cut down code length
+
+if next line is equal to previous method then remove it from list? (check logs)
