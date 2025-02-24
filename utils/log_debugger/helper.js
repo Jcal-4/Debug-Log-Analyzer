@@ -73,11 +73,13 @@ function retrieveComponents(fileContent) {
             counter += 1;
             let parts = line.split("|");
             let methodDetails = parts[parts.length - 1];
+            console.log("CODE_UNIT_STARTED_" + counter, methodDetails);
             codeUnitMap.set("CODE_UNIT_STARTED_" + counter, methodDetails);
             stack.push(methodDetails);
         } else if (line.includes("METHOD_ENTRY")) {
             let parts = line.split("|");
             let methodDetails = parts[parts.length - 1];
+            console.log("METHOD_ENTRY" + counter, methodDetails);
             let methodDetailsLowercase = methodDetails.toLowerCase();
             let shouldIgnore = false;
             ignoreList.forEach((ignoreItem) => {
@@ -94,9 +96,18 @@ function retrieveComponents(fileContent) {
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             let parts = line.split("|");
             let methodDetails = parts[parts.length - 1];
+            console.log("CODE_UNIT_FINISHED_" + counter, methodDetails);
             if (stack.length > 0) {
+                // Remove CODE_UNIT that instantly finish as soon as they start
+                let prevLine = lines[i - 1];
+                let prevParts = prevLine.split("|");
+                let prevMethodDetails = prevParts[prevParts.length - 1];
                 let lastMethod = stack.pop();
-                if (lastMethod == methodDetails) {
+                if (prevMethodDetails == methodDetails) {
+                    codeUnitMap.delete("CODE_UNIT_STARTED_" + counter);
+                    counter -= 1;
+                    // continue;
+                } else if (lastMethod == methodDetails) {
                     counter += 1;
                     codeUnitMap.set("CODE_UNIT_FINISHED_" + counter, methodDetails);
                 }
@@ -112,9 +123,4 @@ function retrieveComponents(fileContent) {
     return executedComponents;
 }
 
-// STACK: ['CODE_UNIT_STARTED_1', 'CODE_UNIT_STARTED_2', 'CODE_UNIT_STARTED_3']
-// 14:06:23.1 (1737138)|CODE_UNIT_STARTED|[EXTERNAL]|01p830000009tTO|ReturnAccessoriesDetailsControllerTest.makeData()
-// 14:06:23.1 (4694724)|METHOD_ENTRY|[2]|01p830000009tTO|ReturnAccessoriesDetailsControllerTest.ReturnAccessoriesDetailsControllerTest()
-// 14:06:23.1 (99219423)|CODE_UNIT_STARTED|[EXTERNAL]|Flow:User
-// 14:06:23.1 (99249223)|CODE_UNIT_FINISHED|Flow:User
 module.exports = analyzeDebugLog;
