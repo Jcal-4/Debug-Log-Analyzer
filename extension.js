@@ -1,11 +1,8 @@
-// The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
-const analyzeDebugLog = require("./utils/log_debugger/helper");
+const analyzeDebugLog = require("./utils/log_analyzer/index");
 
-// This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -14,7 +11,7 @@ function activate(context) {
     console.log('Congratulations, your extension "text-extension" is now active!');
 
     const logicFunction = vscode.commands.registerCommand("log-analyzer.analyzeDebugLog", () => {
-        analyzeDebugLog();
+        analyzeDebugLog(context);
     });
 
     context.subscriptions.push(logicFunction);

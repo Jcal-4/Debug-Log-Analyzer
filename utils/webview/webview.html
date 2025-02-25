@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Log Analyzer</title>
+    </head>
+    <body>
+        <h1>Hello, World!</h1>
+        <p>This is an example webview for log analyzer.</p>
+        <div>{{data}}</div>
+        <div id="executedComponents"></div>
+    </body>
+
+    <script>
+        let executedComponents = "{{executedComponents}}";
+        console.log("Script Loaded");
+        console.log("executedComponents");
+        //const executedComponents = JSON.parse("{{executedComponents}}");
+        let executedComponentsParsed = JSON.parse(executedComponents);
+
+        // Ensure executedComponentsParsed is an array
+        if (!Array.isArray(executedComponentsParsed)) {
+            executedComponentsParsed = [executedComponentsParsed];
+        }
+
+        console.log("executedComponents: ", executedComponentsParsed);
+        console.log(typeof executedComponentsParsed);
+        const container = document.getElementById("executedComponents");
+        /*
+        executedComponents.forEach((component) => {
+            console.log("component: ", component);
+            const componentDiv = document.createElement("div");
+            componentDiv.innerHTML = "test1";
+            //componentDiv.innerHTML = JSON.stringify(component);
+            container.appendChild(componentDiv);
+        });
+        */
+    </script>
+</html>

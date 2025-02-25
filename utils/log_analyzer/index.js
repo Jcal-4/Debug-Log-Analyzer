@@ -1,11 +1,12 @@
 const vscode = require("vscode");
 const ignoreList = require("./ignoreList");
+const webview = require("../webview/index");
 
 /**
  * Analyzes the debug log by reading the active text editor's content
  * and extracting executed components.
  */
-function analyzeDebugLog() {
+function analyzeDebugLog(context) {
     vscode.window.showInformationMessage("Initializing Log Analyzer!");
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -21,6 +22,7 @@ function analyzeDebugLog() {
                 if (executedComponents.length === 0) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
+                    webview(context, executedComponents);
                     console.log(executedComponents);
                 }
             });
