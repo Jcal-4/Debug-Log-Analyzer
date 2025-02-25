@@ -1,23 +1,23 @@
 const vscode = require("vscode");
 const ignoreList = require("./ignoreList");
 
+/**
+ * Analyzes the debug log by reading the active text editor's content
+ * and extracting executed components.
+ */
 function analyzeDebugLog() {
-    // Display a message box to the user
     vscode.window.showInformationMessage("Initializing Log Analyzer!");
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-        console.log("no active editor found");
+        console.log("No active editor found");
         return;
     } else {
-        // Get current file URI
         const fileUri = editor.document.uri;
         console.log("fileUri: ", fileUri);
         try {
             readFile(fileUri).then((fileData) => {
                 const fileContent = new TextDecoder().decode(fileData);
-                let executedComponents = [];
-                // Retrieve components from the file content
-                executedComponents = retrieveComponents(fileContent);
+                let executedComponents = retrieveComponents(fileContent);
                 if (executedComponents.length === 0) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
@@ -30,11 +30,20 @@ function analyzeDebugLog() {
     }
 }
 
+/**
+ * Reads the file content from the given URI.
+ * @param {vscode.Uri} URI - The URI of the file to read.
+ * @returns {Promise<Uint8Array>} - The file content as a Uint8Array.
+ */
 async function readFile(URI) {
-    // Read the file content from the given URI
     return await vscode.workspace.fs.readFile(URI);
 }
 
+/**
+ * Retrieves executed components from the file content.
+ * @param {string} fileContent - The content of the log file.
+ * @returns {Array<Map>} - An array of maps representing executed components.
+ */
 function retrieveComponents(fileContent) {
     const lines = fileContent.split("\n");
     let executedComponents = [];
@@ -49,16 +58,13 @@ function retrieveComponents(fileContent) {
             codeUnitCounter += 1;
             let parts = line.split("|");
             let methodDetails = parts[parts.length - 1];
-            // Store the method details in the map with a unique key
             codeUnitMap.set("CODE_UNIT_STARTED_" + codeUnitCounter, methodDetails);
-            // Push an object with methodDetails and counter onto the stack
             stack.push({ methodDetails, codeUnitCounter });
         } else if (line.includes("METHOD_ENTRY")) {
             let parts = line.split("|");
             let methodDetails = parts[parts.length - 1];
             let methodDetailsLowercase = methodDetails.toLowerCase();
             let shouldIgnoreMethod = false;
-            // Check if the method should be ignored based on the ignore list
             ignoreList.forEach((ignoreItem) => {
                 if (methodDetailsLowercase.includes(ignoreItem.toLowerCase())) {
                     shouldIgnoreMethod = true;
@@ -66,7 +72,6 @@ function retrieveComponents(fileContent) {
             });
             if (!shouldIgnoreMethod) {
                 counter += 1;
-                // Store the method details in the map with a unique key
                 codeUnitMap.set("METHOD_ENTRY_" + counter, methodDetails);
             }
         } else if (line.includes("CODE_UNIT_FINISHED")) {
@@ -98,11 +103,15 @@ function retrieveComponents(fileContent) {
     return executedComponents;
 }
 
+/**
+ * Restructures the input map to nest CODE_UNIT entries.
+ * @param {Map|string} inputMap - The input map or object to restructure.
+ * @returns {Map} - The restructured map.
+ */
 function restructureMap(inputMap) {
     let stack = [];
     let result = new Map();
     let currentMap = result;
-    // Convert inputMap to an array of entries if it's a Map
     if (inputMap instanceof Map) {
         inputMap = Array.from(inputMap.entries());
     }
@@ -116,7 +125,6 @@ function restructureMap(inputMap) {
             currentMap = newMap;
             currentMap.set(key, value);
         } else if (key.startsWith("CODE_UNIT_FINISHED")) {
-            // Add the current key-value pair to the current map
             currentMap.set(key, value);
             // Pop the stack to return to the previous nesting level
             currentMap = stack.pop();
@@ -125,8 +133,6 @@ function restructureMap(inputMap) {
             currentMap.set(key, value);
         }
     }
-
-    // Return the restructured map
     return result;
 }
 
