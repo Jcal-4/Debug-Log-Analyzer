@@ -16,10 +16,6 @@
             {
                 "command": "log-analyzer.analyzeDebugLog",
                 "title": "Analyze Debug Log"
-            },
-            {
-                "command": "vscode-react-webview.openWebview",
-                "title": "Open React Webview"
             }
         ]
     },
