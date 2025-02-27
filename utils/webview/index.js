@@ -9,12 +9,29 @@ function createWebviewPanel(context, executedComponents) {
     const htmlPath = path.join(context.extensionPath, "utils", "webview", "webview.html");
     let htmlContent = fs.readFileSync(htmlPath, "utf8");
 
-    // Insert data into the HTML content
-    // htmlContent = htmlContent.replace("{{data}}", "data passed in!");
+    // Function to process maps and generate HTML content
+    function processMap(map, parentId) {
+        let html = "";
+        let idCounter = 1;
+        for (let [key, value] of map) {
+            const currentId = `${parentId}-${idCounter}`;
+            html += `<div id="${currentId}">Key: ${key}, Value: ${value}</div>`;
+            if (value instanceof Map) {
+                html += processMap(value, currentId); // Recursively process nested maps
+            }
+            idCounter++;
+        }
+        return html;
+    }
 
-    const executedComponentsJSON = JSON.stringify(executedComponents);
-    // const executedComponentsJSON = executedComponents;
-    htmlContent = htmlContent.replace("{{executedComponents}}", executedComponentsJSON);
+    let dynamicHtmlContent = "";
+    for (let i = 0; i < executedComponents.length; i++) {
+        dynamicHtmlContent += processMap(executedComponents[i], `parent-div-${i + 1}`);
+    }
+
+    // Insert the generated HTML content into the main HTML template
+    htmlContent = htmlContent.replace("{{dynamicContent}}", dynamicHtmlContent);
+
     panel.webview.html = htmlContent;
 }
 

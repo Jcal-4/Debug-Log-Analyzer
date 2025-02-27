@@ -23,7 +23,7 @@ function analyzeDebugLog(context) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
                     webview(context, executedComponents);
-                    console.log(executedComponents);
+                    // console.log(executedComponents);
                 }
             });
         } catch (error) {

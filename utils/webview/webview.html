@@ -8,33 +8,10 @@
     <body>
         <h1>Hello, World!</h1>
         <p>This is an example webview for log analyzer.</p>
-        <div>{{data}}</div>
-        <div id="executedComponents"></div>
+        <div id="content">{{dynamicContent}}</div>
     </body>
 
     <script>
-        let executedComponents = "{{executedComponents}}";
         console.log("Script Loaded");
-        console.log("executedComponents");
-        //const executedComponents = JSON.parse("{{executedComponents}}");
-        let executedComponentsParsed = JSON.parse(executedComponents);
-
-        // Ensure executedComponentsParsed is an array
-        if (!Array.isArray(executedComponentsParsed)) {
-            executedComponentsParsed = [executedComponentsParsed];
-        }
-
-        console.log("executedComponents: ", executedComponentsParsed);
-        console.log(typeof executedComponentsParsed);
-        const container = document.getElementById("executedComponents");
-        /*
-        executedComponents.forEach((component) => {
-            console.log("component: ", component);
-            const componentDiv = document.createElement("div");
-            componentDiv.innerHTML = "test1";
-            //componentDiv.innerHTML = JSON.stringify(component);
-            container.appendChild(componentDiv);
-        });
-        */
     </script>
 </html>
