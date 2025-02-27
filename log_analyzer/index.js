@@ -1,6 +1,8 @@
 const vscode = require("vscode");
 const ignoreList = require("./ignoreList");
-const webview = require("../webview/index");
+// const webview = require("../webview/index");
+const path = require("path");
+const fs = require("fs");
 
 /**
  * Analyzes the debug log by reading the active text editor's content
@@ -22,7 +24,8 @@ function analyzeDebugLog(context) {
                 if (executedComponents.length === 0) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
-                    webview(context, executedComponents);
+                    sendMessageToWebview(context);
+                    // webview(context, executedComponents);
                     // console.log(executedComponents);
                 }
             });
@@ -136,6 +139,41 @@ function restructureMap(inputMap) {
         }
     }
     return result;
+}
+
+function sendMessageToWebview(context) {
+    const panel = vscode.window.createWebviewPanel("logAnalyzer", "React Log Analyzer", vscode.ViewColumn.One, {
+        enableScripts: true
+    });
+
+    const htmlPath = path.join(context.extensionPath, "utils", "reactWebview", "index.html");
+    let htmlContent = fs.readFileSync(htmlPath, "utf8");
+
+    // Convert the local file path to a webview URI
+    const scriptUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "utils", "reactWebview", "index.js")));
+
+    // Replace the placeholder in the HTML with the webview URI
+    htmlContent = htmlContent.replace("SCRIPT_URI_PLACEHOLDER", scriptUri.toString());
+
+    panel.webview.html = htmlContent;
+
+    // Pass data to webview (this is similar to websocket)
+    panel.webview.postMessage({
+        command: "initialize",
+        data: {
+            dynamicContent: "This is a test for our passed in data"
+        }
+    });
+
+    // Receive messages from webview (incoming socket)
+    // panel.webview.onDidReveiveMessage((message) => {
+    //     switch (message.command) {
+    //         case "alert":
+    //             vscode.window.showErrorMessage(message.text);
+    //             return;
+    //         // Add more cases here to handle other types of errors
+    //     }
+    // });
 }
 
 module.exports = analyzeDebugLog;
