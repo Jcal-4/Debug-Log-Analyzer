@@ -6,16 +6,18 @@ const App = () => {
     useEffect(() => {
         const vscode = acquireVsCodeApi();
 
-        // Request data from the extension
-        vscode.postMessage({ command: "requestData" });
-
         // Listen for messages from the extension
         window.addEventListener("message", (event) => {
             const message = event.data;
             if (message.command === "update") {
                 setData(message.data);
+            } else if (message.command === "initialize") {
+                setData(message.data);
             }
         });
+
+        // Send back message to extension if needed
+        vscode.postMessage({ command: "requestData" });
 
         return () => {
             window.removeEventListener("message", () => {});
@@ -24,13 +26,13 @@ const App = () => {
 
     return (
         <div>
-            <h1>React Webview in VS Code</h1>
+            <h1>React Webview for Log Analyzer</h1>
             {data ? (
                 <p>
                     {data.message} - Count: {data.count}
                 </p>
             ) : (
-                <p>Loading...</p>
+                <p>Processing Data...</p>
             )}
         </div>
     );
