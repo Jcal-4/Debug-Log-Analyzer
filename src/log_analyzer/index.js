@@ -1,8 +1,7 @@
 const vscode = require("vscode");
-const ignoreList = require("./ignoreList");
-// const webview = require("../webview/index");
 const path = require("path");
 const fs = require("fs");
+const ignoreList = require("./ignoreList");
 
 /**
  * Analyzes the debug log by reading the active text editor's content
@@ -146,15 +145,23 @@ function sendMessageToWebview(context) {
         enableScripts: true
     });
 
-    const htmlPath = path.join(context.extensionPath, "utils", "reactWebview", "index.html");
-    let htmlContent = fs.readFileSync(htmlPath, "utf8");
+    // const htmlPath = path.join(context.extensionPath, "utils", "reactWebview", "index.html");
+    // Resolve the path to `index.html`
+    const htmlFilePath = path.join(context.extensionPath, "src", "webview", "index.html");
 
+    // let htmlContent = fs.readFileSync(htmlPath, "utf8");
+    // Read the HTML file content and replace resource paths
+    let htmlContent = fs.readFileSync(htmlFilePath, "utf8");
+
+    // const scriptUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "utils", "reactWebview", "index.js")));
     // Convert the local file path to a webview URI
-    const scriptUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "utils", "reactWebview", "index.js")));
+    const webviewUri = (file) => panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "webview", file)));
 
+    // htmlContent = htmlContent.replace("SCRIPT_URI_PLACEHOLDER", scriptUri.toString());
     // Replace the placeholder in the HTML with the webview URI
-    htmlContent = htmlContent.replace("SCRIPT_URI_PLACEHOLDER", scriptUri.toString());
+    htmlContent = htmlContent.replace(/src="\.\/index\.js"/g, `src="${webviewUri("index.js")}"`);
 
+    // Set the HTML content to Webview
     panel.webview.html = htmlContent;
 
     // Pass data to webview (this is similar to websocket)
@@ -165,6 +172,20 @@ function sendMessageToWebview(context) {
         }
     });
 
+    // Handle messages from Webview
+    panel.webview.onDidReceiveMessage(
+        (message) => {
+            if (message.command === "requestData") {
+                panel.webview.postMessage({
+                    command: "update",
+                    data: { message: "Hello from VS Code Extension!", count: 5 }
+                });
+            }
+        },
+        undefined,
+        context.subscriptions
+    );
+
     // Receive messages from webview (incoming socket)
     // panel.webview.onDidReveiveMessage((message) => {
     //     switch (message.command) {
@@ -174,6 +195,8 @@ function sendMessageToWebview(context) {
     //         // Add more cases here to handle other types of errors
     //     }
     // });
+
+    context.subscriptions.push(disposable);
 }
 
 module.exports = analyzeDebugLog;
