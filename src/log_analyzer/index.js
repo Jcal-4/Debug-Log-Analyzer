@@ -23,7 +23,7 @@ function analyzeDebugLog(context) {
                 if (executedComponents.length === 0) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
-                    sendMessageToWebview(context);
+                    sendMessageToWebview(context, executedComponents);
                     // webview(context, executedComponents);
                     // console.log(executedComponents);
                 }
@@ -46,13 +46,13 @@ async function readFile(URI) {
 /**
  * Retrieves executed components from the file content.
  * @param {string} fileContent - The content of the log file.
- * @returns {Array<Map>} - An array of maps representing executed components.
+ * @returns {Array<Array>} - An array of arrays representing executed components.
  */
 function retrieveComponents(fileContent) {
     const lines = fileContent.split("\n");
     let executedComponents = [];
     let stack = [];
-    let codeUnitMap = new Map();
+    let codeUnitArray = [];
     let counter = 0;
     let codeUnitCounter = 0;
 
@@ -61,45 +61,45 @@ function retrieveComponents(fileContent) {
         if (line.includes("CODE_UNIT_STARTED")) {
             codeUnitCounter += 1;
             let parts = line.split("|");
-            let methodDetails = parts[parts.length - 1];
-            codeUnitMap.set("CODE_UNIT_STARTED_" + codeUnitCounter, methodDetails);
-            stack.push({ methodDetails, codeUnitCounter });
+            let methodName = parts[parts.length - 1];
+            codeUnitArray.push(["CODE_UNIT_STARTED_" + codeUnitCounter, methodName]);
+            stack.push({ methodName, codeUnitCounter });
         } else if (line.includes("METHOD_ENTRY")) {
             let parts = line.split("|");
-            let methodDetails = parts[parts.length - 1];
-            let methodDetailsLowercase = methodDetails.toLowerCase();
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
             let shouldIgnoreMethod = false;
             ignoreList.forEach((ignoreItem) => {
-                if (methodDetailsLowercase.includes(ignoreItem.toLowerCase())) {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
                     shouldIgnoreMethod = true;
                 }
             });
             if (!shouldIgnoreMethod) {
                 counter += 1;
-                codeUnitMap.set("METHOD_ENTRY_" + counter, methodDetails);
+                codeUnitArray.push(["METHOD_ENTRY_" + counter, methodName]);
             }
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             let parts = line.split("|");
-            let methodDetails = parts[parts.length - 1];
+            let methodName = parts[parts.length - 1];
             if (stack.length > 0) {
                 let prevLine = lines[i - 1];
-                let prevParts = prevLine.split("|");
-                let prevMethodDetails = prevParts[prevParts.length - 1];
+                prevLine = prevLine.split("|");
+                let prevmethodName = prevLine[prevLine.length - 1];
                 let lastMethod = stack.pop();
-                if (prevMethodDetails == methodDetails) {
+                if (prevmethodName == methodName) {
                     // Remove the corresponding CODE_UNIT_STARTED entry if it matches
-                    codeUnitMap.delete("CODE_UNIT_STARTED_" + lastMethod.codeUnitCounter);
+                    codeUnitArray = codeUnitArray.filter((entry) => entry[0] !== "CODE_UNIT_STARTED_" + lastMethod.codeUnitCounter);
                     codeUnitCounter -= 1;
-                } else if (lastMethod.methodDetails == methodDetails) {
-                    // Store the method details in the map with a unique key
-                    codeUnitMap.set("CODE_UNIT_FINISHED_" + lastMethod.codeUnitCounter, methodDetails);
+                } else if (lastMethod.methodName == methodName) {
+                    // Store the method details in the array with a unique key
+                    codeUnitArray.push(["CODE_UNIT_FINISHED_" + lastMethod.codeUnitCounter, methodName]);
                 }
             }
             if (stack.length === 0) {
-                // Restructure the map and add it to the executed components
-                codeUnitMap = restructureMap(codeUnitMap);
-                executedComponents.push(new Map(codeUnitMap));
-                codeUnitMap.clear();
+                // Restructure the array and add it to the executed components
+                codeUnitArray = restructureArray(codeUnitArray);
+                executedComponents.push([...codeUnitArray]);
+                codeUnitArray = [];
                 codeUnitCounter = 0;
             }
         }
@@ -108,47 +108,44 @@ function retrieveComponents(fileContent) {
 }
 
 /**
- * Restructures the input map to nest CODE_UNIT entries.
- * @param {Map|string} inputMap - The input map or object to restructure.
- * @returns {Map} - The restructured map.
+ * Restructures the input array to nest CODE_UNIT entries.
+ * @param {Array} inputArray - The input array to restructure.
+ * @returns {Array} - The restructured array.
  */
-function restructureMap(inputMap) {
+function restructureArray(inputArray) {
     let stack = [];
-    let result = new Map();
-    let currentMap = result;
-    if (inputMap instanceof Map) {
-        inputMap = Array.from(inputMap.entries());
-    }
-    for (let [key, value] of inputMap) {
+    let result = [];
+    let currentArray = result;
+
+    for (let [key, value] of inputArray) {
         if (key.startsWith("CODE_UNIT_STARTED")) {
-            let newMap = new Map();
-            // Add the new map to the current map with the current key
-            currentMap.set(key, newMap);
-            stack.push(currentMap);
-            // Update the current map to the new nested map
-            currentMap = newMap;
-            currentMap.set(key, value);
+            let newArray = [];
+            // Add the new array to the current array with the current key
+            currentArray.push([key, newArray]);
+            stack.push(currentArray);
+            // Update the current array to the new nested array
+            currentArray = newArray;
+            currentArray.push([key, value]);
         } else if (key.startsWith("CODE_UNIT_FINISHED")) {
-            currentMap.set(key, value);
+            currentArray.push([key, value]);
             // Pop the stack to return to the previous nesting level
-            currentMap = stack.pop();
+            currentArray = stack.pop();
         } else {
-            // For other keys, simply add the key-value pair to the current map
-            currentMap.set(key, value);
+            // For other keys, simply add the key-value pair to the current array
+            currentArray.push([key, value]);
         }
     }
     return result;
 }
 
-function sendMessageToWebview(context) {
+function sendMessageToWebview(context, executedComponents) {
+    console.log("executedComponents: ", executedComponents);
     const panel = vscode.window.createWebviewPanel("logAnalyzer", "React Log Analyzer", vscode.ViewColumn.One, {
         enableScripts: true
     });
 
     // Resolve the path to `index.html`
     const htmlFilePath = path.join(context.extensionPath, "src", "webview", "index.html");
-
-    // Read the HTML file content and replace resource paths
     let htmlContent = fs.readFileSync(htmlFilePath, "utf8");
 
     // Convert the local file path to a webview URI
@@ -156,22 +153,20 @@ function sendMessageToWebview(context) {
 
     // Replace the placeholder in the HTML with the webview URI
     htmlContent = htmlContent.replace(/src="\.\/index\.js"/g, `src="${webviewUri("index.js")}"`);
-
-    // Set the HTML content to Webview
     panel.webview.html = htmlContent;
 
     // Pass data to webview (this is similar to websocket)
     panel.webview.postMessage({
         command: "initialize",
         data: {
-            message: "This is a test for our passed in data"
+            executedComponents: executedComponents
         }
     });
 
     // Handle messages from React Webview
     panel.webview.onDidReceiveMessage(
         (message) => {
-            if (message.command === "requestData") {
+            if (message.command === "error") {
                 panel.webview.postMessage({
                     command: "update",
                     data: { message: "Hello from VS Code Extension!", count: 5 }

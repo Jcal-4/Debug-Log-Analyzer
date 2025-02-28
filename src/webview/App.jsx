@@ -8,14 +8,17 @@ const App = () => {
 
         // Listen for messages from the extension
         window.addEventListener("message", (event) => {
+            console.log("event", event);
             const message = event.data;
+            console.log("message", message);
             if (message.command === "update") {
                 setData(message.data);
             } else if (message.command === "initialize") {
-                setData(message.data);
+                console.log("initialize", message.data.executedComponents);
+                let newArray = message.data.executedComponents;
+                setData(newArray);
             }
         });
-
         // Send back message to extension if needed
         vscode.postMessage({ command: "requestData" });
 
@@ -28,9 +31,9 @@ const App = () => {
         <div>
             <h1>React Webview for Log Analyzer</h1>
             {data ? (
-                <p>
-                    {data.message} - Count: {data.count}
-                </p>
+                <div>
+                    <p>{data}</p>
+                </div>
             ) : (
                 <p>Processing Data...</p>
             )}
@@ -39,3 +42,6 @@ const App = () => {
 };
 
 export default App;
+
+// instead of an array full of maps try and use and of arrays or an array of objects
+// maps are hard to work with
