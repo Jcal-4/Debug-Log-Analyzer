@@ -32,7 +32,12 @@ const App = () => {
         return arr.reduce((acc, val, index) => {
             const key = parentKey ? `${parentKey}.${index}` : `${index}`;
             if (Array.isArray(val)) {
-                if (val.length === 2 && typeof val[0] === "string" && typeof val[1] === "string") {
+                if (val.length === 2 && typeof val[0] === "string" && Array.isArray(val[1])) {
+                    return acc.concat(
+                        { key, value: `${val[0]}` },
+                        flattenArray(val[1], key).map((item) => ({ ...item, nested: true }))
+                    );
+                } else if (val.length === 2 && typeof val[0] === "string" && typeof val[1] === "string") {
                     return acc.concat({ key, value: `${val[0]}: ${val[1]}` });
                 }
                 return acc.concat(flattenArray(val, key));
@@ -50,7 +55,7 @@ const App = () => {
             {data ? (
                 <div className="data-container">
                     {flattenArray(data).map((item, index) => (
-                        <div key={index} className="data-item">
+                        <div key={index} className={`data-item ${item.nested ? "nested-array" : ""}`}>
                             <span className="data-key">{item.key}: </span>
                             <span className="data-value">{item.value}</span>
                         </div>

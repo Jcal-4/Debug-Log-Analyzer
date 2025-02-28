@@ -34,3 +34,26 @@ h1 {
 .data-value {
     color: #777;
 }
+
+/* New styles for nested arrays */
+.nested-array {
+    margin-left: 20px;
+    padding-left: 10px;
+    border-left: 2px solid #ccc;
+}
+
+.nested-array .data-item {
+    margin-left: 20px;
+}
+
+.nested-array .nested-array .data-item {
+    margin-left: 40px;
+}
+
+.nested-array .data-key {
+    color: #333;
+}
+
+.nested-array .data-value {
+    color: #555;
+}
