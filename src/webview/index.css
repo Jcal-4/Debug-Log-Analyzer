@@ -29,6 +29,7 @@ h1 {
 .data-key {
     font-weight: bold;
     color: #555;
+    cursor: pointer;
 }
 
 .data-value {
@@ -40,6 +41,7 @@ h1 {
     margin-left: 20px;
     padding-left: 10px;
     border-left: 2px solid #ccc;
+    /* display: none; Initially hidden */
 }
 
 .nested-array .data-item {
@@ -56,4 +58,16 @@ h1 {
 
 .nested-array .data-value {
     color: #555;
+}
+
+/* Styles for button */
+.top-level-button {
+    margin-left: 10px;
+    padding: 2px 5px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    border-radius: 3px;
 }

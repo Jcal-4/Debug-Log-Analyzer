@@ -34,7 +34,7 @@ const App = () => {
             if (Array.isArray(val)) {
                 if (val.length === 2 && typeof val[0] === "string" && Array.isArray(val[1])) {
                     return acc.concat(
-                        { key, value: `${val[0]}` },
+                        { key, value: `${val[0]}`, nested: false },
                         flattenArray(val[1], key).map((item) => ({ ...item, nested: true }))
                     );
                 } else if (val.length === 2 && typeof val[0] === "string" && typeof val[1] === "string") {
@@ -49,6 +49,13 @@ const App = () => {
         }, []);
     };
 
+    const handleButtonClick = (e) => {
+        const nestedElement = e.currentTarget.nextElementSibling;
+        if (nestedElement) {
+            nestedElement.style.display = nestedElement.style.display === "none" ? "block" : "none";
+        }
+    };
+
     return (
         <div>
             <h1>React Webview for Log Analyzer</h1>
@@ -58,6 +65,11 @@ const App = () => {
                         <div key={index} className={`data-item ${item.nested ? "nested-array" : ""}`}>
                             <span className="data-key">{item.key}: </span>
                             <span className="data-value">{item.value}</span>
+                            {!item.nested && (
+                                <button className="top-level-button" onClick={handleButtonClick}>
+                                    Expand
+                                </button>
+                            )}
                         </div>
                     ))}
                 </div>
