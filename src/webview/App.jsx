@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./index.css"; // Import the CSS file
 
 const App = () => {
+    // terms needed to be defined to use in html components
     const [data, setData] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const itemRefs = useRef([]);
 
     useEffect(() => {
         const vscode = acquireVsCodeApi();
@@ -66,13 +69,23 @@ const App = () => {
         }
     };
 
+    useEffect(() => {
+        if (searchTerm) {
+            const index = flattenArray(data).findIndex((item) => item.value.toLowerCase().includes(searchTerm.toLowerCase()));
+            if (index !== -1 && itemRefs.current[index]) {
+                itemRefs.current[index].scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+    }, [searchTerm, data]);
+
     return (
         <div>
             <h1>React Webview for Log Analyzer</h1>
             {data ? (
                 <div className="data-container">
+                    <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                     {flattenArray(data).map((item, index) => (
-                        <div key={index} className={`data-item ${item.nested ? "nested-array" : ""}`}>
+                        <div key={index} className={`data-item ${item.nested ? "nested-array" : ""}`} ref={(el) => (itemRefs.current[index] = el)}>
                             <span className="data-key">{item.key}: </span>
                             <span className="data-value">{item.value}</span>
                             {!item.nested && (
