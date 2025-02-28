@@ -50,9 +50,19 @@ const App = () => {
     };
 
     const handleButtonClick = (e) => {
-        const nestedElement = e.currentTarget.nextElementSibling;
-        if (nestedElement) {
-            nestedElement.style.display = nestedElement.style.display === "none" ? "block" : "none";
+        let nextElement = e.currentTarget.parentElement.nextElementSibling;
+        console.log("nextElement", nextElement);
+        console.log("contains data-item", nextElement.classList.contains("data-item"));
+        console.log("contains nested-array", nextElement.classList.contains("nested-array"));
+        while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
+            // element does not have an inline style.displau property set so the following method will allow us to get the property
+            let computedStyle = window.getComputedStyle(nextElement);
+            if (computedStyle.display === "none") {
+                nextElement.style.display = "block";
+            } else {
+                nextElement.style.display = "none";
+            }
+            nextElement = nextElement.nextElementSibling;
         }
     };
 
