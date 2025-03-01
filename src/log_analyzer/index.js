@@ -78,15 +78,197 @@ function retrieveComponents(fileContent) {
                 counter += 1;
                 codeUnitArray.push(["METHOD_ENTRY_" + counter, methodName]);
             }
+        } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["FLOW_START_INTERVIEW_BEGIN_" + counter, methodName]);
+            }
+        } else if (line.includes("NAMED_CREDENTIAL_REQUEST")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["NAMED_CREDENTIAL_REQUEST" + counter, methodName]);
+            }
+        } else if (line.includes("NAMED_CREDENTIAL_RESPONSE")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["NAMED_CREDENTIAL_RESPONSE_" + counter, methodName]);
+            }
+        } else if (line.includes("FLOW_START_INTERVIEWS_ERROR")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["FLOW_START_INTERVIEWS_ERROR_" + counter, methodName]);
+            }
+        } else if (line.includes("CALLOUT_REQUEST")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["CALLOUT_REQUEST_" + counter, methodName]);
+            }
+        } else if (line.includes("CALLOUT_RESPONSE")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["CALLOUT_RESPONSE_" + counter, methodName]);
+            }
+        } else if (line.includes("EXCEPTION_THROWN")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["EXCEPTION_THROWN_" + counter, methodName]);
+            }
+        } else if (line.includes("FATAL_ERROR")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["FATAL_ERROR_" + counter, methodName]);
+            }
+        } else if (line.includes("VALIDATION_FAIL")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["VALIDATION_FAIL_" + counter, methodName]);
+            }
+        } else if (line.includes("VALIDATION_PASS")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["VALIDATION_PASS_" + counter, methodName]);
+            }
+        } else if (line.includes("VALIDATION_RULE")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["VALIDATION_RULE_" + counter, methodName]);
+            }
+        } else if (line.includes("VALIDATION_ERROR")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["VALIDATION_ERROR_" + counter, methodName]);
+            }
+        } else if (line.includes("USER_DEBUG")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                counter += 1;
+                codeUnitArray.push(["USER_DEBUG_" + counter, methodName]);
+            }
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             if (stack.length > 0) {
                 let prevLine = lines[i - 1];
                 prevLine = prevLine.split("|");
-                let prevmethodName = prevLine[prevLine.length - 1];
+                let prevMethodName = prevLine[prevLine.length - 1];
                 let lastMethod = stack.pop();
-                if (prevmethodName == methodName) {
+                if (prevMethodName == methodName) {
                     // Remove the corresponding CODE_UNIT_STARTED entry if it matches
                     codeUnitArray = codeUnitArray.filter((entry) => entry[0] !== "CODE_UNIT_STARTED_" + lastMethod.codeUnitCounter);
                     codeUnitCounter -= 1;
