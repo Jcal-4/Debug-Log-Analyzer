@@ -73,6 +73,7 @@ const App = () => {
         }
     };
 
+    
     // React Hook used to perform side effects in function components
     useEffect(() => {
         if (searchTerm) {
