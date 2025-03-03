@@ -323,6 +323,7 @@ function restructureArray(inputArray) {
 function sendMessageToWebview(context, executedComponents) {
     console.log("executedComponents: ", executedComponents);
     const panel = vscode.window.createWebviewPanel("logAnalyzer", "React Log Analyzer", vscode.ViewColumn.One, {
+        retainContextWhenHidden: true,
         enableScripts: true
     });
 
