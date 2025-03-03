@@ -5,6 +5,7 @@ const App = () => {
     // terms needed to be defined to use in html components
     const [data, setData] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(0);
     const itemRefs = useRef([]);
 
     useEffect(() => {
@@ -134,12 +135,27 @@ const App = () => {
         }
     }, [searchTerm, data]);
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % flattenArray(data).filter((item) => item.value.toLowerCase().includes(searchTerm.toLowerCase())).length);
+        }
+    };
+
     return (
         <div>
             <h1>React Webview for Log Analyzer</h1>
             {data ? (
                 <div className="data-container">
-                    <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setCurrentIndex(0); // Reset index when search term changes
+                        }}
+                        onKeyDown={handleKeyDown}
+                    />
                     {flattenArray(data).map((item, index) => (
                         <div
                             key={index}
