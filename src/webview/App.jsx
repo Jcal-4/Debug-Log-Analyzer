@@ -8,13 +8,12 @@ const App = () => {
     const itemRefs = useRef([]);
 
     useEffect(() => {
+        // we can't import vscode api directly so we need to use acquireVsCodeApi
         const vscode = acquireVsCodeApi();
 
         // Listen for messages from the extension
         window.addEventListener("message", (event) => {
-            console.log("event", event);
             const message = event.data;
-            console.log("message", message);
             if (message.command === "update") {
                 setData(message.data);
             } else if (message.command === "initialize") {
@@ -52,13 +51,18 @@ const App = () => {
         }, []);
     };
 
+    /**
+     * Handles click of Expand button.
+     * @param {event} - The event object.
+     */
     const handleButtonClick = (e) => {
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         console.log("nextElement", nextElement);
         console.log("contains data-item", nextElement.classList.contains("data-item"));
         console.log("contains nested-array", nextElement.classList.contains("nested-array"));
+        // check if nextElement is a data-item and nested-array, if so then change 
         while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
-            // element does not have an inline style.displau property set so the following method will allow us to get the property
+            // element does not have an inline style.display property set so the following method will allow us to get the property
             let computedStyle = window.getComputedStyle(nextElement);
             if (computedStyle.display === "none") {
                 nextElement.style.display = "block";
@@ -69,6 +73,7 @@ const App = () => {
         }
     };
 
+    // React Hook used to perform side effects in function components
     useEffect(() => {
         if (searchTerm) {
             const index = flattenArray(data).findIndex((item) => item.value.toLowerCase().includes(searchTerm.toLowerCase()));
