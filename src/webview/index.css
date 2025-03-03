@@ -63,6 +63,12 @@ span.data-value.code-unit-started {
     color: #555;
 }
 
+span.highlight {
+    background-color: #ffeb3b;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
 /* Styles for button */
 .top-level-button {
     margin-left: 10px;

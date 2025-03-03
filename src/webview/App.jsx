@@ -109,6 +109,21 @@ const App = () => {
         }
     };
 
+    // Function to highlight search term in the value
+    const highlightSearchTerm = (value, searchTerm) => {
+        if (!searchTerm) return value;
+        const parts = value.split(new RegExp(`(${searchTerm})`, "gi"));
+        return parts.map((part, index) =>
+            part.toLowerCase() === searchTerm.toLowerCase() ? (
+                <span key={index} className="highlight">
+                    {part}
+                </span>
+            ) : (
+                part
+            )
+        );
+    };
+
     // React Hook used to perform side effects in function components
     useEffect(() => {
         if (searchTerm) {
@@ -132,7 +147,7 @@ const App = () => {
                             ref={(el) => (itemRefs.current[index] = el)}
                         >
                             <span className="data-key">{item.key}: </span>
-                            <span className={`data-value ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{item.value}</span>
+                            <span className={`data-value ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{highlightSearchTerm(item.value, searchTerm)}</span>
                             {!item.nested && (
                                 <button className="top-level-button" onClick={handleButtonClick}>
                                     Expand
