@@ -33,22 +33,35 @@ const App = () => {
     const flattenArray = (arr, parentKey = "") => {
         return arr.reduce((acc, val, index) => {
             const key = parentKey ? `${parentKey}.${index}` : `${index}`;
+
             if (Array.isArray(val)) {
-                if (val.length === 2 && typeof val[0] === "string" && Array.isArray(val[1])) {
-                    return acc.concat(
-                        { key, value: `${val[0]}`, nested: false },
-                        flattenArray(val[1], key).map((item) => ({ ...item, nested: true }))
-                    );
-                } else if (val.length === 2 && typeof val[0] === "string" && typeof val[1] === "string") {
-                    return acc.concat({ key, value: `${val[0]}: ${val[1]}` });
-                }
-                return acc.concat(flattenArray(val, key));
+                return acc.concat(flattenArrayFromArray(val, key));
             } else if (typeof val === "object" && val !== null) {
                 return acc.concat(flattenArray(Object.entries(val), key));
             } else {
                 return acc.concat({ key, value: val });
             }
         }, []);
+    };
+
+    // Case: ['CODE_UNIT_STARTED_1', Array[]]
+    // Case: ['METHOD_ENTRY_1', 'makeData()']
+    const flattenArrayFromArray = (val, key) => {
+        if (val.length === 2 && typeof val[0] === "string") {
+            const isValArray = Array.isArray(val[1]);
+            const includesCodeUnitStarted = val[0].includes("CODE_UNIT_STARTED_");
+            const isCodeUnitStarted = isValArray && includesCodeUnitStarted;
+            if (Array.isArray(val[1])) {
+                // Case: [string, array]
+                const nestedItems = flattenArray(val[1], key).map((item) => ({ ...item, nested: true }));
+                return [{ key, value: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted }, ...nestedItems];
+            } else if (typeof val[1] === "string") {
+                // Case: [string, string]
+                return [{ key, value: `${val[0]}: ${val[1]}`, codeUnitStarted: isCodeUnitStarted }];
+            }
+        }
+        // Case: array
+        return flattenArray(val, key);
     };
 
     /**
@@ -60,7 +73,7 @@ const App = () => {
         console.log("nextElement", nextElement);
         console.log("contains data-item", nextElement.classList.contains("data-item"));
         console.log("contains nested-array", nextElement.classList.contains("nested-array"));
-        // check if nextElement is a data-item and nested-array, if so then change 
+        // check if nextElement is a data-item and nested-array, if so then change
         while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
             // element does not have an inline style.display property set so the following method will allow us to get the property
             let computedStyle = window.getComputedStyle(nextElement);
@@ -73,7 +86,29 @@ const App = () => {
         }
     };
 
-    
+    const handleInnerButtonClick = (e) => {
+        let nextElement = e.currentTarget.parentElement.nextElementSibling;
+        console.log("nextElement", nextElement);
+        console.log("contains data-item", nextElement.classList.contains("data-item"));
+        console.log("contains nested-array", nextElement.classList.contains("nested-array"));
+        // check if nextElement is a data-item and nested-array, if so then change
+        while (
+            nextElement &&
+            nextElement.classList.contains("data-item") &&
+            nextElement.classList.contains("nested-array") &&
+            !nextElement.classList.contains("code-unit-started")
+        ) {
+            // element does not have an inline style.display property set so the following method will allow us to get the property
+            let computedStyle = window.getComputedStyle(nextElement);
+            if (computedStyle.display === "none") {
+                nextElement.style.display = "block";
+            } else {
+                nextElement.style.display = "none";
+            }
+            nextElement = nextElement.nextElementSibling;
+        }
+    };
+
     // React Hook used to perform side effects in function components
     useEffect(() => {
         if (searchTerm) {
@@ -91,11 +126,20 @@ const App = () => {
                 <div className="data-container">
                     <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                     {flattenArray(data).map((item, index) => (
-                        <div key={index} className={`data-item ${item.nested ? "nested-array" : ""}`} ref={(el) => (itemRefs.current[index] = el)}>
+                        <div
+                            key={index}
+                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""}`}
+                            ref={(el) => (itemRefs.current[index] = el)}
+                        >
                             <span className="data-key">{item.key}: </span>
-                            <span className="data-value">{item.value}</span>
+                            <span className={`data-value ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{item.value}</span>
                             {!item.nested && (
                                 <button className="top-level-button" onClick={handleButtonClick}>
+                                    Expand
+                                </button>
+                            )}
+                            {item.codeUnitStarted && item.nested && (
+                                <button className="top-level-button" onClick={handleInnerButtonClick}>
                                     Expand
                                 </button>
                             )}

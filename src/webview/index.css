@@ -35,6 +35,10 @@ h1 {
     color: #777;
 }
 
+span.data-value.code-unit-started {
+    color: #007acc;
+}
+
 /* New styles for nested arrays */
 .nested-array {
     margin-left: 20px;
