@@ -64,7 +64,7 @@ function retrieveComponents(fileContent) {
             let methodName = parts[parts.length - 1];
             codeUnitArray.push(["CODE_UNIT_STARTED_" + codeUnitCounter, methodName]);
             stack.push({ methodName, codeUnitCounter });
-        } else if (line.includes("METHOD_ENTRY")) {
+        } else if (line.includes("|METHOD_ENTRY|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();

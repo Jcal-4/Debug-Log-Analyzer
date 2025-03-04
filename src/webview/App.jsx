@@ -113,7 +113,10 @@ const App = () => {
     // Function to highlight search term in the value
     const highlightSearchTerm = (value, searchTerm) => {
         if (!searchTerm) return value;
-        const parts = value.split(new RegExp(`(${searchTerm})`, "gi"));
+        // Escape special characters in the search term
+        const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        const parts = value.split(new RegExp(`(${escapedSearchTerm})`, "gi"));
         return parts.map((part, index) =>
             part.toLowerCase() === searchTerm.toLowerCase() ? (
                 <span key={index} className="highlight">
