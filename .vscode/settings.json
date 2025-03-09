@@ -1,5 +1,10 @@
 {
     "cSpell.words": [
         "newuser"
-    ]
+    ],
+    "salesforcedx-vscode-slds.enabled": false,
+    "salesforcedx-vscode-slds.basic.invalid": false,
+    "salesforcedx-vscode-slds.enhancements.autoSuggest": false,
+    "salesforcedx-vscode-slds.accessibility.colorContrast": false,
+    "salesforcedx-vscode-slds.basic.mobileValidation": false
 }

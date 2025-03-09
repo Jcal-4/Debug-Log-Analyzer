@@ -4,22 +4,22 @@ body {
 }
 
 h1 {
-    color: #333;
+    color: #66fcf1;;
     text-align: center;
 }
 
 .data-container {
     margin-top: 20px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 2px solid #1f2833;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #0b0c10;
 }
 
 .data-item {
     margin: 5px 0;
     padding: 5px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #1f2833;
 }
 
 .data-item:last-child {
@@ -32,18 +32,19 @@ h1 {
 }
 
 .data-value {
-    color: #777;
+    color: #66fcf1;
 }
 
 span.data-value.code-unit-started {
-    color: #007acc;
+    color: #66fcf1;
+    font-weight: bolder;
 }
 
 /* New styles for nested arrays */
 .nested-array {
     margin-left: 20px;
     padding-left: 10px;
-    border-left: 2px solid #ccc;
+    border-left: 2px solid #1f2833;
     display: none; /* Initially hidden */
 }
 
@@ -60,7 +61,7 @@ span.data-value.code-unit-started {
 }
 
 .nested-array .data-value {
-    color: #555;
+    color: #45a29e;
 }
 
 span.highlight {
@@ -86,4 +87,7 @@ input[type="text"] {
     padding: 10px;
     width: 100%;
     box-sizing: border-box;
+    background-color: #1f2833;
+    color: #66fcf1;
+    border-radius: 5px;
 }

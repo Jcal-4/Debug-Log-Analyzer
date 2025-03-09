@@ -70,10 +70,15 @@ const App = () => {
      * @param {event} - The event object.
      */
     const handleButtonClick = (e) => {
+        // toggle the button text between "Show More" and "Show Less"
+        if (e.currentTarget.innerHTML === "Show More") {
+            e.currentTarget.innerHTML = "Show Less";
+        } else {
+            e.currentTarget.innerHTML = "Show More";
+        }
+
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         console.log("nextElement", nextElement);
-        console.log("contains data-item", nextElement.classList.contains("data-item"));
-        console.log("contains nested-array", nextElement.classList.contains("nested-array"));
         // check if nextElement is a data-item and nested-array, if so then change
         while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
             // element does not have an inline style.display property set so the following method will allow us to get the property
@@ -88,10 +93,15 @@ const App = () => {
     };
 
     const handleInnerButtonClick = (e) => {
+        // toggle the button text between "Show More" and "Show Less"
+        if (e.currentTarget.innerHTML === "Show More") {
+            e.currentTarget.innerHTML = "Show Less";
+        } else {
+            e.currentTarget.innerHTML = "Show More";
+        }
+
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         console.log("nextElement", nextElement);
-        console.log("contains data-item", nextElement.classList.contains("data-item"));
-        console.log("contains nested-array", nextElement.classList.contains("nested-array"));
         // check if nextElement is a data-item and nested-array, if so then change
         while (
             nextElement &&
@@ -169,12 +179,12 @@ const App = () => {
                             <span className={`data-value ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{highlightSearchTerm(item.value, searchTerm)}</span>
                             {!item.nested && (
                                 <button className="top-level-button" onClick={handleButtonClick}>
-                                    Expand
+                                    Show More
                                 </button>
                             )}
                             {item.codeUnitStarted && item.nested && (
                                 <button className="top-level-button" onClick={handleInnerButtonClick}>
-                                    Expand
+                                    Show Less
                                 </button>
                             )}
                         </div>
