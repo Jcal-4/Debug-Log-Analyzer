@@ -103,16 +103,23 @@ const App = () => {
             e.currentTarget.innerHTML = "Show More";
             e.currentTarget.style.backgroundColor = "#007acc";
         }
-
+        let currentElement = e.currentTarget.parentElement;
+        let elementValue = currentElement.querySelector(".data-value");
+        elementValue = elementValue.innerHTML;
+        elementValue = elementValue.split("_")[3]; // the number associated with the code unit
+        console.log("elementValue", elementValue);
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
+        let nextElementValue = nextElement.querySelector(".data-value");
+        nextElementValue = nextElementValue.innerHTML;
+        let nextElementMatchesCurrent = false;
+        // create logic here to check that nextElement if value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
+        if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + elementValue)) {
+            // Trying to finish the logic here and will also need similar logic inside of the while loop as the nextElement will constantly change
+            nextElementMatchesCurrent = true;
+        }
         console.log("nextElement", nextElement);
         // check if nextElement is a data-item and nested-array, if so then change
-        while (
-            nextElement &&
-            nextElement.classList.contains("data-item") &&
-            nextElement.classList.contains("nested-array") &&
-            !nextElement.classList.contains("code-unit-started")
-        ) {
+        while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array") && !nextElementMatchesCurrent) {
             // element does not have an inline style.display property set so the following method will allow us to get the property
             let computedStyle = window.getComputedStyle(nextElement);
             if (computedStyle.display === "none") {
@@ -121,6 +128,14 @@ const App = () => {
                 nextElement.style.display = "none";
             }
             nextElement = nextElement.nextElementSibling;
+            if (nextElement) {
+                nextElementValue = nextElement.querySelector(".data-value");
+                nextElementValue = nextElementValue.innerHTML;
+                if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + elementValue)) {
+                    // Trying to finish the logic here and will also need similar logic inside of the while loop as the nextElement will constantly change
+                    nextElementMatchesCurrent = true;
+                }
+            }
         }
     };
 
