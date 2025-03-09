@@ -68,6 +68,8 @@ span.highlight {
     background-color: #ffeb3b;
     padding: 2px 4px;
     border-radius: 3px;
+    color: #000000;
+    font-weight: bold;
 }
 
 /* Styles for button */
@@ -101,4 +103,10 @@ input[type="text"] {
     background-color: #1f2833;
     color: #66fcf1;
     border-radius: 5px;
+}
+
+/* Styles for User Debug */
+.user-debug .data-value {
+    color: #ffa500;
+    font-weight: bold;
 }

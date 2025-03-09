@@ -51,14 +51,15 @@ const App = () => {
         if (val.length === 2 && typeof val[0] === "string") {
             const isValArray = Array.isArray(val[1]);
             const includesCodeUnitStarted = val[0].includes("CODE_UNIT_STARTED_");
+            const includesUserDebug = val[0].includes("USER_DEBUG");
             const isCodeUnitStarted = isValArray && includesCodeUnitStarted;
             if (Array.isArray(val[1])) {
                 // Case: [string, array]
                 const nestedItems = flattenArray(val[1], key).map((item) => ({ ...item, nested: true }));
-                return [{ key, value: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted }, ...nestedItems];
+                return [{ key, value: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug }, ...nestedItems];
             } else if (typeof val[1] === "string") {
                 // Case: [string, string]
-                return [{ key, value: `${val[0]}: ${val[1]}`, codeUnitStarted: isCodeUnitStarted }];
+                return [{ key, value: `${val[0]}: ${val[1]}`, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug }];
             }
         }
         // Case: array
@@ -188,7 +189,7 @@ const App = () => {
                     {flattenArray(data).map((item, index) => (
                         <div
                             key={index}
-                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""}`}
+                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""}`}
                             ref={(el) => (itemRefs.current[index] = el)}
                         >
                             <span className="data-key">{item.key}: </span>
