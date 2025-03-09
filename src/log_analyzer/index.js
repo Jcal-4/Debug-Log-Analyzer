@@ -59,9 +59,14 @@ function retrieveComponents(fileContent) {
         let line = lines[i];
         let currentLineNumber = i + 1;
         if (line.includes("CODE_UNIT_STARTED")) {
+            let methodName = "";
             codeUnitCounter += 1;
             let parts = line.split("|");
-            let methodName = parts[parts.length - 1];
+            if (parts[parts.length - 1].includes("trigger/")) {
+                methodName = parts[parts.length - 2];
+            } else {
+                methodName = parts[parts.length - 1];
+            }
             codeUnitArray.push(["CODE_UNIT_STARTED_" + codeUnitCounter, methodName]);
             stack.push({ methodName, codeUnitCounter });
         } else if (line.includes("|METHOD_ENTRY|")) {
@@ -248,11 +253,22 @@ function retrieveComponents(fileContent) {
             }
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             let parts = line.split("|");
-            let methodName = parts[parts.length - 1];
+            let methodName = "";
+            if (parts[parts.length - 1].includes("trigger/")) {
+                methodName = parts[parts.length - 2];
+            } else {
+                methodName = parts[parts.length - 1];
+            }
             if (stack.length > 0) {
                 let prevLine = lines[i - 1];
                 prevLine = prevLine.split("|");
-                let prevMethodName = prevLine[prevLine.length - 1];
+                // let prevMethodName = prevLine[prevLine.length - 1];
+                let prevMethodName = "";
+                if (prevLine[prevLine.length - 1].includes("trigger/")) {
+                    prevMethodName = prevLine[prevLine.length - 2];
+                } else {
+                    prevMethodName = prevLine[prevLine.length - 1];
+                }
                 let lastMethod = stack.pop();
                 if (prevMethodName == methodName) {
                     // Remove the corresponding CODE_UNIT_STARTED entry if it matches
