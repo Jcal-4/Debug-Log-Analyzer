@@ -73,8 +73,10 @@ const App = () => {
         // toggle the button text between "Show More" and "Show Less"
         if (e.currentTarget.innerHTML === "Show More") {
             e.currentTarget.innerHTML = "Show Less";
+            e.currentTarget.style.backgroundColor = "#1F2833";
         } else {
             e.currentTarget.innerHTML = "Show More";
+            e.currentTarget.style.backgroundColor = "#007acc";
         }
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
@@ -96,8 +98,10 @@ const App = () => {
         // toggle the button text between "Show More" and "Show Less"
         if (e.currentTarget.innerHTML === "Show More") {
             e.currentTarget.innerHTML = "Show Less";
+            e.currentTarget.style.backgroundColor = "#1F2833";
         } else {
             e.currentTarget.innerHTML = "Show More";
+            e.currentTarget.style.backgroundColor = "#007acc";
         }
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
@@ -183,7 +187,7 @@ const App = () => {
                                 </button>
                             )}
                             {item.codeUnitStarted && item.nested && (
-                                <button className="top-level-button" onClick={handleInnerButtonClick}>
+                                <button className="inner-level-button" onClick={handleInnerButtonClick}>
                                     Show Less
                                 </button>
                             )}
