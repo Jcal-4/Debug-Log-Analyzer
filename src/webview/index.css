@@ -64,6 +64,7 @@ span.data-value.code-unit-started {
     color: #45a29e;
 }
 
+/* Styles for Highlight */
 span.highlight {
     background-color: #ffeb3b;
     padding: 2px 4px;

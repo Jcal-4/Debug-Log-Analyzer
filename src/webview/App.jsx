@@ -173,7 +173,7 @@ const App = () => {
 
     return (
         <div>
-            <h1>React Webview for Log Analyzer</h1>
+            <h1>React Webview for Debug Log Analyzing</h1>
             {data ? (
                 <div className="data-container">
                     <input
