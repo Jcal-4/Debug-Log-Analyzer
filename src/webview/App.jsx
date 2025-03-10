@@ -175,37 +175,41 @@ const App = () => {
         <div>
             <h1>React Webview for Debug Log Analyzing</h1>
             {data ? (
-                <div className="data-container">
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={searchTerm}
-                        onChange={(e) => {
-                            setSearchTerm(e.target.value);
-                            setCurrentIndex(0); // Reset index when search term changes
-                        }}
-                        onKeyDown={handleKeyDown}
-                    />
-                    {flattenArray(data).map((item, index) => (
-                        <div
-                            key={index}
-                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""}`}
-                            ref={(el) => (itemRefs.current[index] = el)}
-                        >
-                            <span className="data-key">{item.key}: </span>
-                            <span className={`data-value ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{highlightSearchTerm(item.value, searchTerm)}</span>
-                            {!item.nested && (
-                                <button className="top-level-button" onClick={handleButtonClick}>
-                                    Show More
-                                </button>
-                            )}
-                            {item.codeUnitStarted && item.nested && (
-                                <button className="inner-level-button" onClick={handleInnerButtonClick}>
-                                    Show Less
-                                </button>
-                            )}
-                        </div>
-                    ))}
+                <div className="container">
+                    <div className="search-container">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentIndex(0); // Reset index when search term changes
+                            }}
+                            onKeyDown={handleKeyDown}
+                        />
+                    </div>
+                    <div className="data-container">
+                        {flattenArray(data).map((item, index) => (
+                            <div
+                                key={index}
+                                className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""}`}
+                                ref={(el) => (itemRefs.current[index] = el)}
+                            >
+                                <span className="data-key">{item.key}: </span>
+                                <span className={`data-value ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{highlightSearchTerm(item.value, searchTerm)}</span>
+                                {!item.nested && (
+                                    <button className="top-level-button" onClick={handleButtonClick}>
+                                        Show More
+                                    </button>
+                                )}
+                                {item.codeUnitStarted && item.nested && (
+                                    <button className="inner-level-button" onClick={handleInnerButtonClick}>
+                                        Show Less
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             ) : (
                 <p>Processing Data...</p>

@@ -9,7 +9,7 @@ h1 {
 }
 
 .data-container {
-    margin-top: 20px;
+    margin-top: 60px;
     padding: 10px;
     border: 2.5px solid #1f2833;
     border-radius: 5px;
@@ -61,7 +61,7 @@ span.data-value.code-unit-started {
 }
 
 .nested-array .data-value {
-    color: #45a29e;
+    color: #54c392;
 }
 
 /* Styles for Highlight */
@@ -96,6 +96,19 @@ span.highlight {
     border-radius: 3px;
 }
 
+.container {
+    display: flex;
+}
+
+.search-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #0b0c10;
+    padding: 10px;
+    z-index: 1000;
+}
+
 input[type="text"] {
     margin-bottom: 20px;
     padding: 10px;
@@ -110,4 +123,5 @@ input[type="text"] {
 .user-debug .data-value {
     color: #ffa500;
     font-weight: bold;
+    font-style: italic;
 }
