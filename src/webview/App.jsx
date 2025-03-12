@@ -187,6 +187,10 @@ const App = () => {
                             }}
                             onKeyDown={handleKeyDown}
                         />
+                        <div className="data-filters">
+                            <input type="checkbox" id="show-code-unit-started" />
+                            Show Code Unit Started
+                        </div>
                     </div>
                     <div className="data-container">
                         {flattenArray(data).map((item, index) => (
@@ -195,7 +199,7 @@ const App = () => {
                                 className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""}`}
                                 ref={(el) => (itemRefs.current[index] = el)}
                             >
-                                <span className="data-key">{item.key}: </span>
+                                <span className="data-key">{item.key} : </span>
                                 <span className={`data-value ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{highlightSearchTerm(item.value, searchTerm)}</span>
                                 {!item.nested && (
                                     <button className="top-level-button" onClick={handleButtonClick}>
