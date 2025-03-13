@@ -187,10 +187,21 @@ const App = () => {
                             }}
                             onKeyDown={handleKeyDown}
                         />
-                        <div className="data-filters">
-                            <input type="checkbox" id="show-code-unit-started" />
-                            Show Code Unit Started
-                        </div>
+                        <fieldset className="data-filters">
+                            <legend>Choose Elements to Display</legend>
+                            <div>
+                                <input type="checkbox" id="show-code-unit-started" />
+                                <label for="scales">Method Entries</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="show-flows" />
+                                <label for="scales">Flows</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="show-assignment-variable" />
+                                <label for="scales">Assignment Variables</label>
+                            </div>
+                        </fieldset>
                     </div>
                     <div className="data-container">
                         {flattenArray(data).map((item, index) => (
