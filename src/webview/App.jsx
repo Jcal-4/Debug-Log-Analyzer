@@ -45,8 +45,8 @@ const App = () => {
         }, []);
     };
 
-    // Case: ['CODE_UNIT_STARTED_1', Array[]]
-    // Case: ['METHOD_ENTRY_1', 'makeData()']
+    // Val: ['CODE_UNIT_STARTED_1', Array[]]
+    // Val: ['METHOD_ENTRY_1', 'makeData()']
     const flattenArrayFromArray = (val, key) => {
         if (val.length === 2 && typeof val[0] === "string") {
             const isValArray = Array.isArray(val[1]);
@@ -54,12 +54,12 @@ const App = () => {
             const includesUserDebug = val[0].includes("USER_DEBUG");
             const isCodeUnitStarted = isValArray && includesCodeUnitStarted;
             if (Array.isArray(val[1])) {
-                // Case: [string, array]
+                // Case: [string, [array]]
                 const nestedItems = flattenArray(val[1], key).map((item) => ({ ...item, nested: true }));
-                return [{ key, value: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug }, ...nestedItems];
+                return [{ key, event: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug }, ...nestedItems];
             } else if (typeof val[1] === "string") {
                 // Case: [string, string]
-                return [{ key, value: `${val[0]}: ${val[1]}`, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug }];
+                return [{ key, event: `${val[0]}`, value: `${val[1]}`, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug }];
             }
         }
         // Case: array
@@ -95,6 +95,32 @@ const App = () => {
         }
     };
 
+    // const handleInnerButtonClick = (e) => {
+    //     // Toggle the button text and background color
+    //     const button = e.currentTarget;
+    //     const isShowMore = button.innerHTML === "Show More";
+    //     button.innerHTML = isShowMore ? "Show Less" : "Show More";
+    //     button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
+
+    //     const currentElement = button.parentElement;
+    //     const currentElementValue = currentElement.querySelector(".data-value").innerHTML.split("_")[3]; // The number associated with the code unit
+    //     let nextElement = currentElement.nextElementSibling;
+    //     let nextElementMatchesCurrent = false;
+
+    //     // Check if nextElement value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
+    //     while (nextElement && !nextElementMatchesCurrent) {
+    //         const nextElementValue = nextElement.querySelector(".data-value").innerHTML;
+    //         if (nextElementValue.includes("CODE_UNIT_FINISHED_" + currentElementValue)) {
+    //             nextElementMatchesCurrent = true;
+    //             nextElement.style.display = "none";
+    //         } else if (nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
+    //             const computedStyle = window.getComputedStyle(nextElement);
+    //             nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+    //         }
+    //         nextElement = nextElement.nextElementSibling;
+    //     }
+    // };
+
     const handleInnerButtonClick = (e) => {
         // toggle the button text between "Show More" and "Show Less"
         if (e.currentTarget.innerHTML === "Show More") {
@@ -105,11 +131,11 @@ const App = () => {
             e.currentTarget.style.backgroundColor = "#007acc";
         }
         let currentElement = e.currentTarget.parentElement;
-        let currentElementValue = currentElement.querySelector(".data-value");
+        let currentElementValue = currentElement.querySelector(".data-event");
         currentElementValue = currentElementValue.innerHTML;
         currentElementValue = currentElementValue.split("_")[3]; // the number associated with the code unit
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
-        let nextElementValue = nextElement.querySelector(".data-value");
+        let nextElementValue = nextElement.querySelector(".data-event");
         nextElementValue = nextElementValue.innerHTML;
         let nextElementMatchesCurrent = false;
         // create logic here to check that nextElement if value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
@@ -127,7 +153,7 @@ const App = () => {
                 nextElement.style.display = "none";
             }
             if (nextElement) {
-                nextElementValue = nextElement.querySelector(".data-value");
+                nextElementValue = nextElement.querySelector(".data-event");
                 nextElementValue = nextElementValue.innerHTML;
                 if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + currentElementValue)) {
                     nextElementMatchesCurrent = true;
@@ -189,7 +215,7 @@ const App = () => {
                                 onKeyDown={handleKeyDown}
                             />
                             <fieldset className="data-filters">
-                                <legend>Choose Elements to Display</legend>
+                                <legend>Elements to Display</legend>
                                 <div>
                                     <input type="checkbox" id="show-assignment-variable" />
                                     <label for="scales">Assignment Variables</label>
@@ -216,8 +242,9 @@ const App = () => {
                                 className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""}`}
                                 ref={(el) => (itemRefs.current[index] = el)}
                             >
-                                <span className="data-key">{item.key} : </span>
-                                <span className={`data-value ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{highlightSearchTerm(item.value, searchTerm)}</span>
+                                <span className="data-key">{item.key}: </span>
+                                <span className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{highlightSearchTerm(item.event, searchTerm)} : </span>
+                                <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
                                 {!item.nested && (
                                     <button className="top-level-button" onClick={handleButtonClick}>
                                         Show More

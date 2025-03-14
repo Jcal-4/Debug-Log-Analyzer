@@ -28,6 +28,8 @@ h1 {
 
 .data-filters {
     margin-top: 5px;
+    color: #66fcf1;
+    border-color: #66fcf1;
 }
 
 .data-container {
@@ -48,16 +50,7 @@ h1 {
     border-bottom: none;
 }
 
-.data-key {
-    font-weight: bold;
-    color: #555;
-}
-
-.data-value {
-    color: #66fcf1;
-}
-
-span.data-value.code-unit-started {
+span.data-event.code-unit-started {
     color: #66fcf1;
     font-weight: bolder;
 }
@@ -78,12 +71,17 @@ span.data-value.code-unit-started {
     margin-left: 40px;
 }
 
+/* Style of displayed data */
 .nested-array .data-key {
     color: #333;
 }
 
+.nested-array .data-event {
+    color: #66edb2;
+}
+
 .nested-array .data-value {
-    color: #54c392;
+    color: #48a97e;
 }
 
 /* Styles for Highlight */
@@ -129,6 +127,7 @@ input[type="text"] {
 }
 
 /* Styles for User Debug */
+.user-debug .data-event,
 .user-debug .data-value {
     color: #ffa500;
     font-weight: bold;
