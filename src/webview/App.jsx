@@ -6,6 +6,7 @@ const App = () => {
     const [data, setData] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [matchingCount, setMatchingCount] = useState(0); // State to keep track of matching items count
     const itemRefs = useRef([]);
 
     useEffect(() => {
@@ -140,18 +141,27 @@ const App = () => {
     // React Hook used to perform side effects in function components
     useEffect(() => {
         if (searchTerm) {
-            const index = flattenArray(data).findIndex(
+            const flattenedData = flattenArray(data);
+            const matchingItems = flattenedData.filter(
                 (item) => (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) || (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
             );
-            if (index !== -1 && itemRefs.current[index]) {
-                itemRefs.current[index].scrollIntoView({ behavior: "smooth", block: "center" });
+
+            setMatchingCount(matchingItems.length); // Update the matching count
+
+            if (matchingItems.length > 0) {
+                const nearestIndex = matchingItems[currentIndex % matchingItems.length].key.split(".").pop();
+                if (itemRefs.current[nearestIndex]) {
+                    itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            } else {
+                setMatchingCount(0); // Reset the matching count if search term is empty
             }
         }
-    }, [searchTerm, data]);
+    }, [searchTerm, data, currentIndex]);
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % flattenArray(data).filter((item) => item.value.toLowerCase().includes(searchTerm.toLowerCase())).length);
+            setCurrentIndex((prevIndex) => prevIndex + 1);
         }
     };
 
@@ -172,6 +182,11 @@ const App = () => {
                                 }}
                                 onKeyDown={handleKeyDown}
                             />
+                            {searchTerm && (
+                                <div className="search-popup">
+                                    {matchingCount} result{matchingCount !== 1 ? "s" : ""} found
+                                </div>
+                            )}
                             <fieldset className="data-filters">
                                 <legend>Elements to Display</legend>
                                 <div>
