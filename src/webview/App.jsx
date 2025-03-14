@@ -177,31 +177,37 @@ const App = () => {
             {data ? (
                 <div className="container">
                     <div className="search-container">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            value={searchTerm}
-                            onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                                setCurrentIndex(0); // Reset index when search term changes
-                            }}
-                            onKeyDown={handleKeyDown}
-                        />
-                        <fieldset className="data-filters">
-                            <legend>Choose Elements to Display</legend>
-                            <div>
-                                <input type="checkbox" id="show-code-unit-started" />
-                                <label for="scales">Method Entries</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" id="show-flows" />
-                                <label for="scales">Flows</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" id="show-assignment-variable" />
-                                <label for="scales">Assignment Variables</label>
-                            </div>
-                        </fieldset>
+                        <div className="search-inner-container">
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setCurrentIndex(0); // Reset index when search term changes
+                                }}
+                                onKeyDown={handleKeyDown}
+                            />
+                            <fieldset className="data-filters">
+                                <legend>Choose Elements to Display</legend>
+                                <div>
+                                    <input type="checkbox" id="show-assignment-variable" />
+                                    <label for="scales">Assignment Variables</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="show-flows" />
+                                    <label for="scales">Flows</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="show-code-unit-started" />
+                                    <label for="scales">Method Entries</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="show-assignment-variable" />
+                                    <label for="scales">Validation Rules</label>
+                                </div>
+                            </fieldset>
+                        </div>
                     </div>
                     <div className="data-container">
                         {flattenArray(data).map((item, index) => (

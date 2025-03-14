@@ -80,7 +80,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_ENTRY " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
             let parts = line.split("|");
@@ -93,7 +93,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["FLOW_START_INTERVIEW_BEGIN " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["FLOW_START_INTERVIEW_BEGIN" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("NAMED_CREDENTIAL_REQUEST")) {
             let parts = line.split("|");
@@ -106,7 +106,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["NAMED_CREDENTIAL_REQUES " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["NAMED_CREDENTIAL_REQUEST" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("NAMED_CREDENTIAL_RESPONSE")) {
             let parts = line.split("|");
@@ -119,7 +119,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["NAMED_CREDENTIAL_RESPONSE " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["NAMED_CREDENTIAL_RESPONSE" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("FLOW_START_INTERVIEWS_ERROR")) {
             let parts = line.split("|");
@@ -132,7 +132,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["FLOW_START_INTERVIEWS_ERROR " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["FLOW_START_INTERVIEWS_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("CALLOUT_REQUEST")) {
             let parts = line.split("|");
@@ -145,7 +145,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["CALLOUT_REQUEST " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["CALLOUT_REQUEST" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("CALLOUT_RESPONSE")) {
             let parts = line.split("|");
@@ -158,7 +158,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["CALLOUT_RESPONSE " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["CALLOUT_RESPONSE" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("EXCEPTION_THROWN")) {
             let parts = line.split("|");
@@ -171,7 +171,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["EXCEPTION_THROWN " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["EXCEPTION_THROWN" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("FATAL_ERROR")) {
             let parts = line.split("|");
@@ -184,7 +184,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["FATAL_ERROR " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["FATAL_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("VALIDATION_FAIL")) {
             let parts = line.split("|");
@@ -197,7 +197,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["VALIDATION_FAIL " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["VALIDATION_FAIL" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("VALIDATION_PASS")) {
             let parts = line.split("|");
@@ -210,7 +210,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["VALIDATION_PASS " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["VALIDATION_PASS" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("VALIDATION_RULE")) {
             let parts = line.split("|");
@@ -223,7 +223,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["VALIDATION_RULE " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["VALIDATION_RULE" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("VALIDATION_ERROR")) {
             let parts = line.split("|");
@@ -236,7 +236,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["VALIDATION_ERROR " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["VALIDATION_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("USER_DEBUG")) {
             let parts = line.split("|");
@@ -249,7 +249,7 @@ function retrieveComponents(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["USER_DEBUG " + "(Line: " + currentLineNumber + ")", methodName]);
+                codeUnitArray.push(["USER_DEBUG" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             let parts = line.split("|");

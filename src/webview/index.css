@@ -21,6 +21,15 @@ h1 {
     flex-basis: 25%;
 }
 
+.search-inner-container {
+    position: sticky;
+    top: 10px;
+}
+
+.data-filters {
+    margin-top: 5px;
+}
+
 .data-container {
     padding: 10px;
     border: 2.5px solid #1f2833;
@@ -115,7 +124,6 @@ input[type="text"] {
     background-color: #1f2833;
     color: #66fcf1;
     border-radius: 5px;
-    position: sticky;
     width: 100%;
     top: 10px;
 }
