@@ -71,6 +71,19 @@ span.data-event.code-unit-started {
     margin-left: 40px;
 }
 
+.search-popup {
+    background-color: #007acc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.search-popup button {
+    background: none;
+    cursor: pointer;
+}
+
 /* Style of displayed data */
 .nested-array .data-key {
     color: #333;

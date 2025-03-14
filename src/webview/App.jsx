@@ -7,6 +7,7 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
     const [matchingCount, setMatchingCount] = useState(0); // State to keep track of matching items count
+    const [matchingItems, setMatchingItems] = useState([]); // State to store matching items with original indices
     const itemRefs = useRef([]);
 
     useEffect(() => {
@@ -142,14 +143,18 @@ const App = () => {
     useEffect(() => {
         if (searchTerm) {
             const flattenedData = flattenArray(data);
-            const matchingItems = flattenedData.filter(
-                (item) => (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) || (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
-            );
+            const matchingItems = flattenedData
+                .map((item, index) => ({ item, index })) // Store the original index
+                .filter(
+                    ({ item }) =>
+                        (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) || (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
+                );
 
+            setMatchingItems(matchingItems); // Update the matching items
             setMatchingCount(matchingItems.length); // Update the matching count
-
+            console.log("matchingItems", matchingItems);
             if (matchingItems.length > 0) {
-                const nearestIndex = matchingItems[currentIndex % matchingItems.length].key.split(".").pop();
+                const nearestIndex = matchingItems[currentIndex % matchingItems.length].index;
                 if (itemRefs.current[nearestIndex]) {
                     itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "center" });
                 }
@@ -161,8 +166,17 @@ const App = () => {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            setCurrentIndex((prevIndex) => prevIndex + 1);
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % matchingItems.length);
         }
+    };
+
+    const handleNext = () => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % matchingItems.length);
+        console.log("handleNext", currentIndex);
+    };
+
+    const handlePrevious = () => {
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + matchingItems.length) % matchingItems.length);
     };
 
     return (
@@ -185,6 +199,8 @@ const App = () => {
                             {searchTerm && (
                                 <div className="search-popup">
                                     {matchingCount} result{matchingCount !== 1 ? "s" : ""} found
+                                    <button onClick={handlePrevious}>⬆️</button>
+                                    <button onClick={handleNext}>⬇️</button>
                                 </div>
                             )}
                             <fieldset className="data-filters">
