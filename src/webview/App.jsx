@@ -71,94 +71,49 @@ const App = () => {
      * @param {event} - The event object.
      */
     const handleButtonClick = (e) => {
-        // toggle the button text between "Show More" and "Show Less"
-        if (e.currentTarget.innerHTML === "Show More") {
-            e.currentTarget.innerHTML = "Show Less";
-            e.currentTarget.style.backgroundColor = "#1F2833";
-        } else {
-            e.currentTarget.innerHTML = "Show More";
-            e.currentTarget.style.backgroundColor = "#007acc";
-        }
+        // Toggle the button text and background color
+        const button = e.currentTarget;
+        const isShowMore = button.innerHTML === "Show More";
+        button.innerHTML = isShowMore ? "Show Less" : "Show More";
+        button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
-        console.log("nextElement", nextElement);
-        // check if nextElement is a data-item and nested-array, if so then change
+        
         while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
-            // element does not have an inline style.display property set so the following method will allow us to get the property
             let computedStyle = window.getComputedStyle(nextElement);
-            if (computedStyle.display === "none") {
-                nextElement.style.display = "block";
-            } else {
-                nextElement.style.display = "none";
-            }
+            nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+
             nextElement = nextElement.nextElementSibling;
         }
     };
 
-    // const handleInnerButtonClick = (e) => {
-    //     // Toggle the button text and background color
-    //     const button = e.currentTarget;
-    //     const isShowMore = button.innerHTML === "Show More";
-    //     button.innerHTML = isShowMore ? "Show Less" : "Show More";
-    //     button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
-
-    //     const currentElement = button.parentElement;
-    //     const currentElementValue = currentElement.querySelector(".data-value").innerHTML.split("_")[3]; // The number associated with the code unit
-    //     let nextElement = currentElement.nextElementSibling;
-    //     let nextElementMatchesCurrent = false;
-
-    //     // Check if nextElement value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
-    //     while (nextElement && !nextElementMatchesCurrent) {
-    //         const nextElementValue = nextElement.querySelector(".data-value").innerHTML;
-    //         if (nextElementValue.includes("CODE_UNIT_FINISHED_" + currentElementValue)) {
-    //             nextElementMatchesCurrent = true;
-    //             nextElement.style.display = "none";
-    //         } else if (nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
-    //             const computedStyle = window.getComputedStyle(nextElement);
-    //             nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
-    //         }
-    //         nextElement = nextElement.nextElementSibling;
-    //     }
-    // };
-
     const handleInnerButtonClick = (e) => {
-        // toggle the button text between "Show More" and "Show Less"
-        if (e.currentTarget.innerHTML === "Show More") {
-            e.currentTarget.innerHTML = "Show Less";
-            e.currentTarget.style.backgroundColor = "#1F2833";
-        } else {
-            e.currentTarget.innerHTML = "Show More";
-            e.currentTarget.style.backgroundColor = "#007acc";
-        }
-        let currentElement = e.currentTarget.parentElement;
-        let currentElementValue = currentElement.querySelector(".data-event");
-        currentElementValue = currentElementValue.innerHTML;
-        currentElementValue = currentElementValue.split("_")[3]; // the number associated with the code unit
+        // Toggle the button text and background color
+        const button = e.currentTarget;
+        const isShowMore = button.innerHTML === "Show More";
+        button.innerHTML = isShowMore ? "Show Less" : "Show More";
+        button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
+
+        let currentElement = button.parentElement;
+        let currentElementValue = currentElement.querySelector(".data-event").innerHTML.split("_")[3]; // the number associated with the code unit
+
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
-        let nextElementValue = nextElement.querySelector(".data-event");
-        nextElementValue = nextElementValue.innerHTML;
         let nextElementMatchesCurrent = false;
-        // create logic here to check that nextElement if value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
-        if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + currentElementValue)) {
-            nextElementMatchesCurrent = true;
-            nextElement.style.display = "none";
-        }
+
         // check if nextElement is a data-item and nested-array, if so then change
         while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array") && !nextElementMatchesCurrent) {
-            // element does not have an inline style.display property set so the following method will allow us to get the property
+            let nextElementValue = nextElement.querySelector(".data-event").innerHTML;
             let computedStyle = window.getComputedStyle(nextElement);
-            if (computedStyle.display === "none") {
-                nextElement.style.display = "block";
+
+            // Check if nextElement value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
+            if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + currentElementValue)) {
+                nextElementMatchesCurrent = true;
+                nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+                break;
             } else {
-                nextElement.style.display = "none";
+                nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
             }
-            if (nextElement) {
-                nextElementValue = nextElement.querySelector(".data-event");
-                nextElementValue = nextElementValue.innerHTML;
-                if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + currentElementValue)) {
-                    nextElementMatchesCurrent = true;
-                }
-            }
+
             nextElement = nextElement.nextElementSibling;
         }
     };
