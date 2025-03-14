@@ -78,7 +78,7 @@ const App = () => {
         button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
-        
+
         while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
             let computedStyle = window.getComputedStyle(nextElement);
             nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
@@ -120,6 +120,7 @@ const App = () => {
 
     // Function to highlight search term in the value
     const highlightSearchTerm = (value, searchTerm) => {
+        if (!value) return value; // Ensure value is defined
         if (!searchTerm) return value;
         // Escape special characters in the search term
         const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -139,7 +140,9 @@ const App = () => {
     // React Hook used to perform side effects in function components
     useEffect(() => {
         if (searchTerm) {
-            const index = flattenArray(data).findIndex((item) => item.value.toLowerCase().includes(searchTerm.toLowerCase()));
+            const index = flattenArray(data).findIndex(
+                (item) => (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) || (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
             if (index !== -1 && itemRefs.current[index]) {
                 itemRefs.current[index].scrollIntoView({ behavior: "smooth", block: "center" });
             }
