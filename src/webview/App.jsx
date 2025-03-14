@@ -94,8 +94,8 @@ const App = () => {
         button.innerHTML = isShowMore ? "Show Less" : "Show More";
         button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
 
-        let currentElement = button.parentElement;
-        let currentElementValue = currentElement.querySelector(".data-event").innerHTML.split("_")[3]; // the number associated with the code unit
+        let codeUnitElement = button.parentElement;
+        let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.split("_")[3];
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         let nextElementMatchesCurrent = false;
@@ -106,7 +106,7 @@ const App = () => {
             let computedStyle = window.getComputedStyle(nextElement);
 
             // Check if nextElement value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
-            if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + currentElementValue)) {
+            if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + codeUnitVal)) {
                 nextElementMatchesCurrent = true;
                 nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
                 break;
