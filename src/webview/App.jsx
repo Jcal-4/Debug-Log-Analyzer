@@ -26,6 +26,7 @@ const App = () => {
 
     useEffect(() => {
         // we can't import vscode api directly so we need to use acquireVsCodeApi
+        // eslint-disable-next-line no-undef
         const vscode = acquireVsCodeApi();
 
         // Listen for messages from the extension
@@ -68,7 +69,10 @@ const App = () => {
             const isValArray = Array.isArray(val[1]);
             const includesCodeUnitStarted = val[0].includes("CODE_UNIT_STARTED_");
             const includesMethodEntry = val[0].includes("METHOD_ENTRY");
+            const includesVariableAssignment = val[0].includes("VARIABLE_ASSIGNMENT");
             const includesUserDebug = val[0].includes("USER_DEBUG");
+            const includesFlow = val[0].includes("FLOW_");
+            const includesValidation = val[0].includes("VALIDATION");
             const isCodeUnitStarted = isValArray && includesCodeUnitStarted;
             if (Array.isArray(val[1])) {
                 // Case: [string, [array]]
@@ -76,7 +80,19 @@ const App = () => {
                 return [{ key, event: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted }, ...nestedItems];
             } else if (typeof val[1] === "string") {
                 // Case: [string, string]
-                return [{ key, event: `${val[0]}`, value: `${val[1]}`, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug, isMethodEntry: includesMethodEntry }];
+                return [
+                    {
+                        key,
+                        event: `${val[0]}`,
+                        value: `${val[1]}`,
+                        codeUnitStarted: isCodeUnitStarted,
+                        userDebug: includesUserDebug,
+                        isMethodEntry: includesMethodEntry,
+                        isVariableAssignment: includesVariableAssignment,
+                        isFlow: includesFlow,
+                        isValidation: includesValidation
+                    }
+                ];
             }
         }
         // Case: array
@@ -96,8 +112,12 @@ const App = () => {
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
 
-        while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
-            let computedStyle = window.getComputedStyle(nextElement);
+        while (
+            nextElement &&
+            nextElement.classList.contains("data-item") &&
+            nextElement.classList.contains("nested-array")
+        ) {
+            // let computedStyle = window.getComputedStyle(nextElement);
             // nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
 
             // patch for top level button to show/hide nested values
@@ -121,7 +141,12 @@ const App = () => {
         let nextElementMatchesCurrent = false;
 
         // check if nextElement is a data-item and nested-array, if so then change
-        while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array") && !nextElementMatchesCurrent) {
+        while (
+            nextElement &&
+            nextElement.classList.contains("data-item") &&
+            nextElement.classList.contains("nested-array") &&
+            !nextElementMatchesCurrent
+        ) {
             let nextElementValue = nextElement.querySelector(".data-event").innerHTML;
             let computedStyle = window.getComputedStyle(nextElement);
 
@@ -165,7 +190,8 @@ const App = () => {
                 .map((item, index) => ({ item, index })) // Store the original index
                 .filter(
                     ({ item }) =>
-                        (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) || (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
+                        (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                        (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
                 );
 
             setMatchingItems(matchingItems); // Update the matching items
@@ -197,18 +223,18 @@ const App = () => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + matchingItems.length) % matchingItems.length);
     };
 
-    const handleCheckboxChange = (e, eventType) => {
+    const handleCheckboxChange = (e) => {
         const { id, checked } = e.target;
-        console.log("id-->", id, "checked-->", checked, eventType);
+        console.log("id-->", id, "checked-->", checked);
         let assignmentVariables = [];
 
         if (checked) {
-            assignmentVariables = document.querySelectorAll(`.${eventType}`);
+            assignmentVariables = document.querySelectorAll(`.${id}`);
             assignmentVariables.forEach((item) => {
                 item.style.display = "block";
             });
         } else {
-            assignmentVariables = document.querySelectorAll(`.${eventType}`);
+            assignmentVariables = document.querySelectorAll(`.${id}`);
             assignmentVariables.forEach((item) => {
                 item.style.display = "none";
             });
@@ -242,27 +268,35 @@ const App = () => {
                             <fieldset className="data-filters">
                                 <legend>Elements to Display</legend>
                                 <div>
-                                    <input type="checkbox" id="show-assignment-variables" onChange={handleCheckboxChange} />
-                                    <label for="scales">Assignment Variables</label>
+                                    <input
+                                        type="checkbox"
+                                        id="variable-assignment"
+                                        onChange={handleCheckboxChange}
+                                        defaultChecked
+                                    />
+                                    <label>Variable Assignment</label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="show-flows" onChange={handleCheckboxChange} />
-                                    <label for="scales">Flows</label>
+                                    <input type="checkbox" id="flow" onChange={handleCheckboxChange} defaultChecked />
+                                    <label>Flows</label>
                                 </div>
                                 <div>
                                     <input
                                         type="checkbox"
-                                        id="show-method-entries"
-                                        onChange={(e) => {
-                                            handleCheckboxChange(e, "method-entry");
-                                        }}
+                                        id="method-entry"
+                                        onChange={handleCheckboxChange}
                                         defaultChecked
                                     />
-                                    <label for="scales">Method Entries</label>
+                                    <label>Method Entries</label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="show-validation-rules" onChange={handleCheckboxChange} />
-                                    <label for="scales">Validation Rules</label>
+                                    <input
+                                        type="checkbox"
+                                        id="validation-rule"
+                                        onChange={handleCheckboxChange}
+                                        defaultChecked
+                                    />
+                                    <label>Validations</label>
                                 </div>
                             </fieldset>
                         </div>
@@ -271,11 +305,13 @@ const App = () => {
                         {flattenArray(data).map((item, index) => (
                             <div
                                 key={index}
-                                className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""}`}
+                                className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}`}
                                 ref={(el) => (itemRefs.current[index] = el)}
                             >
                                 <span className="data-key">{item.key}: </span>
-                                <span className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}>{highlightSearchTerm(item.event, searchTerm)} : </span>
+                                <span className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}>
+                                    {highlightSearchTerm(item.event, searchTerm)} :{" "}
+                                </span>
                                 <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
                                 {!item.nested && (
                                     <button className="top-level-button" onClick={handleButtonClick}>

@@ -251,6 +251,25 @@ function retrieveComponents(fileContent) {
             if (!shouldIgnoreMethod) {
                 codeUnitArray.push(["USER_DEBUG" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
+        } else if (line.includes("VARIABLE_ASSIGNMENT")) {
+            let parts = line.split("|");
+            let variableName = parts[parts.length - 3];
+            let variableValue = parts[parts.length - 2];
+            const constantVariable = parts.length != 6;
+            if (
+                !constantVariable &&
+                variableName != "this" &&
+                variableName != "t" &&
+                variableName != "handler" &&
+                variableName != "field" &&
+                variableName != "tName" &&
+                !variableName.includes("this.") 
+            ) {
+                codeUnitArray.push([
+                    "VARIABLE_ASSIGNMENT" + "(Line: " + currentLineNumber + ") " + "- (" + variableName + ") ",
+                    variableValue
+                ]);
+            }
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             let parts = line.split("|");
             let methodName = "";
@@ -272,7 +291,9 @@ function retrieveComponents(fileContent) {
                 let lastMethod = stack.pop();
                 if (prevMethodName == methodName) {
                     // Remove the corresponding CODE_UNIT_STARTED entry if it matches
-                    codeUnitArray = codeUnitArray.filter((entry) => entry[0] !== "CODE_UNIT_STARTED_" + lastMethod.codeUnitCounter);
+                    codeUnitArray = codeUnitArray.filter(
+                        (entry) => entry[0] !== "CODE_UNIT_STARTED_" + lastMethod.codeUnitCounter
+                    );
                     codeUnitCounter -= 1;
                 } else if (lastMethod.methodName == methodName) {
                     // Store the method details in the array with a unique key
@@ -334,7 +355,8 @@ function sendMessageToWebview(context, executedComponents) {
     let htmlContent = fs.readFileSync(htmlFilePath, "utf8");
 
     // Convert the local file path to a webview URI
-    const webviewUri = (file) => panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "webview", file)));
+    const webviewUri = (file) =>
+        panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "webview", file)));
 
     // Replace the placeholder in the HTML with the webview URI
     htmlContent = htmlContent.replace(/src="\.\/index\.js"/g, `src="${webviewUri("index.js")}"`);
