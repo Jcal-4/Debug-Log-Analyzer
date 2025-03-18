@@ -2,6 +2,20 @@ import React, { useEffect, useState, useRef } from "react";
 import "./index.css"; // Import the CSS file
 
 const App = () => {
+    /*
+        How to use checkboxes to filter out values (div tags) based on the checkbox value
+        1. Create a state to store the checkbox values
+        2. Create a function to handle the checkbox change event
+        3. Filter the data based on the checkbox values
+        4. Update the state to re-render
+
+
+        1. create an Id for each div tag that represents the type of data
+        2. onChange for checkbox trigger a function that would filter the data based on the checkbox value
+        (eg. if checkbox is checked, then show the div tag with the id, else hide the div tag with the id)
+        3. A conditional in the function to check what checkbox what clicked therefore deciding what id to query for
+    */
+
     // terms needed to be defined to use in html components
     const [data, setData] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -53,15 +67,16 @@ const App = () => {
         if (val.length === 2 && typeof val[0] === "string") {
             const isValArray = Array.isArray(val[1]);
             const includesCodeUnitStarted = val[0].includes("CODE_UNIT_STARTED_");
+            const includesMethodEntry = val[0].includes("METHOD_ENTRY");
             const includesUserDebug = val[0].includes("USER_DEBUG");
             const isCodeUnitStarted = isValArray && includesCodeUnitStarted;
             if (Array.isArray(val[1])) {
                 // Case: [string, [array]]
                 const nestedItems = flattenArray(val[1], key).map((item) => ({ ...item, nested: true }));
-                return [{ key, event: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug }, ...nestedItems];
+                return [{ key, event: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted }, ...nestedItems];
             } else if (typeof val[1] === "string") {
                 // Case: [string, string]
-                return [{ key, event: `${val[0]}`, value: `${val[1]}`, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug }];
+                return [{ key, event: `${val[0]}`, value: `${val[1]}`, codeUnitStarted: isCodeUnitStarted, userDebug: includesUserDebug, isMethodEntry: includesMethodEntry }];
             }
         }
         // Case: array
@@ -182,6 +197,24 @@ const App = () => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + matchingItems.length) % matchingItems.length);
     };
 
+    const handleCheckboxChange = (e, eventType) => {
+        const { id, checked } = e.target;
+        console.log("id-->", id, "checked-->", checked, eventType);
+        let assignmentVariables = [];
+
+        if (checked) {
+            assignmentVariables = document.querySelectorAll(`.${eventType}`);
+            assignmentVariables.forEach((item) => {
+                item.style.display = "block";
+            });
+        } else {
+            assignmentVariables = document.querySelectorAll(`.${eventType}`);
+            assignmentVariables.forEach((item) => {
+                item.style.display = "none";
+            });
+        }
+    };
+
     return (
         <div>
             <h1>React Webview for Debug Log Analyzing</h1>
@@ -209,19 +242,26 @@ const App = () => {
                             <fieldset className="data-filters">
                                 <legend>Elements to Display</legend>
                                 <div>
-                                    <input type="checkbox" id="show-assignment-variable" />
+                                    <input type="checkbox" id="show-assignment-variables" onChange={handleCheckboxChange} />
                                     <label for="scales">Assignment Variables</label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="show-flows" />
+                                    <input type="checkbox" id="show-flows" onChange={handleCheckboxChange} />
                                     <label for="scales">Flows</label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="show-code-unit-started" />
+                                    <input
+                                        type="checkbox"
+                                        id="show-method-entries"
+                                        onChange={(e) => {
+                                            handleCheckboxChange(e, "method-entry");
+                                        }}
+                                        defaultChecked
+                                    />
                                     <label for="scales">Method Entries</label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="show-assignment-variable" />
+                                    <input type="checkbox" id="show-validation-rules" onChange={handleCheckboxChange} />
                                     <label for="scales">Validation Rules</label>
                                 </div>
                             </fieldset>
@@ -231,7 +271,7 @@ const App = () => {
                         {flattenArray(data).map((item, index) => (
                             <div
                                 key={index}
-                                className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""}`}
+                                className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""}`}
                                 ref={(el) => (itemRefs.current[index] = el)}
                             >
                                 <span className="data-key">{item.key}: </span>
