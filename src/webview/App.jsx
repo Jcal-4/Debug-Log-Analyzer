@@ -83,7 +83,10 @@ const App = () => {
 
         while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
             let computedStyle = window.getComputedStyle(nextElement);
-            nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+            // nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+
+            // patch for top level button to show/hide nested values
+            nextElement.style.display = isShowMore ? "block" : "none";
 
             nextElement = nextElement.nextElementSibling;
         }

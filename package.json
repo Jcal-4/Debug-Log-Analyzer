@@ -4,7 +4,7 @@
     "description": "Goal of this extension is to be able to break down log files from Salesforce",
     "version": "0.0.9",
     "engines": {
-        "vscode": "^1.97.2"
+        "vscode": "^1.98.2"
     },
     "categories": [
         "Other"
