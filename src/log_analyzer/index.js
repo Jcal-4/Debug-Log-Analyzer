@@ -82,6 +82,19 @@ function retrieveComponents(fileContent) {
             if (!shouldIgnoreMethod) {
                 codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
+        } else if (line.includes("|METHOD_EXIT|")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                codeUnitArray.push(["METHOD_EXIT" + "(Line: " + currentLineNumber + ") ", methodName]);
+            }
         } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
@@ -263,7 +276,7 @@ function retrieveComponents(fileContent) {
                 variableName != "handler" &&
                 variableName != "field" &&
                 variableName != "tName" &&
-                !variableName.includes("this.") 
+                !variableName.includes("this.")
             ) {
                 codeUnitArray.push([
                     "VARIABLE_ASSIGNMENT" + "(Line: " + currentLineNumber + ") " + "- (" + variableName + ") ",
