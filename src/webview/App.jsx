@@ -283,15 +283,6 @@ const App = () => {
                             <fieldset className="data-filters">
                                 <legend>Elements to Display</legend>
                                 <div>
-                                    <input
-                                        type="checkbox"
-                                        id="variable-assignment"
-                                        onChange={handleCheckboxChange}
-                                        defaultChecked
-                                    />
-                                    <label>Variable Assignment</label>
-                                </div>
-                                <div>
                                     <input type="checkbox" id="flow" onChange={handleCheckboxChange} defaultChecked />
                                     <label>Flows</label>
                                 </div>
@@ -313,6 +304,15 @@ const App = () => {
                                     />
                                     <label>Validations</label>
                                 </div>
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        id="variable-assignment"
+                                        onChange={handleCheckboxChange}
+                                        defaultChecked
+                                    />
+                                    <label>Variable Assignment</label>
+                                </div>
                             </fieldset>
                         </div>
                     </div>
@@ -323,7 +323,7 @@ const App = () => {
                                 className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""}`}
                                 ref={(el) => (itemRefs.current[index] = el)}
                             >
-                                <span className="data-key">{item.key}: </span>
+                                {/* <span className="data-key">{item.key}: </span> */}
                                 <span className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}>
                                     {highlightSearchTerm(item.event, searchTerm)} :{" "}
                                 </span>
