@@ -1,15 +1,15 @@
 {
     "name": "log-analyzer",
     "displayName": "Salesforce - Debug Log Analyzer",
-    "description": "Goal of this extension is to be able to break down log files from Salesforce",
-    "version": "0.0.9",
+    "description": "Goal of this extension is to be able to break down log files from Salesforce (still in developmental mode)",
+    "version": "0.0.14",
     "engines": {
         "vscode": "^1.98.2"
     },
     "categories": [
         "Other"
     ],
-    "activationEvents": [],
+    "activationEvents": ["*"],
     "main": "./src/extension.js",
     "contributes": {
         "commands": [
@@ -49,6 +49,7 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
+        "@vscode/vsce": "^3.3.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
     }

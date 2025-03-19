@@ -10,6 +10,7 @@ function activate(context) {
     console.log('Congratulations, your extension "text-extension" is now active!');
 
     const logicFunction = vscode.commands.registerCommand("log-analyzer.analyzeDebugLog", () => {
+        console.log('analyzeDebugLog command is triggerd');
         analyzeDebugLog(context);
     });
 

@@ -23,6 +23,7 @@ function analyzeDebugLog(context) {
                 if (executedComponents.length === 0) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
+                    console.log("executedComponents: ", executedComponents);
                     sendMessageToWebview(context, executedComponents);
                     // webview(context, executedComponents);
                     // console.log(executedComponents);
@@ -375,30 +376,46 @@ function sendMessageToWebview(context, executedComponents) {
     htmlContent = htmlContent.replace(/src="\.\/index\.js"/g, `src="${webviewUri("index.js")}"`);
     panel.webview.html = htmlContent;
 
-    // Pass data to webview (this is similar to websocket)
-    panel.webview.postMessage({
-        command: "initialize",
-        data: {
-            executedComponents: executedComponents
-        }
-    });
-
     // Handle messages from React Webview
     panel.webview.onDidReceiveMessage(
         (message) => {
-            if (message.command === "error") {
+            if (message.command === "webviewLoaded") {
+                console.log("webview loaded");
                 panel.webview.postMessage({
-                    command: "update",
-                    data: { message: "Hello from VS Code Extension!", count: 5 }
+                    command: "initialize",
+                    data: {
+                        executedComponents: executedComponents
+                    }
                 });
-                // Add more cases here to handle other types of errors
-                // vscode.window.showErrorMessage(message.text);
-                // return;
+            } else if (message.command === "error") {
+                console.log("Error: ", "error Received");
             }
         },
         undefined,
         context.subscriptions
     );
+
+    // Retry Sending Messages if above method is not working
+    // function sendMessageWithRetry(panel, message, retries = 5, delay = 500) {
+    //     let attempt = 0;
+
+    //     const send = () => {
+    //         if (panel.webview) {
+    //             panel.webview.postMessage(message);
+    //         } else if (attempt < retries) {
+    //             attempt++;
+    //             setTimeout(send, delay);
+    //         }
+    //     };
+
+    //     send();
+    // }
+
+    // sendMessageWithRetry(panel, {
+    //     command: "initialize",
+    //     data: { executedComponents: executedComponents }
+    // });
+
 
     context.subscriptions.push(panel);
 }

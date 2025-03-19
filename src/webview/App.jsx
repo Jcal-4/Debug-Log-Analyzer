@@ -2,20 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import "./index.css"; // Import the CSS file
 
 const App = () => {
-    /*
-        How to use checkboxes to filter out values (div tags) based on the checkbox value
-        1. Create a state to store the checkbox values
-        2. Create a function to handle the checkbox change event
-        3. Filter the data based on the checkbox values
-        4. Update the state to re-render
-
-
-        1. create an Id for each div tag that represents the type of data
-        2. onChange for checkbox trigger a function that would filter the data based on the checkbox value
-        (eg. if checkbox is checked, then show the div tag with the id, else hide the div tag with the id)
-        3. A conditional in the function to check what checkbox what clicked therefore deciding what id to query for
-    */
-
     // terms needed to be defined to use in html components
     const [data, setData] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -26,22 +12,20 @@ const App = () => {
 
     useEffect(() => {
         // we can't import vscode api directly so we need to use acquireVsCodeApi
-        // eslint-disable-next-line no-undef
         const vscode = acquireVsCodeApi();
+
+        // Send back message to extension if needed
+        vscode.postMessage({ command: "webviewLoaded" });
 
         // Listen for messages from the extension
         window.addEventListener("message", (event) => {
             const message = event.data;
-            if (message.command === "update") {
-                setData(message.data);
-            } else if (message.command === "initialize") {
-                console.log("initialize", message.data.executedComponents);
+            if (message.command === "initialize") {
+                console.log("initialize (executedComponents Received)", message.data.executedComponents);
                 let newArray = message.data.executedComponents;
                 setData(newArray);
             }
         });
-        // Send back message to extension if needed
-        vscode.postMessage({ command: "requestData" });
 
         return () => {
             window.removeEventListener("message", () => {});
