@@ -69,6 +69,7 @@ const App = () => {
             const isValArray = Array.isArray(val[1]);
             const includesCodeUnitStarted = val[0].includes("CODE_UNIT_STARTED_");
             const includesMethodEntry = val[0].includes("METHOD_ENTRY");
+            const includesMethodExit = val[0].includes("METHOD_EXIT");
             const includesVariableAssignment = val[0].includes("VARIABLE_ASSIGNMENT");
             const includesUserDebug = val[0].includes("USER_DEBUG");
             const includesFlow = val[0].includes("FLOW_");
@@ -88,6 +89,7 @@ const App = () => {
                         codeUnitStarted: isCodeUnitStarted,
                         userDebug: includesUserDebug,
                         isMethodEntry: includesMethodEntry,
+                        isMethodExit: includesMethodExit,
                         isVariableAssignment: includesVariableAssignment,
                         isFlow: includesFlow,
                         isValidation: includesValidation
@@ -233,11 +235,24 @@ const App = () => {
             assignmentVariables.forEach((item) => {
                 item.style.display = "block";
             });
+            if (id == "method-entry") {
+                console.log("here1");
+                assignmentVariables = document.querySelectorAll(".method-exit");
+                assignmentVariables.forEach((item) => {
+                    item.style.display = "block";
+                });
+            }
         } else {
             assignmentVariables = document.querySelectorAll(`.${id}`);
             assignmentVariables.forEach((item) => {
                 item.style.display = "none";
             });
+            if (id == "method-entry") {
+                assignmentVariables = document.querySelectorAll(".method-exit");
+                assignmentVariables.forEach((item) => {
+                    item.style.display = "none";
+                });
+            }
         }
     };
 
@@ -287,7 +302,7 @@ const App = () => {
                                         onChange={handleCheckboxChange}
                                         defaultChecked
                                     />
-                                    <label>Method Entries</label>
+                                    <label>Method Entry/Exit</label>
                                 </div>
                                 <div>
                                     <input
@@ -305,7 +320,7 @@ const App = () => {
                         {flattenArray(data).map((item, index) => (
                             <div
                                 key={index}
-                                className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}`}
+                                className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""}`}
                                 ref={(el) => (itemRefs.current[index] = el)}
                             >
                                 <span className="data-key">{item.key}: </span>
