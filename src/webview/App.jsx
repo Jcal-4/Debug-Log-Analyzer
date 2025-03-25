@@ -242,7 +242,6 @@ const App = () => {
 
     return (
         <div>
-            <h1>React Webview for Debug Log Analyzing</h1>
             {data ? (
                 <div className="container">
                     <div className="search-container">
@@ -259,9 +258,11 @@ const App = () => {
                             />
                             {searchTerm && (
                                 <div className="search-popup">
-                                    {matchingCount} result{matchingCount !== 1 ? "s" : ""} found
-                                    <button onClick={handlePrevious}>⬆️</button>
-                                    <button onClick={handleNext}>⬇️</button>
+                                    {currentIndex + 1} of {matchingCount}
+                                    <div>
+                                        <button onClick={handlePrevious}>⬆️</button>
+                                        <button onClick={handleNext}>⬇️</button>
+                                    </div>
                                 </div>
                             )}
                             <fieldset className="data-filters">
@@ -301,6 +302,7 @@ const App = () => {
                         </div>
                     </div>
                     <div className="data-container">
+                        <h1>React Webview for Debug Log Analyzing</h1>
                         {flattenArray(data).map((item, index) => (
                             <div
                                 key={index}
