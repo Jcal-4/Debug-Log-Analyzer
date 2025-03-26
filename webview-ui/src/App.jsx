@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./index.css"; // Import the CSS file
-import { Input } from "@heroui/react";
+import { Input, CheckboxGroup, Checkbox, Card, CardBody } from "@heroui/react";
 
 const App = () => {
     // terms needed to be defined to use in html components
@@ -211,16 +211,17 @@ const App = () => {
     };
 
     const handleCheckboxChange = (e) => {
-        const { id, checked } = e.target;
-        console.log("id-->", id, "checked-->", checked);
+        const { checked, value } = e.target;
+        console.log(e.target);
+        console.log("value -->", value, "checked-->", checked);
         let assignmentVariables = [];
 
         if (checked) {
-            assignmentVariables = document.querySelectorAll(`.${id}`);
+            assignmentVariables = document.querySelectorAll(`.${value}`);
             assignmentVariables.forEach((item) => {
                 item.style.display = "block";
             });
-            if (id == "method-entry") {
+            if (value == "method-entry") {
                 console.log("here1");
                 assignmentVariables = document.querySelectorAll(".method-exit");
                 assignmentVariables.forEach((item) => {
@@ -228,11 +229,11 @@ const App = () => {
                 });
             }
         } else {
-            assignmentVariables = document.querySelectorAll(`.${id}`);
+            assignmentVariables = document.querySelectorAll(`.${value}`);
             assignmentVariables.forEach((item) => {
                 item.style.display = "none";
             });
-            if (id == "method-entry") {
+            if (value == "method-entry") {
                 assignmentVariables = document.querySelectorAll(".method-exit");
                 assignmentVariables.forEach((item) => {
                     item.style.display = "none";
@@ -247,16 +248,6 @@ const App = () => {
                 <div className="container">
                     <div className="search-container">
                         <div className="search-inner-container">
-                            {/* <input
-                                type="text"
-                                placeholder="Search..."
-                                value={searchTerm}
-                                onChange={(e) => {
-                                    setSearchTerm(e.target.value);
-                                    setCurrentIndex(0); // Reset index when search term changes
-                                }}
-                                onKeyDown={handleKeyDown}
-                            /> */}
                             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
                                 <Input
                                     size={"sm"}
@@ -279,40 +270,34 @@ const App = () => {
                                     </div>
                                 </div>
                             )}
-                            <fieldset className="data-filters">
-                                <legend>Elements to Display</legend>
-                                <div>
-                                    <input type="checkbox" id="flow" onChange={handleCheckboxChange} defaultChecked />
-                                    <label>Flows</label>
-                                </div>
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        id="method-entry"
-                                        onChange={handleCheckboxChange}
-                                        defaultChecked
-                                    />
-                                    <label>Method Entry/Exit</label>
-                                </div>
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        id="validation-rule"
-                                        onChange={handleCheckboxChange}
-                                        defaultChecked
-                                    />
-                                    <label>Validations</label>
-                                </div>
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        id="variable-assignment"
-                                        onChange={handleCheckboxChange}
-                                        defaultChecked
-                                    />
-                                    <label>Variable Assignment</label>
-                                </div>
-                            </fieldset>
+                            <div className="data-filters">
+                                <Card>
+                                    <CardBody>
+                                        <CheckboxGroup
+                                            defaultValue={[
+                                                "flow",
+                                                "method-entry",
+                                                "validation-rule",
+                                                "variable-assignment"
+                                            ]}
+                                            label="Select Elements"
+                                        >
+                                            <Checkbox value="flow" onChange={handleCheckboxChange}>
+                                                Flows
+                                            </Checkbox>
+                                            <Checkbox value="method-entry" onChange={handleCheckboxChange}>
+                                                Method Entry/Exit
+                                            </Checkbox>
+                                            <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
+                                                Validations
+                                            </Checkbox>
+                                            <Checkbox value="variable-assignment" onChange={handleCheckboxChange}>
+                                                Variable Assignment
+                                            </Checkbox>
+                                        </CheckboxGroup>
+                                    </CardBody>
+                                </Card>
+                            </div>
                         </div>
                     </div>
                     <div className="data-container">

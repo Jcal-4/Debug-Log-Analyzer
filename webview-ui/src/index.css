@@ -26,9 +26,9 @@ h1 {
     border: 2.5px solid #1f2833;
     border-radius: 5px;
     padding: 10px;
-    flex-basis: 15%;
+    flex-basis: 20%;
     flex-shrink: 0;
-    min-width: 175px;
+    min-width: 200px;
 }
 
 .search-inner-container {
@@ -38,8 +38,6 @@ h1 {
 
 .data-filters {
     margin-top: 5px;
-    color: #66fcf1;
-    border-color: #66fcf1;
 }
 
 .data-container {
