@@ -1,3 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dark {
+    /* apply color here if need to change */
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 20px;

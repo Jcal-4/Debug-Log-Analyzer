@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./index.css"; // Import the CSS file
+import { Input } from "@heroui/react";
 
 const App = () => {
     // terms needed to be defined to use in html components
@@ -246,7 +247,7 @@ const App = () => {
                 <div className="container">
                     <div className="search-container">
                         <div className="search-inner-container">
-                            <input
+                            {/* <input
                                 type="text"
                                 placeholder="Search..."
                                 value={searchTerm}
@@ -255,7 +256,20 @@ const App = () => {
                                     setCurrentIndex(0); // Reset index when search term changes
                                 }}
                                 onKeyDown={handleKeyDown}
-                            />
+                            /> */}
+                            <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+                                <Input
+                                    size={"sm"}
+                                    label="Search..."
+                                    type="search"
+                                    value={searchTerm}
+                                    onChange={(e) => {
+                                        setSearchTerm(e.target.value);
+                                        setCurrentIndex(0); // Reset index when search term changes
+                                    }}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
                             {searchTerm && (
                                 <div className="search-popup">
                                     {currentIndex + 1} of {matchingCount}
