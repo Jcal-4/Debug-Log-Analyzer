@@ -25,9 +25,7 @@
         "build:webview": "cd webview-ui && npm run build",
         "lint": "eslint .",
         "pretest": "npm run lint",
-        "test": "vscode-test",
-        "build": "webpack --mode production",
-        "watch": "webpack --watch"
+        "test": "vscode-test"
     },
     "devDependencies": {
         "@babel/core": "^7.26.9",
@@ -46,9 +44,7 @@
         "globals": "^16.0.0",
         "prettier": "^3.5.2",
         "prettier-plugin-apex": "^2.2.4",
-        "style-loader": "^3.3.1",
-        "webpack": "^5.98.0",
-        "webpack-cli": "^6.0.1"
+        "style-loader": "^3.3.1"
     },
     "dependencies": {
         "@vscode/vsce": "^3.3.0",

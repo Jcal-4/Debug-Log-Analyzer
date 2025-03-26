@@ -6,7 +6,7 @@
     "private": true,
     "scripts": {
         "start": "vite",
-        "build": "vite build",
+        "build": "vite build --watch",
         "preview": "vite preview"
     },
     "dependencies": {

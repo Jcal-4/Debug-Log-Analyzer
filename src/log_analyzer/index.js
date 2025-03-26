@@ -370,7 +370,9 @@ function sendMessageToWebview(context, executedComponents) {
 
     // Convert the local file path to a webview URI
     const webviewUri = (file) =>
-        panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "webview-ui", "build", "assets", file)));
+        panel.webview.asWebviewUri(
+            vscode.Uri.file(path.join(context.extensionPath, "webview-ui", "build", "assets", file))
+        );
     // Replace the placeholder in the HTML with the webview URI
     htmlContent = htmlContent
         .replace(/src="\/assets\/index\.js"/g, `src="${webviewUri("index.js")}"`)
