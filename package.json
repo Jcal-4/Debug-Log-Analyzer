@@ -21,6 +21,8 @@
     },
     "publisher": "jairocal",
     "scripts": {
+        "install:all": "npm install && cd webview-ui && npm install",
+        "build:webview": "cd webview-ui && npm run build",
         "lint": "eslint .",
         "pretest": "npm run lint",
         "test": "vscode-test",
