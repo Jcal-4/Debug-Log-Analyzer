@@ -22,10 +22,6 @@ h1 {
 }
 
 .search-container {
-    background-color: #0b0c10;
-    border: 2.5px solid #1f2833;
-    border-radius: 5px;
-    padding: 10px;
     flex-basis: 20%;
     flex-shrink: 0;
     min-width: 200px;
@@ -41,10 +37,6 @@ h1 {
 }
 
 .data-container {
-    padding: 10px;
-    border: 2.5px solid #1f2833;
-    border-radius: 5px;
-    background-color: #0b0c10;
     max-width: 80%;
     flex-basis: 80%;
 }

@@ -247,84 +247,99 @@ const App = () => {
             {data ? (
                 <div className="container">
                     <div className="search-container">
-                        <div className="search-inner-container">
-                            <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-                                <Input
-                                    size={"sm"}
-                                    label="Search..."
-                                    type="search"
-                                    value={searchTerm}
-                                    onChange={(e) => {
-                                        setSearchTerm(e.target.value);
-                                        setCurrentIndex(0); // Reset index when search term changes
-                                    }}
-                                    onKeyDown={handleKeyDown}
-                                />
-                            </div>
-                            {searchTerm && (
-                                <div className="search-popup">
-                                    {currentIndex + 1} of {matchingCount}
-                                    <div>
-                                        <button onClick={handlePrevious}>⬆️</button>
-                                        <button onClick={handleNext}>⬇️</button>
+                        <Card className="h-full">
+                            <CardBody>
+                                <div className="search-inner-container">
+                                    <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+                                        <Input
+                                            size={"sm"}
+                                            label="Search..."
+                                            type="search"
+                                            value={searchTerm}
+                                            onChange={(e) => {
+                                                setSearchTerm(e.target.value);
+                                                setCurrentIndex(0); // Reset index when search term changes
+                                            }}
+                                            onKeyDown={handleKeyDown}
+                                        />
+                                    </div>
+                                    {searchTerm && (
+                                        <div className="search-popup">
+                                            {currentIndex + 1} of {matchingCount}
+                                            <div>
+                                                <button onClick={handlePrevious}>⬆️</button>
+                                                <button onClick={handleNext}>⬇️</button>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="data-filters">
+                                        <Card>
+                                            <CardBody className="sticky top-0">
+                                                <CheckboxGroup
+                                                    defaultValue={[
+                                                        "flow",
+                                                        "method-entry",
+                                                        "validation-rule",
+                                                        "variable-assignment"
+                                                    ]}
+                                                    label="Select Elements"
+                                                >
+                                                    <Checkbox value="flow" onChange={handleCheckboxChange}>
+                                                        Flows
+                                                    </Checkbox>
+                                                    <Checkbox value="method-entry" onChange={handleCheckboxChange}>
+                                                        Method Entry/Exit
+                                                    </Checkbox>
+                                                    <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
+                                                        Validations
+                                                    </Checkbox>
+                                                    <Checkbox
+                                                        value="variable-assignment"
+                                                        onChange={handleCheckboxChange}
+                                                    >
+                                                        Variable Assignment
+                                                    </Checkbox>
+                                                </CheckboxGroup>
+                                            </CardBody>
+                                        </Card>
                                     </div>
                                 </div>
-                            )}
-                            <div className="data-filters">
-                                <Card>
-                                    <CardBody>
-                                        <CheckboxGroup
-                                            defaultValue={[
-                                                "flow",
-                                                "method-entry",
-                                                "validation-rule",
-                                                "variable-assignment"
-                                            ]}
-                                            label="Select Elements"
-                                        >
-                                            <Checkbox value="flow" onChange={handleCheckboxChange}>
-                                                Flows
-                                            </Checkbox>
-                                            <Checkbox value="method-entry" onChange={handleCheckboxChange}>
-                                                Method Entry/Exit
-                                            </Checkbox>
-                                            <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
-                                                Validations
-                                            </Checkbox>
-                                            <Checkbox value="variable-assignment" onChange={handleCheckboxChange}>
-                                                Variable Assignment
-                                            </Checkbox>
-                                        </CheckboxGroup>
-                                    </CardBody>
-                                </Card>
-                            </div>
-                        </div>
+                            </CardBody>
+                        </Card>
                     </div>
                     <div className="data-container">
-                        <h1>React Webview for Debug Log Analyzing</h1>
-                        {flattenArray(data).map((item, index) => (
-                            <div
-                                key={index}
-                                className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""}`}
-                                ref={(el) => (itemRefs.current[index] = el)}
-                            >
-                                {/* <span className="data-key">{item.key}: </span> */}
-                                <span className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}>
-                                    {highlightSearchTerm(item.event, searchTerm)} :{" "}
-                                </span>
-                                <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
-                                {!item.nested && (
-                                    <button className="top-level-button" onClick={handleButtonClick}>
-                                        Show More
-                                    </button>
-                                )}
-                                {item.codeUnitStarted && item.nested && (
-                                    <button className="inner-level-button" onClick={handleInnerButtonClick}>
-                                        Show Less
-                                    </button>
-                                )}
-                            </div>
-                        ))}
+                        <Card className="h-full">
+                            <CardBody>
+                                <h1>React Webview for Debug Log Analyzing</h1>
+                                {flattenArray(data).map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""}`}
+                                        ref={(el) => (itemRefs.current[index] = el)}
+                                    >
+                                        {/* <span className="data-key">{item.key}: </span> */}
+                                        <span
+                                            className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}
+                                        >
+                                            {highlightSearchTerm(item.event, searchTerm)} :{" "}
+                                        </span>
+                                        <span className="data-value">
+                                            {highlightSearchTerm(item.value, searchTerm)}
+                                        </span>
+                                        {!item.nested && (
+                                            <button className="top-level-button" onClick={handleButtonClick}>
+                                                Show More
+                                            </button>
+                                        )}
+                                        {item.codeUnitStarted && item.nested && (
+                                            <button className="inner-level-button" onClick={handleInnerButtonClick}>
+                                                Show Less
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                            </CardBody>
+                        </Card>
                     </div>
                 </div>
             ) : (
