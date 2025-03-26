@@ -8,7 +8,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    padding: 0;
 }
 
 h1 {
@@ -25,11 +25,6 @@ h1 {
     flex-basis: 20%;
     flex-shrink: 0;
     min-width: 200px;
-}
-
-.search-inner-container {
-    position: sticky;
-    top: 10px;
 }
 
 .data-filters {

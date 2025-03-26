@@ -245,70 +245,63 @@ const App = () => {
     return (
         <div>
             {data ? (
-                <div className="container">
-                    <div className="search-container">
-                        <Card className="h-full">
-                            <CardBody>
-                                <div className="search-inner-container">
-                                    <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-                                        <Input
-                                            size={"sm"}
-                                            label="Search..."
-                                            type="search"
-                                            value={searchTerm}
-                                            onChange={(e) => {
-                                                setSearchTerm(e.target.value);
-                                                setCurrentIndex(0); // Reset index when search term changes
-                                            }}
-                                            onKeyDown={handleKeyDown}
-                                        />
-                                    </div>
-                                    {searchTerm && (
-                                        <div className="search-popup">
-                                            {currentIndex + 1} of {matchingCount}
-                                            <div>
-                                                <button onClick={handlePrevious}>⬆️</button>
-                                                <button onClick={handleNext}>⬇️</button>
-                                            </div>
-                                        </div>
-                                    )}
-                                    <div className="data-filters">
-                                        <Card>
-                                            <CardBody className="sticky top-0">
-                                                <CheckboxGroup
-                                                    defaultValue={[
-                                                        "flow",
-                                                        "method-entry",
-                                                        "validation-rule",
-                                                        "variable-assignment"
-                                                    ]}
-                                                    label="Select Elements"
-                                                >
-                                                    <Checkbox value="flow" onChange={handleCheckboxChange}>
-                                                        Flows
-                                                    </Checkbox>
-                                                    <Checkbox value="method-entry" onChange={handleCheckboxChange}>
-                                                        Method Entry/Exit
-                                                    </Checkbox>
-                                                    <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
-                                                        Validations
-                                                    </Checkbox>
-                                                    <Checkbox
-                                                        value="variable-assignment"
-                                                        onChange={handleCheckboxChange}
-                                                    >
-                                                        Variable Assignment
-                                                    </Checkbox>
-                                                </CheckboxGroup>
-                                            </CardBody>
-                                        </Card>
+                <Card className="h-screen flex flex-row">
+                    <CardBody className="h-screen overflow-y-auto relative max-w-xs">
+                        <div className="sticky top-0">
+                            <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+                                <Input
+                                    size={"sm"}
+                                    label="Search..."
+                                    type="search"
+                                    value={searchTerm}
+                                    onChange={(e) => {
+                                        setSearchTerm(e.target.value);
+                                        setCurrentIndex(0); // Reset index when search term changes
+                                    }}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
+                            {searchTerm && (
+                                <div className="search-popup">
+                                    {currentIndex + 1} of {matchingCount}
+                                    <div>
+                                        <button onClick={handlePrevious}>⬆️</button>
+                                        <button onClick={handleNext}>⬇️</button>
                                     </div>
                                 </div>
-                            </CardBody>
-                        </Card>
-                    </div>
+                            )}
+                            <div className="data-filters">
+                                <Card>
+                                    <CardBody className="sticky top-0">
+                                        <CheckboxGroup
+                                            defaultValue={[
+                                                "flow",
+                                                "method-entry",
+                                                "validation-rule",
+                                                "variable-assignment"
+                                            ]}
+                                            label="Select Elements"
+                                        >
+                                            <Checkbox value="flow" onChange={handleCheckboxChange}>
+                                                Flows
+                                            </Checkbox>
+                                            <Checkbox value="method-entry" onChange={handleCheckboxChange}>
+                                                Method Entry/Exit
+                                            </Checkbox>
+                                            <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
+                                                Validations
+                                            </Checkbox>
+                                            <Checkbox value="variable-assignment" onChange={handleCheckboxChange}>
+                                                Variable Assignment
+                                            </Checkbox>
+                                        </CheckboxGroup>
+                                    </CardBody>
+                                </Card>
+                            </div>
+                        </div>
+                    </CardBody>
                     <div className="data-container">
-                        <Card className="h-full">
+                        <Card className="h-screen">
                             <CardBody>
                                 <h1>React Webview for Debug Log Analyzing</h1>
                                 {flattenArray(data).map((item, index) => (
@@ -341,7 +334,7 @@ const App = () => {
                             </CardBody>
                         </Card>
                     </div>
-                </div>
+                </Card>
             ) : (
                 <p>Processing Data...</p>
             )}
