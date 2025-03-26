@@ -2,10 +2,6 @@ const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
 const ignoreList = require("./ignoreList");
-// import { WebviewPanel } from "vscode";
-const { WebviewPanel } = require("vscode");
-const { Uri } = require("vscode");
-
 
 /**
  * Analyzes the debug log by reading the active text editor's content
@@ -367,8 +363,6 @@ function sendMessageToWebview(context, executedComponents) {
         retainContextWhenHidden: true,
         enableScripts: true
     });
-    console.log("webview panel: ", WebviewPanel);
-    console.log("Uri: ", vscode.Uri);
 
     // Resolve the path to `index.html`
     const htmlFilePath = path.join(context.extensionPath, "webview-ui", "build", "index.html");
@@ -376,20 +370,12 @@ function sendMessageToWebview(context, executedComponents) {
 
     // Convert the local file path to a webview URI
     const webviewUri = (file) =>
-        panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", file)));
-    console.log("webviewUri: ", webviewUri);
+        panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "webview-ui", "build", "assets", file)));
     // Replace the placeholder in the HTML with the webview URI
+    htmlContent = htmlContent
+        .replace(/src="\/assets\/index\.js"/g, `src="${webviewUri("index.js")}"`)
+        .replace(/href="\/assets\/index\.css"/g, `href="${webviewUri("index.css")}"`);
 
-    // htmlContent = htmlContent
-    //     .replace(/src="\.\/assets\/index\.js"/g, `src="${webviewUri("/index.jsx")}"`)
-    //     .replace(/href="\.\/assets\/index\.css"/g, `href="${webviewUri("/index.css")}"`);
-    // htmlContent = htmlContent.replace(/src="\.\/index\.js"/g, `src="${webviewUri("index.js")}"`);
-
-    // webview.asWebviewUri(Uri.joinPath(extensionUri, ...pathList));
-
-    // export function getUri(webview: Webview, extensionUri: Uri, pathList: string[]) {
-    //   return webview.asWebviewUri(Uri.joinPath(extensionUri, ...pathList));
-    // }
     panel.webview.html = htmlContent;
 
     // Handle messages from React Webview
