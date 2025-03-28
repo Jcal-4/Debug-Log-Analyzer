@@ -254,7 +254,12 @@ const App = () => {
                                     value={searchTerm}
                                     onChange={(e) => {
                                         setSearchTerm(e.target.value);
-                                        setCurrentIndex(0); // Reset index when search term changes
+                                        if (e.target.value === "") {
+                                            setMatchingCount(0); // Reset matching count if search term is empty
+                                            setMatchingItems([]); // Clear matching items
+                                        } else {
+                                            setCurrentIndex(0); // Reset index when search term changes
+                                        }
                                     }}
                                     onKeyDown={handleKeyDown}
                                 />
