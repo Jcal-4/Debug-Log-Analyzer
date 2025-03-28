@@ -56,7 +56,6 @@ span.data-event.code-unit-started {
     margin-left: 20px;
     padding-left: 10px;
     border-left: 2px solid #1f2833;
-    display: none; /* Initially hidden */
 }
 
 .nested-array .data-item {
@@ -83,12 +82,18 @@ span.data-event.code-unit-started {
 
 .search-popup {
     background-color: #007acc;
-    padding: 5px 10px;
+    padding: 2px;
     border-radius: 10px;
     margin-top: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.directional-arrow:hover {
+    cursor: pointer;
+    background-color: #005997;
+    border-radius: 5px;
 }
 
 .search-popup button {
@@ -115,7 +120,7 @@ span.highlight {
     padding: 2px 5px;
     font-size: 12px;
     cursor: pointer;
-    background-color: #007acc;
+    background-color: #1f2833;
     color: white;
     border: none;
     border-radius: 3px;

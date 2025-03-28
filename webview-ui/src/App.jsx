@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./index.css"; // Import the CSS file
 import { Input, CheckboxGroup, Checkbox, Card, CardBody } from "@heroui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
     // terms needed to be defined to use in html components
@@ -11,14 +13,14 @@ const App = () => {
     const [matchingItems, setMatchingItems] = useState([]); // State to store matching items with original indices
     const itemRefs = useRef([]);
 
+    // on initial load, we need to get the executed components from the extension
     useEffect(() => {
         // we can't import vscode api directly so we need to use acquireVsCodeApi
         const vscode = acquireVsCodeApi();
 
-        // Send back message to extension if needed
         vscode.postMessage({ command: "webviewLoaded" });
 
-        // Listen for messages from the extension
+        // Listen for response from the extension
         window.addEventListener("message", (event) => {
             const message = event.data;
             if (message.command === "initialize") {
@@ -82,7 +84,6 @@ const App = () => {
                 ];
             }
         }
-        // Case: array
         return flattenArray(val, key);
     };
 
@@ -104,9 +105,6 @@ const App = () => {
             nextElement.classList.contains("data-item") &&
             nextElement.classList.contains("nested-array")
         ) {
-            // let computedStyle = window.getComputedStyle(nextElement);
-            // nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
-
             // patch for top level button to show/hide nested values
             nextElement.style.display = isShowMore ? "block" : "none";
 
@@ -245,7 +243,7 @@ const App = () => {
     return (
         <div>
             {data ? (
-                <Card className="h-screen flex flex-row">
+                <Card className="h-screen flex flex-row rounded-none">
                     <CardBody className="h-screen overflow-y-auto relative max-w-xs">
                         <div className="sticky top-0">
                             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
@@ -264,9 +262,17 @@ const App = () => {
                             {searchTerm && (
                                 <div className="search-popup">
                                     {currentIndex + 1} of {matchingCount}
-                                    <div>
-                                        <button onClick={handlePrevious}>⬆️</button>
-                                        <button onClick={handleNext}>⬇️</button>
+                                    <div className="flex items-center">
+                                        <FontAwesomeIcon
+                                            className="directional-arrow p-1"
+                                            icon={faArrowUp}
+                                            onClick={handlePrevious}
+                                        />
+                                        <FontAwesomeIcon
+                                            className="directional-arrow p-1"
+                                            icon={faArrowDown}
+                                            onClick={handleNext}
+                                        />
                                     </div>
                                 </div>
                             )}
@@ -310,7 +316,6 @@ const App = () => {
                                         className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""}`}
                                         ref={(el) => (itemRefs.current[index] = el)}
                                     >
-                                        {/* <span className="data-key">{item.key}: </span> */}
                                         <span
                                             className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}
                                         >
@@ -321,7 +326,7 @@ const App = () => {
                                         </span>
                                         {!item.nested && (
                                             <button className="top-level-button" onClick={handleButtonClick}>
-                                                Show More
+                                                Show Less
                                             </button>
                                         )}
                                         {item.codeUnitStarted && item.nested && (
