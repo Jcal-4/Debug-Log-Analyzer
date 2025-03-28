@@ -309,11 +309,11 @@ const App = () => {
                     <div className="data-container">
                         <Card className="h-screen">
                             <CardBody>
-                                <h1>React Webview for Debug Log Analyzing</h1>
+                                <h1>Data Logged</h1>
                                 {flattenArray(data).map((item, index) => (
                                     <div
                                         key={index}
-                                        className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""}`}
+                                        className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
                                         ref={(el) => (itemRefs.current[index] = el)}
                                     >
                                         <span

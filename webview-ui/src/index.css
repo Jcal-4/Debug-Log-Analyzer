@@ -108,10 +108,17 @@ span.data-event.code-unit-started {
 /* Styles for Highlight */
 span.highlight {
     background-color: #ffeb3b;
-    padding: 2px 4px;
+    padding: 2px 2px;
     border-radius: 3px;
     color: #000000;
     font-weight: bold;
+}
+
+/* Highlighted result */
+.data-item.current-index {
+    border-radius: 10px;
+    background-color: #3f3f42;
+    transition: background-color 0.3s ease; /* Smooth transition */
 }
 
 /* Styles for button */
