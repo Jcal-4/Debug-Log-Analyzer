@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { debounce } from "lodash";
 import "./index.css"; // Import the CSS file
 import { Input, CheckboxGroup, Checkbox, Card, CardBody } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,9 +12,13 @@ const App = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [matchingCount, setMatchingCount] = useState(0); // State to keep track of matching items count
     const [matchingItems, setMatchingItems] = useState([]); // State to store matching items with original indices
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const itemRefs = useRef([]);
 
-    // on initial load, we need to get the executed components from the extension
+    /**
+     * On initial load, send a message to the extension to let it know the webview has loaded.
+     * This will allow the extension to send back the executed components data.
+     */
     useEffect(() => {
         // we can't import vscode api directly so we need to use acquireVsCodeApi
         const vscode = acquireVsCodeApi();
@@ -148,10 +153,14 @@ const App = () => {
         }
     };
 
-    // Function to highlight search term in the value
+    /**
+     * Highlights text depending on if searchTerm matches part of the string.
+     * @param {value} - either the event or value of the data item
+     * @param {searchTerm} - The term to search for in the value.
+     */
     const highlightSearchTerm = (value, searchTerm) => {
         if (!value) return value; // Ensure value is defined
-        if (!searchTerm) return value;
+        if (!searchTerm || searchTerm.length < 3) return value;
         // Escape special characters in the search term
         const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -167,31 +176,50 @@ const App = () => {
         );
     };
 
-    // React Hook used to perform side effects in function components
+    // Effect used to handle search bar input and debounce the search term.
     useEffect(() => {
-        if (searchTerm) {
-            const flattenedData = flattenArray(data);
-            const matchingItems = flattenedData
-                .map((item, index) => ({ item, index })) // Store the original index
-                .filter(
-                    ({ item }) =>
-                        (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                        (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
-                );
+        if (searchTerm && searchTerm.length > 2) {
+            const handler = debounce(() => {
+                setDebouncedSearchTerm(searchTerm);
+            }, 300); // Debounce the search term for 300ms
 
-            setMatchingItems(matchingItems); // Update the matching items
-            setMatchingCount(matchingItems.length); // Update the matching count
-            console.log("matchingItems", matchingItems);
-            if (matchingItems.length > 0) {
-                const nearestIndex = matchingItems[currentIndex % matchingItems.length].index;
-                if (itemRefs.current[nearestIndex]) {
-                    itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "center" });
-                }
-            } else {
-                setMatchingCount(0); // Reset the matching count if search term is empty
-            }
+            handler();
+
+            return () => {
+                // Cleanup the debounce handler if searchTerm changes before the timeout
+                handler.cancel();
+            };
         }
-    }, [searchTerm, data, currentIndex]);
+    }, [searchTerm]);
+
+    // Effect to handle the debounced search term
+    useEffect(() => {
+        if (!data) return;
+
+        const flattenedData = flattenArray(data);
+        const matchingItems = flattenedData
+            .map((item, index) => ({ item, index })) // Store the original index
+            .filter(
+                ({ item }) =>
+                    (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
+
+        setMatchingItems(matchingItems); // Update the matching items
+        setMatchingCount(matchingItems.length); // Update the matching count
+    }, [debouncedSearchTerm]);
+
+    // Effect to handle scrolling to the current index of the matching items
+    useEffect(() => {
+        if (matchingItems.length > 0) {
+            const nearestIndex = matchingItems[currentIndex % matchingItems.length].index;
+            if (itemRefs.current[nearestIndex]) {
+                itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        } else {
+            setMatchingCount(0); // Reset the matching count if search term is empty
+        }
+    }, [currentIndex, matchingItems]);
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
@@ -254,7 +282,8 @@ const App = () => {
                                     value={searchTerm}
                                     onChange={(e) => {
                                         setSearchTerm(e.target.value);
-                                        if (e.target.value === "") {
+                                        if (e.target.value === "" || e.target.value.length < 3) {
+                                            // If search term is empty or less than 3 characters
                                             setMatchingCount(0); // Reset matching count if search term is empty
                                             setMatchingItems([]); // Clear matching items
                                         } else {
@@ -264,9 +293,9 @@ const App = () => {
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
-                            {searchTerm && (
+                            {searchTerm.length > 2 && (
                                 <div className="search-popup">
-                                    {currentIndex + 1} of {matchingCount}
+                                    {matchingCount > 0 ? currentIndex + 1 : 0} of {matchingCount}
                                     <div className="flex items-center">
                                         <FontAwesomeIcon
                                             className="directional-arrow p-1"
