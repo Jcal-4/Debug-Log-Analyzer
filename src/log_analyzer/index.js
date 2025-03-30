@@ -357,11 +357,16 @@ function restructureArray(inputArray) {
     return result;
 }
 
+/**
+ * Creates a webview panel to display the log analysis results.
+ * @param {Array} executedComponents - The input array to restructure.
+ */
 function sendMessageToWebview(context, executedComponents) {
     console.log("executedComponents: ", executedComponents);
     const panel = vscode.window.createWebviewPanel("logAnalyzer", "React Log Analyzer", vscode.ViewColumn.One, {
         retainContextWhenHidden: true,
-        enableScripts: true
+        enableScripts: true,
+        enableFindWidget: true
     });
 
     // Resolve the path to `index.html`
