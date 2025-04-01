@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
+    console.log("App component re-rendered");
     // terms needed to be defined to use in html components
     const [data, setData] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -41,60 +42,69 @@ const App = () => {
         };
     }, []);
 
-    const flattenArray = (arr, parentKey = "", level = 0) => {
-        // console.log("array level -->", level);
-
-        return arr.reduce((acc, val, index) => {
-            const key = parentKey ? `${parentKey}.${index}` : `${index}`;
-
-            if (Array.isArray(val)) {
-                // console.log("Val:", val);
-                // console.log("level:", level);
-                return acc.concat(flattenArrayFromArray(val, key, level));
+    /**
+     * Recursively flattens a nested array or object structure into a flat array of key-value pairs.
+     *
+     * @param {Array} arr - The input array to be flattened. Can contain nested arrays, objects, or primitive values.
+     * @param {number} [currentLevel=0] - The current depth level of recursion, used to track the nesting level.
+     * @returns {Array<{ value: any, level: number }>} - A flattened array of objects, where each object contains:
+     *   - `value`: The corresponding value from the original structure.
+     *   - `level`: The depth level of the value in the original structure.
+     */
+    const flattenArray = (nestedData, currentLevel = 0) => {
+        let result = nestedData.reduce((flattenedArray, currentItem) => {
+            if (Array.isArray(currentItem)) {
+                return flattenedArray.concat(processAndFlattenArray(currentItem, currentLevel));
+            } else if (typeof currentItem === "object" && currentItem !== null) {
+                // Handle objects by converting them to entries and flattening
+                return flattenedArray.concat(flattenArray(Object.entries(currentItem), currentLevel));
+            } else {
+                // Handle primitive values
+                return flattenedArray.concat({ value: currentItem, level: currentLevel });
             }
-            // else if (typeof val === "object" && val !== null) {
-            //     console.log("els if level:", level);
-            //     return acc.concat(flattenArray(Object.entries(val), key, level));
-            // } else {
-            //     console.log("else level:", level);
-            //     return acc.concat({ key, value: val, level });
-            // }
         }, []);
+        console.log("flattenArray Result: ", result);
+        return result;
     };
 
-    // Val: ['CODE_UNIT_STARTED_1', Array[]]
-    // Val: ['METHOD_ENTRY_1', 'makeData()']
-    const flattenArrayFromArray = (val, key, level = 0) => {
-        if (val.length === 2 && typeof val[0] === "string") {
-            const isValArray = Array.isArray(val[1]);
-            const includesCodeUnitStarted = val[0].includes("CODE_UNIT_STARTED_");
-            const includesMethodEntry = val[0].includes("METHOD_ENTRY");
-            const includesMethodExit = val[0].includes("METHOD_EXIT");
-            const includesVariableAssignment = val[0].includes("VARIABLE_ASSIGNMENT");
-            const includesUserDebug = val[0].includes("USER_DEBUG");
-            const includesFlow = val[0].includes("FLOW_");
-            const includesValidation = val[0].includes("VALIDATION");
-            const isCodeUnitStarted = isValArray && includesCodeUnitStarted;
-            if (Array.isArray(val[1])) {
+    /**
+     * Processes an array of key-value pairs or nested arrays and flattens it into a structured format.
+     * This method is specifically designed to handle Salesforce log data and classify events like
+     * CODE_UNIT_STARTED, METHOD_ENTRY, METHOD_EXIT, etc.
+     *
+     * @param {Array} dataItem ['CODE_UNIT_STARTED_1', Array[]] - The input array to be processed.
+     * @param {number} [currentLevel=0] - The current depth level of recursion, used to track the nesting level.
+     * @returns {Array} - A flattened array of objects with structured event data.
+     */
+    const processAndFlattenArray = (dataItem, currentLevel = 0) => {
+        if (dataItem.length === 2 && typeof dataItem[0] === "string") {
+            const isValueArray = Array.isArray(dataItem[1]);
+            const includesCodeUnitStarted = dataItem[0].includes("CODE_UNIT_STARTED_");
+            const includesMethodEntry = dataItem[0].includes("METHOD_ENTRY");
+            const includesMethodExit = dataItem[0].includes("METHOD_EXIT");
+            const includesVariableAssignment = dataItem[0].includes("VARIABLE_ASSIGNMENT");
+            const includesUserDebug = dataItem[0].includes("USER_DEBUG");
+            const includesFlow = dataItem[0].includes("FLOW_");
+            const includesValidation = dataItem[0].includes("VALIDATION");
+            const isCodeUnitStarted = isValueArray && includesCodeUnitStarted;
+
+            if (Array.isArray(dataItem[1])) {
                 // Case: [string, [array]]
-                const nestedItems = flattenArray(val[1], key, level + 1).map((item) => ({
+                const nestedItems = flattenArray(dataItem[1], currentLevel + 1).map((item) => ({
                     ...item,
-                    nested: true,
-                    level: level + 1
+                    nested: true
                 }));
                 return [
-                    { key, event: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level },
+                    { event: `${dataItem[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level: currentLevel },
                     ...nestedItems
                 ];
-            } else if (typeof val[1] === "string") {
-                console.log("event: ", val[0]);
-                console.log("level: ", level);
+            } else if (typeof dataItem[1] === "string") {
+                console.log("event: ", dataItem[0]);
                 // Case: [string, string]
-                return [
+                let result = [
                     {
-                        key,
-                        event: `${val[0]}`,
-                        value: `${val[1]}`,
+                        event: `${dataItem[0]}`,
+                        value: `${dataItem[1]}`,
                         codeUnitStarted: isCodeUnitStarted,
                         userDebug: includesUserDebug,
                         isMethodEntry: includesMethodEntry,
@@ -102,12 +112,13 @@ const App = () => {
                         isVariableAssignment: includesVariableAssignment,
                         isFlow: includesFlow,
                         isValidation: includesValidation,
-                        level: level
+                        level: currentLevel
                     }
                 ];
+                return result;
             }
         }
-        return flattenArray(val, key, level);
+        return flattenArray(dataItem, currentLevel);
     };
 
     /**
@@ -374,9 +385,6 @@ const App = () => {
                             <CardBody>
                                 <h1>Data Logged</h1>
                                 {flattenArray(data).map((item, index) => {
-                                    // console.log(
-                                    //     `Item: ${item.event}, Level: ${item.level}, Margin: ${item.level * 20}px`
-                                    // );
                                     return (
                                         <div
                                             key={index}
@@ -384,7 +392,6 @@ const App = () => {
                                             ref={(el) => (itemRefs.current[index] = el)}
                                             style={{ marginLeft: `${item.level * 20}px` }} // Indent based on nesting level
                                         >
-                                            <span className="data-level">{item.level}</span>
                                             <span
                                                 className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}
                                             >
