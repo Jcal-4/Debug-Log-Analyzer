@@ -13,6 +13,7 @@ const App = () => {
     const [matchingCount, setMatchingCount] = useState(0); // State to keep track of matching items count
     const [matchingItems, setMatchingItems] = useState([]); // State to store matching items with original indices
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+    const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
     const itemRefs = useRef([]);
 
     /**
@@ -40,23 +41,30 @@ const App = () => {
         };
     }, []);
 
-    const flattenArray = (arr, parentKey = "") => {
+    const flattenArray = (arr, parentKey = "", level = 0) => {
+        // console.log("array level -->", level);
+
         return arr.reduce((acc, val, index) => {
             const key = parentKey ? `${parentKey}.${index}` : `${index}`;
 
             if (Array.isArray(val)) {
-                return acc.concat(flattenArrayFromArray(val, key));
-            } else if (typeof val === "object" && val !== null) {
-                return acc.concat(flattenArray(Object.entries(val), key));
-            } else {
-                return acc.concat({ key, value: val });
+                // console.log("Val:", val);
+                // console.log("level:", level);
+                return acc.concat(flattenArrayFromArray(val, key, level));
             }
+            // else if (typeof val === "object" && val !== null) {
+            //     console.log("els if level:", level);
+            //     return acc.concat(flattenArray(Object.entries(val), key, level));
+            // } else {
+            //     console.log("else level:", level);
+            //     return acc.concat({ key, value: val, level });
+            // }
         }, []);
     };
 
     // Val: ['CODE_UNIT_STARTED_1', Array[]]
     // Val: ['METHOD_ENTRY_1', 'makeData()']
-    const flattenArrayFromArray = (val, key) => {
+    const flattenArrayFromArray = (val, key, level = 0) => {
         if (val.length === 2 && typeof val[0] === "string") {
             const isValArray = Array.isArray(val[1]);
             const includesCodeUnitStarted = val[0].includes("CODE_UNIT_STARTED_");
@@ -69,9 +77,18 @@ const App = () => {
             const isCodeUnitStarted = isValArray && includesCodeUnitStarted;
             if (Array.isArray(val[1])) {
                 // Case: [string, [array]]
-                const nestedItems = flattenArray(val[1], key).map((item) => ({ ...item, nested: true }));
-                return [{ key, event: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted }, ...nestedItems];
+                const nestedItems = flattenArray(val[1], key, level + 1).map((item) => ({
+                    ...item,
+                    nested: true,
+                    level: level + 1
+                }));
+                return [
+                    { key, event: `${val[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level },
+                    ...nestedItems
+                ];
             } else if (typeof val[1] === "string") {
+                console.log("event: ", val[0]);
+                console.log("level: ", level);
                 // Case: [string, string]
                 return [
                     {
@@ -84,12 +101,13 @@ const App = () => {
                         isMethodExit: includesMethodExit,
                         isVariableAssignment: includesVariableAssignment,
                         isFlow: includesFlow,
-                        isValidation: includesValidation
+                        isValidation: includesValidation,
+                        level: level
                     }
                 ];
             }
         }
-        return flattenArray(val, key);
+        return flattenArray(val, key, level);
     };
 
     /**
@@ -126,7 +144,7 @@ const App = () => {
 
         let codeUnitElement = button.parentElement;
         let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.split("_")[3];
-
+        console.log("codeUnitVal", codeUnitVal);
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         let nextElementMatchesCurrent = false;
 
@@ -141,6 +159,7 @@ const App = () => {
             let computedStyle = window.getComputedStyle(nextElement);
 
             // Check if nextElement value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
+            console.log("nextElementValue", nextElementValue);
             if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + codeUnitVal)) {
                 nextElementMatchesCurrent = true;
                 nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
@@ -181,7 +200,7 @@ const App = () => {
         if (searchTerm && searchTerm.length > 2) {
             const handler = debounce(() => {
                 setDebouncedSearchTerm(searchTerm);
-            }, 300); // Debounce the search term for 300ms
+            }, 400); // Debounce the search term for 300ms
 
             handler();
 
@@ -197,17 +216,25 @@ const App = () => {
         if (!data) return;
 
         const flattenedData = flattenArray(data);
+        console.log("Flattened Data:", flattenedData); // Log the flattened data
         const matchingItems = flattenedData
-            .map((item, index) => ({ item, index })) // Store the original index
-            .filter(
-                ({ item }) =>
+            .map((item, index) => ({ item, index }))
+            .filter(({ item, index }) => {
+                const element = itemRefs.current[index];
+                if (!element) return false; // Ensure the element exists
+
+                const computedStyle = window.getComputedStyle(element);
+                if (computedStyle.display === "none") return false; // Skip if the element is hidden
+
+                return (
                     (item.value && item.value.toLowerCase().includes(searchTerm.toLowerCase())) ||
                     (item.event && item.event.toLowerCase().includes(searchTerm.toLowerCase()))
-            );
+                );
+            });
 
         setMatchingItems(matchingItems); // Update the matching items
         setMatchingCount(matchingItems.length); // Update the matching count
-    }, [debouncedSearchTerm]);
+    }, [debouncedSearchTerm, filterChangeTrigger]);
 
     // Effect to handle scrolling to the current index of the matching items
     useEffect(() => {
@@ -266,6 +293,8 @@ const App = () => {
                 });
             }
         }
+
+        setFilterChangeTrigger((prev) => prev + 1); // Trigger a re-render to update the UI
     };
 
     return (
@@ -344,32 +373,39 @@ const App = () => {
                         <Card className="h-screen">
                             <CardBody>
                                 <h1>Data Logged</h1>
-                                {flattenArray(data).map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
-                                        ref={(el) => (itemRefs.current[index] = el)}
-                                    >
-                                        <span
-                                            className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}
+                                {flattenArray(data).map((item, index) => {
+                                    // console.log(
+                                    //     `Item: ${item.event}, Level: ${item.level}, Margin: ${item.level * 20}px`
+                                    // );
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
+                                            ref={(el) => (itemRefs.current[index] = el)}
+                                            style={{ marginLeft: `${item.level * 20}px` }} // Indent based on nesting level
                                         >
-                                            {highlightSearchTerm(item.event, searchTerm)} :{" "}
-                                        </span>
-                                        <span className="data-value">
-                                            {highlightSearchTerm(item.value, searchTerm)}
-                                        </span>
-                                        {!item.nested && (
-                                            <button className="top-level-button" onClick={handleButtonClick}>
-                                                Show Less
-                                            </button>
-                                        )}
-                                        {item.codeUnitStarted && item.nested && (
-                                            <button className="inner-level-button" onClick={handleInnerButtonClick}>
-                                                Show Less
-                                            </button>
-                                        )}
-                                    </div>
-                                ))}
+                                            <span className="data-level">{item.level}</span>
+                                            <span
+                                                className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}
+                                            >
+                                                {highlightSearchTerm(item.event, searchTerm)} :{" "}
+                                            </span>
+                                            <span className="data-value">
+                                                {highlightSearchTerm(item.value, searchTerm)}
+                                            </span>
+                                            {!item.nested && (
+                                                <button className="top-level-button" onClick={handleButtonClick}>
+                                                    Show Less
+                                                </button>
+                                            )}
+                                            {item.codeUnitStarted && item.nested && (
+                                                <button className="inner-level-button" onClick={handleInnerButtonClick}>
+                                                    Show Less
+                                                </button>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </CardBody>
                         </Card>
                     </div>

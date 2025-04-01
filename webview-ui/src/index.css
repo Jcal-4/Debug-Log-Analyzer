@@ -53,13 +53,13 @@ span.data-event.code-unit-started {
 
 /* New styles for nested arrays */
 .nested-array {
-    margin-left: 20px;
+    /* margin-left: 20px; */
     padding-left: 10px;
     border-left: 2px solid #1f2833;
 }
 
 .nested-array .data-item {
-    margin-left: 20px;
+    /* margin-left: 20px; */
 }
 
 /* Style of displayed data */
@@ -77,7 +77,7 @@ span.data-event.code-unit-started {
 }
 
 .nested-array .nested-array .data-item {
-    margin-left: 40px;
+    /* margin-left: 40px; */
 }
 
 .search-popup {
