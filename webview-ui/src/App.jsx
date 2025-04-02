@@ -226,6 +226,14 @@ const App = () => {
     useEffect(() => {
         if (!data) return;
 
+        if (!debouncedSearchTerm || debouncedSearchTerm.length < 3) {
+            // Clear matching items and reset matching count if search term is invalid
+            setMatchingItems([]);
+            setMatchingCount(0);
+            setCurrentIndex(0);
+            return;
+        }
+
         const flattenedData = flattenArray(data);
         console.log("Flattened Data:", flattenedData); // Log the flattened data
         const matchingItems = flattenedData
