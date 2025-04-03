@@ -182,6 +182,10 @@ const App = () => {
         }
     };
 
+    const handleMethodEntryClick = (e) => {
+        console.log('handleMethodEntryClick called');
+    };
+
     /**
      * Highlights text depending on if searchTerm matches part of the string.
      * @param {value} - either the event or value of the data item
@@ -413,6 +417,11 @@ const App = () => {
                                             )}
                                             {item.codeUnitStarted && item.nested && (
                                                 <button className="inner-level-button" onClick={handleInnerButtonClick}>
+                                                    Show Less
+                                                </button>
+                                            )}
+                                            {item.isMethodEntry && (
+                                                <button className="inner-level-button" onClick={handleMethodEntryClick}>
                                                     Show Less
                                                 </button>
                                             )}

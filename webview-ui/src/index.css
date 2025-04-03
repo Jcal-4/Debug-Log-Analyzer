@@ -62,7 +62,17 @@ span.data-event.code-unit-started {
     color: #333;
 }
 
-.data-item:not(.code-unit-started) .data-event {
+.method-entry .data-event {
+    color: #4caf50; /* Green color for method-entry */
+    font-weight: bold;
+}
+
+.method-exit .data-event {
+    color: #f85c4d; /* Red color for method-exit */
+    font-weight: bold;
+}
+
+.data-item:not(.code-unit-started):not(.method-entry):not(.method-exit):not(.user-debug) .data-event {
     color: #66edb2;
 }
 
