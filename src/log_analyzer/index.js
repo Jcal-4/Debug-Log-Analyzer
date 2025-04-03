@@ -24,11 +24,11 @@ function analyzeDebugLog(context) {
                     );
                     return;
                 }
-                let executedComponents = parseLogFileContent(fileContent);
-                if (executedComponents.length === 0) {
+                let result = parseLogFileContent(fileContent);
+                if (result.parsedContent.length === 0) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
-                    sendMessageToWebview(context, executedComponents);
+                    sendMessageToWebview(context, result.parsedContent, result.codeUnitStarted);
                 }
             });
         } catch (error) {
@@ -48,11 +48,11 @@ async function readFile(URI) {
 
 /**
  * Creates a webview panel to display the log analysis results.
- * @param {Array} executedComponents - The restructured components to send to webview.
+ * @param {Array} parsedContent - The restructured components to send to webview.
  */
-function sendMessageToWebview(context, executedComponents) {
-    console.log("executedComponents: ", executedComponents);
-    const panel = vscode.window.createWebviewPanel("logAnalyzer", "React Log Analyzer", vscode.ViewColumn.One, {
+function sendMessageToWebview(context, parsedContent, codeUnitStarted) {
+    console.log("parsedContent: ", parsedContent);
+    const panel = vscode.window.createWebviewPanel("logAnalyzer", "Log Analyzer", vscode.ViewColumn.One, {
         retainContextWhenHidden: true,
         enableScripts: true,
         enableFindWidget: true
@@ -82,7 +82,8 @@ function sendMessageToWebview(context, executedComponents) {
                 panel.webview.postMessage({
                     command: "initialize",
                     data: {
-                        executedComponents: executedComponents
+                        executedComponents: parsedContent,
+                        codeUnitStarted: codeUnitStarted
                     }
                 });
             } else if (message.command === "error") {

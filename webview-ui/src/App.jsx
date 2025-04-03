@@ -7,12 +7,12 @@ import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
     console.log("App component re-rendered");
-    // terms needed to be defined to use in html components
     const [data, setData] = useState(null);
+    const [codeUnitStarted, setCodeUnitStarted] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [matchingCount, setMatchingCount] = useState(0); // State to keep track of matching items count
-    const [matchingItems, setMatchingItems] = useState([]); // State to store matching items with original indices
+    const [matchingCount, setMatchingCount] = useState(0);
+    const [matchingItems, setMatchingItems] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
     const itemRefs = useRef([]);
@@ -34,6 +34,7 @@ const App = () => {
                 console.log("initialize (executedComponents Received)", message.data.executedComponents);
                 let newArray = message.data.executedComponents;
                 setData(newArray);
+                setCodeUnitStarted(message.data.codeUnitStarted || false);
             }
         });
 
@@ -405,7 +406,7 @@ const App = () => {
                                             <span className="data-value">
                                                 {highlightSearchTerm(item.value, searchTerm)}
                                             </span>
-                                            {!item.nested && (
+                                            {!item.nested && codeUnitStarted && (
                                                 <button className="top-level-button" onClick={handleButtonClick}>
                                                     Show Less
                                                 </button>

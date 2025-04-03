@@ -281,10 +281,12 @@ function parseLogFileContent(fileContent) {
     }
     if (executedComponents.length === 0 && codeUnitArray.length > 0) {
         console.log("codeUnitArray: ", codeUnitArray);
-        return codeUnitArray;
+        let result = { parsedContent: codeUnitArray, codeUnitStarted: false };
+        return result;
     } else {
         console.log("executedComponents: ", executedComponents);
-        return executedComponents;
+        let result = { parsedContent: executedComponents, codeUnitStarted: true };
+        return result;
     }
 }
 
