@@ -63,7 +63,7 @@ const App = () => {
                 return flattenedArray.concat({ value: currentItem, level: currentLevel });
             }
         }, []);
-        console.log("flattenArray Result: ", result);
+        // console.log("flattenArray Result: ", result);
         return result;
     };
 
@@ -99,7 +99,6 @@ const App = () => {
                     ...nestedItems
                 ];
             } else if (typeof dataItem[1] === "string") {
-                console.log("event: ", dataItem[0]);
                 // Case: [string, string]
                 let result = [
                     {
@@ -155,7 +154,6 @@ const App = () => {
 
         let codeUnitElement = button.parentElement;
         let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.split("_")[3];
-        console.log("codeUnitVal", codeUnitVal);
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         let nextElementMatchesCurrent = false;
 
@@ -294,7 +292,6 @@ const App = () => {
                 item.style.display = "block";
             });
             if (value == "method-entry") {
-                console.log("here1");
                 assignmentVariables = document.querySelectorAll(".method-exit");
                 assignmentVariables.forEach((item) => {
                     item.style.display = "block";
