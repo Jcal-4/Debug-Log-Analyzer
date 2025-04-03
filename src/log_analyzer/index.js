@@ -8,10 +8,9 @@ const ignoreList = require("./ignoreList");
  * and extracting executed components.
  */
 function analyzeDebugLog(context) {
-    vscode.window.showInformationMessage("Initializing Log Analyzer!");
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-        console.log("No active editor found");
+        vscode.window.showInformationMessage("No active editor found. Please open a log file to analyze.");
         return;
     } else {
         const fileUri = editor.document.uri;
@@ -19,14 +18,18 @@ function analyzeDebugLog(context) {
         try {
             readFile(fileUri).then((fileData) => {
                 const fileContent = new TextDecoder().decode(fileData);
+                if (!fileUri.fsPath.endsWith(".log")) {
+                    vscode.window.showInformationMessage(
+                        " The active file is not a log file. Please open a .log file to analyze."
+                    );
+                    return;
+                }
                 let executedComponents = retrieveComponents(fileContent);
                 if (executedComponents.length === 0) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
                     console.log("executedComponents: ", executedComponents);
                     sendMessageToWebview(context, executedComponents);
-                    // webview(context, executedComponents);
-                    // console.log(executedComponents);
                 }
             });
         } catch (error) {
