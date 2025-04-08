@@ -29,6 +29,7 @@ function parseLogFileContent(fileContent) {
         } else if (line.includes("|METHOD_ENTRY|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
+            let methodKey = parts[2];
             let methodNameLowercase = methodName.toLowerCase();
             let shouldIgnoreMethod = false;
             ignoreList.forEach((ignoreItem) => {
@@ -37,11 +38,12 @@ function parseLogFileContent(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") ", methodName]);
+                codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") ", methodName, methodKey]);
             }
         } else if (line.includes("|METHOD_EXIT|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
+            let methodKey = parts[2];
             let methodNameLowercase = methodName.toLowerCase();
             let shouldIgnoreMethod = false;
             ignoreList.forEach((ignoreItem) => {
@@ -50,7 +52,7 @@ function parseLogFileContent(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_EXIT" + "(Line: " + currentLineNumber + ") ", methodName]);
+                codeUnitArray.push(["METHOD_EXIT" + "(Line: " + currentLineNumber + ") ", methodName, methodKey]);
             }
         } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
             let parts = line.split("|");

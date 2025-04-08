@@ -78,7 +78,7 @@ const App = () => {
      * @returns {Array} - A flattened array of objects with structured event data.
      */
     const processAndFlattenArray = (dataItem, currentLevel = 0) => {
-        if (dataItem.length === 2 && typeof dataItem[0] === "string") {
+        if (dataItem.length >= 2 && typeof dataItem[0] === "string") {
             const isValueArray = Array.isArray(dataItem[1]);
             const includesCodeUnitStarted = dataItem[0].includes("CODE_UNIT_STARTED_");
             const includesMethodEntry = dataItem[0].includes("METHOD_ENTRY");
@@ -103,6 +103,7 @@ const App = () => {
                 // Case: [string, string]
                 let result = [
                     {
+                        key: `${dataItem[2]}`,
                         event: `${dataItem[0]}`,
                         value: `${dataItem[1]}`,
                         codeUnitStarted: isCodeUnitStarted,
@@ -183,7 +184,30 @@ const App = () => {
     };
 
     const handleMethodEntryClick = (e) => {
-        console.log('handleMethodEntryClick called');
+        // Toggle the button text and background color
+        const button = e.currentTarget;
+        const isShowMore = button.innerHTML === "Show More";
+        button.innerHTML = isShowMore ? "Show Less" : "Show More";
+        button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
+
+        let methodElement = button.parentElement;
+        let methodKey = methodElement.getAttribute("data-key");
+        let nextElement = e.currentTarget.parentElement.nextElementSibling;
+        let nextElementMatchesCurrent = false;
+        console.log("nextElementMatchesCurrent", nextElementMatchesCurrent);
+        while (nextElement && nextElement.classList.contains("data-item") && !nextElementMatchesCurrent) {
+            let nextElementKey = nextElement.getAttribute("data-key");
+            let computedStyle = window.getComputedStyle(nextElement);
+
+            if (nextElementKey === methodKey) {
+                nextElementMatchesCurrent = true;
+                nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+                break;
+            } else {
+                nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+            }
+            nextElement = nextElement.nextElementSibling;
+        }
     };
 
     /**
@@ -397,7 +421,8 @@ const App = () => {
                                 {flattenArray(data).map((item, index) => {
                                     return (
                                         <div
-                                            key={index}
+                                            data-key={item.key || index}
+                                            key={item.key}
                                             className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
                                             ref={(el) => (itemRefs.current[index] = el)}
                                             style={{ marginLeft: `${item.level * 20}px` }} // Indent based on nesting level
