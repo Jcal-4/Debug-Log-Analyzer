@@ -346,7 +346,7 @@ const App = () => {
         <div>
             {data ? (
                 <Card className="h-screen flex flex-row rounded-none">
-                    <CardBody className="h-screen overflow-y-auto relative max-w-xs">
+                    <CardBody className="h-screen overflow-y-auto relative min-w-[200px] max-w-xs">
                         <div className="sticky top-0">
                             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
                                 <Input

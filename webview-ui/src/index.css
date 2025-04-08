@@ -63,7 +63,7 @@ span.data-event.code-unit-started {
 }
 
 .method-entry .data-event {
-    color: #4caf50; /* Green color for method-entry */
+    color: #66edb2;
     font-weight: bold;
 }
 .method-entry .data-value {
@@ -72,7 +72,7 @@ span.data-event.code-unit-started {
 
 .method-exit .data-event,
 .method-exit .data-value {
-    color: #f85c4d; /* Red color for method-exit */
+    color: #66edb2;
     font-weight: bold;
 }
 
