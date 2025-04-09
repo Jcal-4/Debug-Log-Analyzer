@@ -132,6 +132,7 @@ const App = () => {
         const isShowMore = button.innerHTML === "Show More";
         button.innerHTML = isShowMore ? "Show Less" : "Show More";
         button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
+        // button.classList.toggle("button-clicked");
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
 
@@ -152,7 +153,7 @@ const App = () => {
         const button = e.currentTarget;
         const isShowMore = button.innerHTML === "Show More";
         button.innerHTML = isShowMore ? "Show Less" : "Show More";
-        button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
+        button.classList.toggle("button-clicked");
 
         let codeUnitElement = button.parentElement;
         let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.split("_")[3];
@@ -173,10 +174,10 @@ const App = () => {
             console.log("nextElementValue", nextElementValue);
             if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + codeUnitVal)) {
                 nextElementMatchesCurrent = true;
-                nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+                nextElement.classList.toggle("hide");
                 break;
             } else {
-                nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+                nextElement.classList.toggle("hide");
             }
 
             nextElement = nextElement.nextElementSibling;
@@ -188,27 +189,22 @@ const App = () => {
         const button = e.currentTarget;
         const isShowMore = button.innerHTML === "Show More";
         button.innerHTML = isShowMore ? "Show Less" : "Show More";
-        // button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
         button.classList.toggle("button-clicked");
 
         let methodElement = button.parentElement;
         let methodKey = methodElement.getAttribute("data-key");
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         let nextElementMatchesCurrent = false;
-        console.log("nextElementMatchesCurrent", nextElementMatchesCurrent);
         while (nextElement && nextElement.classList.contains("data-item") && !nextElementMatchesCurrent) {
             let nextElementKey = nextElement.getAttribute("data-key");
             let computedStyle = window.getComputedStyle(nextElement);
 
             if (nextElementKey === methodKey) {
                 nextElementMatchesCurrent = true;
-                // nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
-                // let isHidden = computedStyle.display === "none" ? "block" : "none";
                 nextElement.classList.toggle("hide");
                 break;
             } else {
                 nextElement.classList.toggle("hide");
-                // nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
             }
             nextElement = nextElement.nextElementSibling;
         }
@@ -350,7 +346,7 @@ const App = () => {
         <div>
             {data ? (
                 <Card className="h-screen flex flex-row rounded-none">
-                    <CardBody className="h-screen overflow-y-auto relative min-w-[200px] max-w-xs">
+                    <CardBody className="filter-container h-screen overflow-y-auto relative">
                         <div className="sticky top-0">
                             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
                                 <Input

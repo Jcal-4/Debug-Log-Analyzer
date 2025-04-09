@@ -242,6 +242,32 @@ function parseLogFileContent(fileContent) {
                     variableValue
                 ]);
             }
+        } else if (line.includes("SOQL_EXECUTE_BEGIN")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                codeUnitArray.push(["SOQL_EXECUTE_BEGIN" + "(Line: " + currentLineNumber + ") ", methodName]);
+            }
+        } else if (line.includes("SOQL_EXECUTE_END")) {
+            let parts = line.split("|");
+            let methodName = parts[parts.length - 1];
+            let methodNameLowercase = methodName.toLowerCase();
+            let shouldIgnoreMethod = false;
+            ignoreList.forEach((ignoreItem) => {
+                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
+                    shouldIgnoreMethod = true;
+                }
+            });
+            if (!shouldIgnoreMethod) {
+                codeUnitArray.push(["SOQL_EXECUTE_END" + "(Line: " + currentLineNumber + ") ", methodName]);
+            }
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             let parts = line.split("|");
             let methodName = "";
@@ -302,22 +328,22 @@ function restructureArray(inputArray) {
     let result = [];
     let currentArray = result;
 
-    for (let [key, value] of inputArray) {
+    for (let [key, value, extra = null] of inputArray) {
         if (key.startsWith("CODE_UNIT_STARTED")) {
             let newArray = [];
             // Add the new array to the current array with the current key
-            currentArray.push([key, newArray]);
+            currentArray.push([key, newArray, extra]);
             stack.push(currentArray);
             // Update the current array to the new nested array
             currentArray = newArray;
-            currentArray.push([key, value]);
+            currentArray.push([key, value, extra]);
         } else if (key.startsWith("CODE_UNIT_FINISHED")) {
-            currentArray.push([key, value]);
+            currentArray.push([key, value, extra]);
             // Pop the stack to return to the previous nesting level
             currentArray = stack.pop();
         } else {
             // For other keys, simply add the key-value pair to the current array
-            currentArray.push([key, value]);
+            currentArray.push([key, value, extra]);
         }
     }
     return result;
