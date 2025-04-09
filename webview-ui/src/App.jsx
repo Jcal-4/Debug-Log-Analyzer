@@ -188,7 +188,8 @@ const App = () => {
         const button = e.currentTarget;
         const isShowMore = button.innerHTML === "Show More";
         button.innerHTML = isShowMore ? "Show Less" : "Show More";
-        button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
+        // button.style.backgroundColor = isShowMore ? "#1F2833" : "#007acc";
+        button.classList.toggle("button-clicked");
 
         let methodElement = button.parentElement;
         let methodKey = methodElement.getAttribute("data-key");
