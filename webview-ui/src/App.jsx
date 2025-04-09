@@ -87,6 +87,7 @@ const App = () => {
             const includesUserDebug = dataItem[0].includes("USER_DEBUG");
             const includesFlow = dataItem[0].includes("FLOW_");
             const includesValidation = dataItem[0].includes("VALIDATION");
+            const includesSOQL = dataItem[0].includes("SOQL");
             const isCodeUnitStarted = isValueArray && includesCodeUnitStarted;
 
             if (Array.isArray(dataItem[1])) {
@@ -113,6 +114,7 @@ const App = () => {
                         isVariableAssignment: includesVariableAssignment,
                         isFlow: includesFlow,
                         isValidation: includesValidation,
+                        isSOQL: includesSOQL,
                         level: currentLevel
                     }
                 ];
@@ -392,7 +394,8 @@ const App = () => {
                                                 "flow",
                                                 "method-entry",
                                                 "validation-rule",
-                                                "variable-assignment"
+                                                "variable-assignment",
+                                                "soql"
                                             ]}
                                             label="Select Elements"
                                         >
@@ -401,6 +404,9 @@ const App = () => {
                                             </Checkbox>
                                             <Checkbox value="method-entry" onChange={handleCheckboxChange}>
                                                 Method Entry/Exit
+                                            </Checkbox>
+                                            <Checkbox value="soql" onChange={handleCheckboxChange}>
+                                                SOQL
                                             </Checkbox>
                                             <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
                                                 Validations
@@ -423,7 +429,7 @@ const App = () => {
                                         <div
                                             data-key={item.key || index}
                                             key={item.key}
-                                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
+                                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
                                             ref={(el) => (itemRefs.current[index] = el)}
                                             style={{ marginLeft: `${item.level * 20}px` }} // Indent based on nesting level
                                         >
