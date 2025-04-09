@@ -40,6 +40,25 @@ h1 {
     margin: 5px 0;
     padding: 5px;
     border-bottom: 1px solid #1f2833;
+    max-height: 500px;
+    transition: all 0.75s ease;
+}
+
+.data-item.expanded {
+    max-height: 500px; /* Adjust based on content size */
+    opacity: 1;
+    transition:
+        max-height 0.5s ease,
+        opacity 0.5s ease;
+}
+
+.data-item.hide {
+    max-height: 0px;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    transition: all 0.75s ease;
 }
 
 .data-item:last-child {

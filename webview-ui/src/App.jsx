@@ -201,10 +201,13 @@ const App = () => {
 
             if (nextElementKey === methodKey) {
                 nextElementMatchesCurrent = true;
-                nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+                // nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+                // let isHidden = computedStyle.display === "none" ? "block" : "none";
+                nextElement.classList.toggle("hide");
                 break;
             } else {
-                nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
+                nextElement.classList.toggle("hide");
+                // nextElement.style.display = computedStyle.display === "none" ? "block" : "none";
             }
             nextElement = nextElement.nextElementSibling;
         }
