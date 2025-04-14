@@ -184,6 +184,16 @@ function parseLogFileContent(fileContent) {
             if (!shouldIgnoreMethod) {
                 codeUnitArray.push(["VALIDATION_PASS" + "(Line: " + currentLineNumber + ") ", methodName]);
             }
+        } else if (line.includes("VALIDATION_FORMULA")) {
+            let parts = line.split("|");
+            let validationFormula = parts[parts.length - 1];
+            let nextLine = lines[i + 1];
+            while (!nextLine.includes("VALIDATION_PASS") && !nextLine.includes("VALIDATION_FAIL")) {
+                i++;
+                validationFormula += "\n" + nextLine;
+                nextLine = lines[i + 1];
+            }
+            codeUnitArray.push(["VALIDATION_FORMULA" + "(Line: " + currentLineNumber + ") ", validationFormula]);
         } else if (line.includes("VALIDATION_RULE")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];

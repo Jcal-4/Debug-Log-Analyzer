@@ -31,8 +31,7 @@ h1 {
 }
 
 .data-container {
-    max-width: 80%;
-    flex-basis: 80%;
+    max-width: calc(100% - 250px);
 }
 
 .data-item {
@@ -93,6 +92,7 @@ span.data-event.code-unit-started {
 .data-item:not(.code-unit-started) .data-value {
     color: #5497c3;
     word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .search-popup {
