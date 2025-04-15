@@ -421,9 +421,9 @@ const App = () => {
                         </div>
                     </CardBody>
                     <div className="data-container">
-                        <Card className="h-screen">
+                        <Card className="h-screen rounded-r-none">
                             <CardBody>
-                                <h1>Data Logged</h1>
+                                {/* <h1>Data Logged</h1> */}
                                 {flattenArray(data).map((item, index) => {
                                     return (
                                         <div

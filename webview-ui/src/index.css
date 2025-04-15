@@ -32,6 +32,7 @@ h1 {
 
 .data-container {
     max-width: calc(100% - 250px);
+    min-width: calc(100% - 250px);
 }
 
 .data-item {
