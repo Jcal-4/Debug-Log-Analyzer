@@ -2,7 +2,7 @@
     "name": "log-analyzer",
     "displayName": "Salesforce - Debug Log Analyzer",
     "description": "Goal of this extension is to be able to break down log files from Salesforce (still in developmental mode)",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "engines": {
         "vscode": "^1.98.2"
     },

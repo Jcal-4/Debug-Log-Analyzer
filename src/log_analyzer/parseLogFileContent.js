@@ -235,11 +235,16 @@ function parseLogFileContent(fileContent) {
             }
         } else if (line.includes("VARIABLE_ASSIGNMENT")) {
             let parts = line.split("|");
-            let variableName = parts[parts.length - 3];
-            let variableValue = parts[parts.length - 2];
-            const constantVariable = parts.length != 6;
+            let variableName = "";
+            let variableValue = "";
+            if (parts.length == 6) {
+                variableName = parts[parts.length - 3];
+                variableValue = parts[parts.length - 2];
+            } else if (parts.length == 5) {
+                variableName = parts[parts.length - 2];
+                variableValue = parts[parts.length - 1];
+            }
             if (
-                !constantVariable &&
                 variableName != "this" &&
                 variableName != "t" &&
                 variableName != "handler" &&

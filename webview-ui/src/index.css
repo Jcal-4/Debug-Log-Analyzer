@@ -39,7 +39,7 @@ h1 {
     padding: 5px;
     border-bottom: 1px solid #1f2833;
     /* max-height: 500px; */
-    transition: all 0.3s ease;
+    /* transition: all 0.3s ease; */
 }
 
 .data-item.hide {
@@ -48,7 +48,7 @@ h1 {
     margin: 0;
     padding: 0;
     border: 0;
-    transition: all 0.3s ease;
+    /* transition: all 0.3s ease; */
 }
 
 .data-item:last-child {
