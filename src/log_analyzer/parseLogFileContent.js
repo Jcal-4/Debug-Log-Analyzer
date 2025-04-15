@@ -186,7 +186,8 @@ function parseLogFileContent(fileContent) {
             }
         } else if (line.includes("VALIDATION_FORMULA")) {
             let parts = line.split("|");
-            let validationFormula = parts[parts.length - 1];
+
+            let validationFormula = parts.slice(2).join("|");
             let nextLine = lines[i + 1];
             while (!nextLine.includes("VALIDATION_PASS") && !nextLine.includes("VALIDATION_FAIL")) {
                 i++;
