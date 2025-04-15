@@ -194,14 +194,17 @@ const App = () => {
         button.classList.toggle("button-clicked");
 
         let methodElement = button.parentElement;
+        let methodValue = methodElement.querySelector(".data-value").innerHTML;
+        console.log("methodValue -->", methodElement.querySelector(".data-value").innerHTML);
         let methodKey = methodElement.getAttribute("data-key");
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         let nextElementMatchesCurrent = false;
         while (nextElement && nextElement.classList.contains("data-item") && !nextElementMatchesCurrent) {
             let nextElementKey = nextElement.getAttribute("data-key");
+            let nextElementValue = nextElement.querySelector(".data-value").innerHTML;
             let computedStyle = window.getComputedStyle(nextElement);
 
-            if (nextElementKey === methodKey) {
+            if (nextElementKey === methodKey && methodValue.includes(nextElementValue)) {
                 nextElementMatchesCurrent = true;
                 nextElement.classList.toggle("hide");
                 break;
@@ -424,14 +427,26 @@ const App = () => {
                         <Card className="h-screen rounded-r-none">
                             <CardBody>
                                 {/* <h1>Data Logged</h1> */}
-                                {flattenArray(data).map((item, index) => {
+                                {flattenArray(data).map((item, index, array) => {
+                                    // Determine if the current item is within a method-entry and method-exit block
+                                    let additionalIndent = 0;
+                                    for (let i = index - 1; i >= 0; i--) {
+                                        if (array[i].isMethodEntry) {
+                                            additionalIndent += 20; // Add extra indentation for each nested method-entry
+                                        }
+                                        if (array[i].isMethodExit) {
+                                            additionalIndent -= 20; // Remove indentation for method-exit
+                                            // break; // Stop adding indentation once a method-exit is encountered
+                                        }
+                                    }
+
                                     return (
                                         <div
                                             data-key={item.key || index}
                                             key={item.key}
                                             className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
                                             ref={(el) => (itemRefs.current[index] = el)}
-                                            style={{ marginLeft: `${item.level * 20}px` }} // Indent based on nesting level
+                                            style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
                                         >
                                             <span
                                                 className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}
