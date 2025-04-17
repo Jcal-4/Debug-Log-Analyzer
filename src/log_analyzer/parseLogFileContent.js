@@ -24,7 +24,9 @@ function parseLogFileContent(fileContent) {
             } else {
                 methodName = parts[parts.length - 1];
             }
-            codeUnitArray.push(["CODE_UNIT_STARTED_" + codeUnitCounter, methodName]);
+            codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter} : ${methodName}`, methodName]);
+            // codeUnitArray.push(["CODE_UNIT_STARTED_" + codeUnitCounter, methodName]);
+
             stack.push({ methodName, codeUnitCounter });
         } else if (line.includes("|METHOD_ENTRY|")) {
             let parts = line.split("|");
@@ -58,132 +60,64 @@ function parseLogFileContent(fileContent) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["FLOW_START_INTERVIEW_BEGIN" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["FLOW_START_INTERVIEW_BEGIN" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("NAMED_CREDENTIAL_REQUEST")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["NAMED_CREDENTIAL_REQUEST" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["NAMED_CREDENTIAL_REQUEST" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("NAMED_CREDENTIAL_RESPONSE")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["NAMED_CREDENTIAL_RESPONSE" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["NAMED_CREDENTIAL_RESPONSE" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("FLOW_START_INTERVIEWS_ERROR")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
             let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["FLOW_START_INTERVIEWS_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["FLOW_START_INTERVIEWS_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("CALLOUT_REQUEST")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["CALLOUT_REQUEST" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["CALLOUT_REQUEST" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("CALLOUT_RESPONSE")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
             let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["CALLOUT_RESPONSE" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["CALLOUT_RESPONSE" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("EXCEPTION_THROWN")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["EXCEPTION_THROWN" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["EXCEPTION_THROWN" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("FATAL_ERROR")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["FATAL_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["FATAL_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("VALIDATION_FAIL")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["VALIDATION_FAIL" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["VALIDATION_FAIL" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("VALIDATION_PASS")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["VALIDATION_PASS" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["VALIDATION_PASS" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("VALIDATION_FORMULA")) {
             let parts = line.split("|");
 
@@ -199,41 +133,20 @@ function parseLogFileContent(fileContent) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["VALIDATION_RULE" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["VALIDATION_RULE" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("VALIDATION_ERROR")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["VALIDATION_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["VALIDATION_ERROR" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("USER_DEBUG")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["USER_DEBUG" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["USER_DEBUG" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("VARIABLE_ASSIGNMENT")) {
             let parts = line.split("|");
             let variableName = "";
@@ -262,29 +175,17 @@ function parseLogFileContent(fileContent) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["SOQL_EXECUTE_BEGIN" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["SOQL_EXECUTE_BEGIN" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("SOQL_EXECUTE_END")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
-            ignoreList.forEach((ignoreItem) => {
-                if (methodNameLowercase.includes(ignoreItem.toLowerCase())) {
-                    shouldIgnoreMethod = true;
-                }
-            });
-            if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["SOQL_EXECUTE_END" + "(Line: " + currentLineNumber + ") ", methodName]);
-            }
+
+            codeUnitArray.push(["SOQL_EXECUTE_END" + "(Line: " + currentLineNumber + ") ", methodName]);
         } else if (line.includes("CODE_UNIT_FINISHED")) {
+            // codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter} : ${methodName}`, methodName]);
+
             let parts = line.split("|");
             let methodName = "";
             if (parts[parts.length - 1].includes("trigger/")) {
@@ -306,7 +207,8 @@ function parseLogFileContent(fileContent) {
                 if (prevMethodName == methodName) {
                     // Remove the corresponding CODE_UNIT_STARTED entry if it matches
                     codeUnitArray = codeUnitArray.filter(
-                        (entry) => entry[0] !== "CODE_UNIT_STARTED_" + lastMethod.codeUnitCounter
+                        (entry) => !entry[0].includes("CODE_UNIT_STARTED_" + lastMethod.codeUnitCounter)
+                        // (entry) => entry[0] !== "CODE_UNIT_STARTED_" + lastMethod.codeUnitCounter
                     );
                     codeUnitCounter -= 1;
                 } else if (lastMethod.methodName == methodName) {
@@ -352,7 +254,7 @@ function restructureArray(inputArray) {
             stack.push(currentArray);
             // Update the current array to the new nested array
             currentArray = newArray;
-            currentArray.push([key, value, extra]);
+            // currentArray.push([key, value, extra]);
         } else if (key.startsWith("CODE_UNIT_FINISHED")) {
             currentArray.push([key, value, extra]);
             // Pop the stack to return to the previous nesting level

@@ -80,7 +80,7 @@ const App = () => {
     const processAndFlattenArray = (dataItem, currentLevel = 0) => {
         if (dataItem.length >= 2 && typeof dataItem[0] === "string") {
             const isValueArray = Array.isArray(dataItem[1]);
-            const includesCodeUnitStarted = dataItem[0].includes("CODE_UNIT_STARTED_");
+            const includesCodeUnitStarted = dataItem[0].includes("CODE_UNIT_STARTED");
             const includesMethodEntry = dataItem[0].includes("METHOD_ENTRY");
             const includesMethodExit = dataItem[0].includes("METHOD_EXIT");
             const includesVariableAssignment = dataItem[0].includes("VARIABLE_ASSIGNMENT");
@@ -158,7 +158,11 @@ const App = () => {
         button.classList.toggle("button-clicked");
 
         let codeUnitElement = button.parentElement;
-        let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.split("_")[3];
+        // let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.split("_")[3];
+
+        let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.match(/CODE_UNIT_STARTED_(\d+)/)?.[1];
+        // let value = string.match(/CODE_UNIT_STARTED_(\d+)/)?.[1];
+
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         let nextElementMatchesCurrent = false;
 
@@ -177,9 +181,15 @@ const App = () => {
             if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + codeUnitVal)) {
                 nextElementMatchesCurrent = true;
                 nextElement.classList.toggle("hide");
+
                 break;
             } else {
                 nextElement.classList.toggle("hide");
+            }
+            // Disable the button inside the nextElement
+            const nextElementButton = nextElement.querySelector("button");
+            if (nextElementButton) {
+                nextElementButton.disabled = true;
             }
 
             nextElement = nextElement.nextElementSibling;
@@ -436,7 +446,6 @@ const App = () => {
                                         }
                                         if (array[i].isMethodExit) {
                                             additionalIndent -= 20; // Remove indentation for method-exit
-                                            // break; // Stop adding indentation once a method-exit is encountered
                                         }
                                     }
 
@@ -451,7 +460,8 @@ const App = () => {
                                             <span
                                                 className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}
                                             >
-                                                {highlightSearchTerm(item.event, searchTerm)} :{" "}
+                                                {highlightSearchTerm(item.event, searchTerm)}
+                                                {item.codeUnitStarted ? "" : " : "}
                                             </span>
                                             <span className="data-value">
                                                 {highlightSearchTerm(item.value, searchTerm)}
