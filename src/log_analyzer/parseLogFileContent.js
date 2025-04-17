@@ -166,10 +166,7 @@ function parseLogFileContent(fileContent) {
                 variableName != "tName" &&
                 !variableName.includes("this.")
             ) {
-                codeUnitArray.push([
-                    "VARIABLE_ASSIGNMENT" + "(Line: " + currentLineNumber + ") " + "- (" + variableName + ") ",
-                    variableValue
-                ]);
+                codeUnitArray.push(["VARIABLE_ASSIGNMENT" + "(Line: " + currentLineNumber + ") " + "- (" + variableName + ") ", variableValue]);
             }
         } else if (line.includes("SOQL_EXECUTE_BEGIN")) {
             let parts = line.split("|");

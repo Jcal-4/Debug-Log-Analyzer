@@ -96,10 +96,7 @@ const App = () => {
                     ...item,
                     nested: true
                 }));
-                return [
-                    { event: `${dataItem[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level: currentLevel },
-                    ...nestedItems
-                ];
+                return [{ event: `${dataItem[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level: currentLevel }, ...nestedItems];
             } else if (typeof dataItem[1] === "string") {
                 // Case: [string, string]
                 let result = [
@@ -138,11 +135,7 @@ const App = () => {
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
 
-        while (
-            nextElement &&
-            nextElement.classList.contains("data-item") &&
-            nextElement.classList.contains("nested-array")
-        ) {
+        while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
             // patch for top level button to show/hide nested values
             nextElement.style.display = isShowMore ? "block" : "none";
 
@@ -197,6 +190,7 @@ const App = () => {
     };
 
     const handleMethodEntryClick = (e) => {
+        let methodEntryCounter = 0;
         // Toggle the button text and background color
         const button = e.currentTarget;
         const isShowMore = button.innerHTML === "Show More";
@@ -213,8 +207,24 @@ const App = () => {
             let nextElementKey = nextElement.getAttribute("data-key");
             let nextElementValue = nextElement.querySelector(".data-value").innerHTML;
             let computedStyle = window.getComputedStyle(nextElement);
-
-            if (nextElementKey === methodKey && methodValue.includes(nextElementValue)) {
+            // Count for method entries matching the methodValue
+            if (nextElementKey === methodKey && methodValue.includes(nextElementValue) && nextElement.classList.contains("method-entry")) {
+                methodEntryCounter++;
+                nextElement.classList.toggle("hide");
+            } else if (
+                nextElementKey === methodKey &&
+                methodValue.includes(nextElementValue) &&
+                nextElement.classList.contains("method-exit") &&
+                methodEntryCounter > 0
+            ) {
+                methodEntryCounter--;
+                nextElement.classList.toggle("hide");
+            } else if (
+                nextElementKey === methodKey &&
+                methodValue.includes(nextElementValue) &&
+                nextElement.classList.contains("method-exit") &&
+                methodEntryCounter === 0
+            ) {
                 nextElementMatchesCurrent = true;
                 nextElement.classList.toggle("hide");
                 break;
@@ -386,16 +396,8 @@ const App = () => {
                                 <div className="search-popup">
                                     {matchingCount > 0 ? currentIndex + 1 : 0} of {matchingCount}
                                     <div className="flex items-center">
-                                        <FontAwesomeIcon
-                                            className="directional-arrow p-1"
-                                            icon={faArrowUp}
-                                            onClick={handlePrevious}
-                                        />
-                                        <FontAwesomeIcon
-                                            className="directional-arrow p-1"
-                                            icon={faArrowDown}
-                                            onClick={handleNext}
-                                        />
+                                        <FontAwesomeIcon className="directional-arrow p-1" icon={faArrowUp} onClick={handlePrevious} />
+                                        <FontAwesomeIcon className="directional-arrow p-1" icon={faArrowDown} onClick={handleNext} />
                                     </div>
                                 </div>
                             )}
@@ -403,13 +405,7 @@ const App = () => {
                                 <Card>
                                     <CardBody className="sticky top-0">
                                         <CheckboxGroup
-                                            defaultValue={[
-                                                "flow",
-                                                "method-entry",
-                                                "validation-rule",
-                                                "variable-assignment",
-                                                "soql"
-                                            ]}
+                                            defaultValue={["flow", "method-entry", "validation-rule", "variable-assignment", "soql"]}
                                             label="Select Elements"
                                         >
                                             <Checkbox value="flow" onChange={handleCheckboxChange}>
@@ -457,15 +453,11 @@ const App = () => {
                                             ref={(el) => (itemRefs.current[index] = el)}
                                             style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
                                         >
-                                            <span
-                                                className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}
-                                            >
+                                            <span className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}>
                                                 {highlightSearchTerm(item.event, searchTerm)}
                                                 {item.codeUnitStarted ? "" : " : "}
                                             </span>
-                                            <span className="data-value">
-                                                {highlightSearchTerm(item.value, searchTerm)}
-                                            </span>
+                                            <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
                                             {!item.nested && codeUnitStarted && (
                                                 <button className="top-level-button" onClick={handleButtonClick}>
                                                     Show Less
