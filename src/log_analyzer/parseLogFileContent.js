@@ -24,7 +24,7 @@ function parseLogFileContent(fileContent) {
             } else {
                 methodName = parts[parts.length - 1];
             }
-            codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter} : ${methodName}`, methodName]);
+            codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter}(Line: ${currentLineNumber}) : ${methodName}`, methodName]);
             // codeUnitArray.push(["CODE_UNIT_STARTED_" + codeUnitCounter, methodName]);
 
             stack.push({ methodName, codeUnitCounter });
@@ -210,7 +210,7 @@ function parseLogFileContent(fileContent) {
                     codeUnitCounter -= 1;
                 } else if (lastMethod.methodName == methodName) {
                     // Store the method details in the array with a unique key
-                    codeUnitArray.push(["CODE_UNIT_FINISHED_" + lastMethod.codeUnitCounter, methodName]);
+                    codeUnitArray.push(["CODE_UNIT_FINISHED_" + lastMethod.codeUnitCounter + "(Line: " + currentLineNumber + ")", methodName]);
                 }
             }
             if (stack.length === 0) {
