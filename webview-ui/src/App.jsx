@@ -453,11 +453,31 @@ const App = () => {
                                             ref={(el) => (itemRefs.current[index] = el)}
                                             style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
                                         >
-                                            <span className={`data-event ${item.codeUnitStarted ? "code-unit-started" : ""}`}>
-                                                {highlightSearchTerm(item.event, searchTerm)}
-                                                {item.codeUnitStarted ? "" : " : "}
-                                            </span>
-                                            <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
+                                            {item.codeUnitStarted && (
+                                                <span className={`data-event code-unit-started`}>
+                                                    {(() => {
+                                                        let splitString = item.event.split(":");
+                                                        let firstPart = splitString.slice(0, 2).join(":");
+                                                        return highlightSearchTerm(firstPart, searchTerm);
+                                                    })()}
+                                                </span>
+                                            )}
+                                            {item.codeUnitStarted && (
+                                                <span className={`data-value code-unit-started`}>
+                                                    {(() => {
+                                                        let splitString = item.event.split(":");
+                                                        let firstPart = splitString.slice(2).join(":");
+                                                        return highlightSearchTerm(firstPart, searchTerm);
+                                                    })()}
+                                                </span>
+                                            )}
+                                            {!item.codeUnitStarted && (
+                                                <span className={`data-event`}>{highlightSearchTerm(item.event, searchTerm)}</span>
+                                            )}
+                                            {!item.codeUnitStarted && (
+                                                <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
+                                            )}
+
                                             {!item.nested && codeUnitStarted && (
                                                 <button className="top-level-button" onClick={handleButtonClick}>
                                                     Show Less
