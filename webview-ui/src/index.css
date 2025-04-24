@@ -96,6 +96,7 @@ span.data-event.code-unit-started {
 .fatal-error .data-event {
     color: #ed7c66;
     font-weight: bold;
+    font-style: italic;
 }
 
 .data-item:not(.code-unit-started):not(.method-entry):not(.method-exit):not(.user-debug):not(.exception-thrown):not(.fatal-error) .data-event {
@@ -187,8 +188,7 @@ input[type="text"] {
 }
 
 /* Styles for User Debug */
-.user-debug:not(.code-unit-started) .data-event,
-.user-debug:not(.code-unit-started) .data-value {
+.user-debug:not(.code-unit-started) .data-event {
     color: #ffa500;
     font-weight: bold;
     font-style: italic;
