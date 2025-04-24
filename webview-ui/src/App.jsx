@@ -88,6 +88,8 @@ const App = () => {
             const includesFlow = dataItem[0].includes("FLOW_");
             const includesValidation = dataItem[0].includes("VALIDATION");
             const includesSOQL = dataItem[0].includes("SOQL");
+            const includesException = dataItem[0].includes("EXCEPTION_THROWN");
+            const includesFatalError = dataItem[0].includes("FATAL_ERROR");
             const isCodeUnitStarted = isValueArray && includesCodeUnitStarted;
 
             if (Array.isArray(dataItem[1])) {
@@ -112,6 +114,8 @@ const App = () => {
                         isFlow: includesFlow,
                         isValidation: includesValidation,
                         isSOQL: includesSOQL,
+                        isException: includesException,
+                        isFatalError: includesFatalError,
                         level: currentLevel
                     }
                 ];
@@ -449,7 +453,7 @@ const App = () => {
                                         <div
                                             data-key={item.key || index}
                                             key={item.key}
-                                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
+                                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
                                             ref={(el) => (itemRefs.current[index] = el)}
                                             style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
                                         >

@@ -92,7 +92,13 @@ span.data-event.code-unit-started {
     font-weight: bold;
 }
 
-.data-item:not(.code-unit-started):not(.method-entry):not(.method-exit):not(.user-debug) .data-event {
+.exception-thrown .data-event,
+.fatal-error .data-event {
+    color: #ed7c66;
+    font-weight: bold;
+}
+
+.data-item:not(.code-unit-started):not(.method-entry):not(.method-exit):not(.user-debug):not(.exception-thrown):not(.fatal-error) .data-event {
     color: #66edb2;
 }
 
