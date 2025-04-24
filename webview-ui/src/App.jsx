@@ -471,10 +471,10 @@ const App = () => {
                                                     })()}
                                                 </span>
                                             )}
-                                            {!item.codeUnitStarted && (
+                                            {!item.codeUnitStarted && !item.isVariableAssignment && (
                                                 <span className={`data-event`}>{highlightSearchTerm(item.event, searchTerm)}</span>
                                             )}
-                                            {!item.codeUnitStarted && (
+                                            {!item.codeUnitStarted && !item.isVariableAssignment && (
                                                 <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
                                             )}
 
@@ -492,6 +492,25 @@ const App = () => {
                                                 <button className="inner-level-button" onClick={handleMethodEntryClick}>
                                                     Show Less
                                                 </button>
+                                            )}
+                                            {item.isVariableAssignment && (
+                                                <>
+                                                    <span className={`data-event`}>
+                                                        {(() => {
+                                                            const firstPart = item.event.split(")")[0] + ") - ";
+                                                            return highlightSearchTerm(firstPart, searchTerm);
+                                                        })()}
+                                                    </span>
+                                                    <span className={`data-variable-name`}>
+                                                        {(() => {
+                                                            const match = item.event.match(/\(([^)]+)\).*?\(([^)]+)\)/);
+                                                            if (match && match[2]) {
+                                                                return highlightSearchTerm("(" + match[2] + ") ", searchTerm);
+                                                            }
+                                                        })()}
+                                                    </span>
+                                                    <span className={`data-value`}>{highlightSearchTerm(item.value, searchTerm)}</span>
+                                                </>
                                             )}
                                         </div>
                                     );

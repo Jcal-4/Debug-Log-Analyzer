@@ -87,6 +87,11 @@ span.data-event.code-unit-started {
     font-weight: bold;
 }
 
+.data-value.code-unit-started {
+    color: #5497c3;
+    font-weight: bold;
+}
+
 .data-item:not(.code-unit-started):not(.method-entry):not(.method-exit):not(.user-debug) .data-event {
     color: #66edb2;
 }
