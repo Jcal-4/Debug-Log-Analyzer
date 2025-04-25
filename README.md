@@ -1,69 +1,55 @@
-# log-analyzer README
+# Debug-Log-Analyzer
 
-log-analyzer is currently in development. not fully functional yet.
+Drowning in debug logs? Spending too much time sifting through endless lines of text? Debug-Log-Analyzer might be the solution you're looking for.
 
-## Features
+This personal project is designed to help you declutter and analyze your debug logs more efficiently. It aims to highlight important information and present it in a more manageable format.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+**How to Use:**
+1.  **Open your debug log**
+2.  **Activate the extension:**
+    *   **Mac:** Press `Command+Shift+P`
+    *   **Windows:** Press `Ctrl+Shift+P`
+3.  **Search for the command:** Type "Analyze Debug Log" and select it.
 
-For example if there is an image subfolder under your extension project workspace:
+The extension will then open a new tab with the analyzed and decluttered version of your log.
 
-\!\[feature X\]\(images/feature-x.png\)
+Give Debug-Log-Analyzer a try and see if it can help you streamline your debugging process!
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Streamlining Debugging: Key Features for Easier Log Analysis
 
-## Requirements
+Debugging can be a pain, especially when wading through mountains of log data. That's why I'm focusing on features designed to make log analysis quicker and more efficient. Here's what you can expect:
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+*   **Decluttered Logs:** We're removing unnecessary information from your logs to highlight the most important details and reduce visual noise.
 
-## Extension Settings
+*   **Checkbox Filtering:** Simplify your view with a checkbox system. Easily select and deselect specific log types to focus on the information you need.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+*   **Search Functionality:** Quickly find specific events or patterns within your logs using a powerful search feature.
 
-For example:
+*   **Layered Levels for Nested Events:** Understand complex relationships with layered levels that visually represent nested events, making it easier to trace the flow of information.
 
-This extension contributes the following settings:
+These features are all designed to streamline your debugging process and help you identify issues faster. Stay tuned for more updates!
 
-- `myExtension.enable`: Enable/disable this extension.
-- `myExtension.thing`: Set to `blah` to do something.
+## Upcoming Features
+* Add buttons to:
+  * minimize everything and display only debug logs
+  * minimize everything except exceptions and fatal errors.
+* Add a button or a new tab to view a simplified stack trace
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+* Large debug logs can cause a bit of lag when using show more/show less buttons and when using built in search bar
+* Nested show more/show less buttons may not work properly when a checkbox filter has been adjusted
+* Certain unique logs break the flow of the CSS indentation
+
 
 ## Release Notes
 
 Users appreciate release notes as you update your extension.
 
-### 1.0.0
+### 0.4.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+* Improved readability and fixed minor bugs
 
 ---
 
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-- Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-- Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-- Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
-## For more information
-
-- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
 **Enjoy!**
-
-# Debug-Log-Analyzer
-
-# Debug-Log-Analyzer
