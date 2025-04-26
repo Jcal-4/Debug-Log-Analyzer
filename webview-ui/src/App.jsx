@@ -129,7 +129,7 @@ const App = () => {
      * Handles click of Expand button.
      * @param {event} - The event object.
      */
-    const handleButtonClick = (e) => {
+    const handleCodeStartedButtonClick = (e) => {
         // Toggle the button text and background color
         const button = e.currentTarget;
         const isShowMore = button.innerHTML === "Show More";
@@ -147,7 +147,7 @@ const App = () => {
         }
     };
 
-    const handleInnerButtonClick = (e) => {
+    const handleInnerCodeStartedButtonClick = (e) => {
         // Toggle the button text and background color
         const button = e.currentTarget;
         const isShowMore = button.innerHTML === "Show More";
@@ -193,7 +193,7 @@ const App = () => {
         }
     };
 
-    const handleMethodEntryClick = (e) => {
+    const handleMethodEntryButtonClick = (e) => {
         let methodEntryCounter = 0;
         // Toggle the button text and background color
         const button = e.currentTarget;
@@ -202,9 +202,9 @@ const App = () => {
         button.classList.toggle("button-clicked");
 
         let methodElement = button.parentElement;
-        let methodValue = methodElement.querySelector(".data-value").innerHTML;
-        console.log("methodValue -->", methodElement.querySelector(".data-value").innerHTML);
         let methodKey = methodElement.getAttribute("data-key");
+        let methodValue = methodElement.querySelector(".data-value").innerHTML;
+        // Target the next element after the button
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         let nextElementMatchesCurrent = false;
         while (nextElement && nextElement.classList.contains("data-item") && !nextElementMatchesCurrent) {
@@ -214,7 +214,17 @@ const App = () => {
             // Count for method entries matching the methodValue
             if (nextElementKey === methodKey && methodValue.includes(nextElementValue) && nextElement.classList.contains("method-entry")) {
                 methodEntryCounter++;
-                nextElement.classList.toggle("hide");
+                if (isShowMore && nextElement.classList.contains("hide")) {
+                    nextElement.classList.remove("hide");
+                } else if (!isShowMore && !nextElement.classList.contains("hide")) {
+                    nextElement.classList.add("hide");
+                }
+                // Disable the button inside the nextElement
+                const nextElementButton = nextElement.querySelector("button");
+                if (isShowMore && nextElementButton.innerHTML === "Show More") {
+                    nextElementButton.innerHTML = "Show Less";
+                    nextElementButton.classList.remove("button-clicked");
+                }
             } else if (
                 nextElementKey === methodKey &&
                 methodValue.includes(nextElementValue) &&
@@ -222,7 +232,11 @@ const App = () => {
                 methodEntryCounter > 0
             ) {
                 methodEntryCounter--;
-                nextElement.classList.toggle("hide");
+                if (isShowMore && nextElement.classList.contains("hide")) {
+                    nextElement.classList.remove("hide");
+                } else if (!isShowMore && !nextElement.classList.contains("hide")) {
+                    nextElement.classList.add("hide");
+                }
             } else if (
                 nextElementKey === methodKey &&
                 methodValue.includes(nextElementValue) &&
@@ -230,10 +244,24 @@ const App = () => {
                 methodEntryCounter === 0
             ) {
                 nextElementMatchesCurrent = true;
-                nextElement.classList.toggle("hide");
+                if (isShowMore && nextElement.classList.contains("hide")) {
+                    nextElement.classList.remove("hide");
+                } else if (!isShowMore && !nextElement.classList.contains("hide")) {
+                    nextElement.classList.add("hide");
+                }
                 break;
             } else {
-                nextElement.classList.toggle("hide");
+                if (isShowMore && nextElement.classList.contains("hide")) {
+                    nextElement.classList.remove("hide");
+                } else if (!isShowMore && !nextElement.classList.contains("hide")) {
+                    nextElement.classList.add("hide");
+                }
+                // Disable the button inside the nextElement
+                const nextElementButton = nextElement.querySelector("button");
+                if (isShowMore && nextElementButton.innerHTML === "Show More") {
+                    nextElementButton.innerHTML = "Show Less";
+                    nextElementButton.classList.remove("button-clicked");
+                }
             }
             nextElement = nextElement.nextElementSibling;
         }
@@ -483,17 +511,17 @@ const App = () => {
                                             )}
 
                                             {!item.nested && codeUnitStarted && (
-                                                <button className="top-level-button" onClick={handleButtonClick}>
+                                                <button className="top-level-button" onClick={handleCodeStartedButtonClick}>
                                                     Show Less
                                                 </button>
                                             )}
                                             {item.codeUnitStarted && item.nested && (
-                                                <button className="inner-level-button" onClick={handleInnerButtonClick}>
+                                                <button className="inner-level-button" onClick={handleInnerCodeStartedButtonClick}>
                                                     Show Less
                                                 </button>
                                             )}
                                             {item.isMethodEntry && (
-                                                <button className="inner-level-button" onClick={handleMethodEntryClick}>
+                                                <button className="inner-level-button" onClick={handleMethodEntryButtonClick}>
                                                     Show Less
                                                 </button>
                                             )}
