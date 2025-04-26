@@ -155,14 +155,10 @@ const App = () => {
         button.classList.toggle("button-clicked");
 
         let codeUnitElement = button.parentElement;
-        // let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.split("_")[3];
-
         let codeUnitVal = codeUnitElement.querySelector(".data-event").innerHTML.match(/CODE_UNIT_STARTED_(\d+)/)?.[1];
-        // let value = string.match(/CODE_UNIT_STARTED_(\d+)/)?.[1];
 
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
         let nextElementMatchesCurrent = false;
-
         // check if nextElement is a data-item and nested-array, if so then change
         while (
             nextElement &&
@@ -181,12 +177,18 @@ const App = () => {
 
                 break;
             } else {
-                nextElement.classList.toggle("hide");
-            }
-            // Disable the button inside the nextElement
-            const nextElementButton = nextElement.querySelector("button");
-            if (nextElementButton) {
-                nextElementButton.disabled = true;
+                // nextElement.classList.toggle("hide");
+                if (isExpandAll && nextElement.classList.contains("hide")) {
+                    nextElement.classList.remove("hide");
+                } else if (!isExpandAll && !nextElement.classList.contains("hide")) {
+                    nextElement.classList.add("hide");
+                }
+                // Disable the button inside the nextElement
+                const nextElementButton = nextElement.querySelector("button");
+                if (isExpandAll && nextElementButton?.innerHTML === "Expand All") {
+                    nextElementButton.innerHTML = "Hide All";
+                    nextElementButton.classList.remove("button-clicked");
+                }
             }
 
             nextElement = nextElement.nextElementSibling;
