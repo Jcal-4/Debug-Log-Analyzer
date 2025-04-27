@@ -3,9 +3,14 @@ import { heroui } from "@heroui/react";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: ["./node_modules/@heroui/theme/dist/**/*.{js,jsx}"],
+    // content: ["./node_modules/@heroui/theme/dist/**/*.{js,jsx}"],
+    content: ["./**/*.{html,js,jsx}"],
     theme: {
-        extend: {}
+        extend: {
+            colors: {
+                customBlue: "#66fcf1"
+            }
+        }
     },
     darkMode: "false",
     plugins: [heroui()]

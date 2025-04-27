@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
 import "./index.css"; // Import the CSS file
-import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner } from "@heroui/react";
+import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner, Code } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -473,7 +473,7 @@ const App = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className="mt-2">
+                            <div className="mt-2 text-customBlue">
                                 <Card>
                                     <CardBody className="sticky top-0">
                                         <CheckboxGroup
@@ -492,29 +492,22 @@ const App = () => {
                                             <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
                                                 Validations
                                             </Checkbox>
-                                            <Checkbox value="variable-assignment" onChange={handleCheckboxChange}>
+                                            <Checkbox className="text-customBlue" value="variable-assignment" onChange={handleCheckboxChange}>
                                                 Variable Assignment
                                             </Checkbox>
                                         </CheckboxGroup>
                                     </CardBody>
                                 </Card>
-                                <div className="mt-2">
-                                    <Card>
-                                        <CardBody className="">
-                                            <div>
-                                                <span className="error-count-label">Exceptions Thrown: </span>
-                                                <span className="error-count-value">{exceptionCount}</span>
-                                            </div>
-                                            <div className="error-count">
-                                                <span className="error-count-label">Fatal Errors: </span>
-                                                <span className="error-count-value">{fatalErrorsCount}</span>
-                                            </div>
-                                            <div>
-                                                <span className="error-count-label">User Debug: </span>
-                                                <span className="error-count-value">{userDebugCount}</span>
-                                            </div>
-                                        </CardBody>
-                                    </Card>
+                                <div className="mt-2 mb-2">
+                                    <Code className="mt-0" color="danger">
+                                        Exceptions Thrown: {exceptionCount}
+                                    </Code>
+                                    <Code className="mt-2" color="danger">
+                                        Fatal Errors: {fatalErrorsCount}
+                                    </Code>
+                                    <Code className="mt-2" color="warning">
+                                        User Debugs: {userDebugCount}
+                                    </Code>
                                 </div>
                             </div>
                         </div>
