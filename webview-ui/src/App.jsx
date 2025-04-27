@@ -516,9 +516,9 @@ const App = () => {
                         <Card className="h-screen rounded-r-none">
                             <Tabs
                                 classNames={{
-                                    tabList: "flex justify-center gap-6 w-full relative rounded-none p-0 border-b border-divider",
+                                    tabList: "flex justify-center gap-6 w-full rounded-none p-0 border-b border-divider",
                                     cursor: "w-full bg-[#22d3ee]",
-                                    tab: "max-w-fit px-0 h-12",
+                                    tab: "max-w-fit px-0 h-9",
                                     tabContent: "group-data-[selected=true]:text-customBlue",
                                     flex: "flex justify-center"
                                 }}
@@ -526,8 +526,8 @@ const App = () => {
                                 variant="underlined"
                             >
                                 <Tab title="Analyzed Debug Log">
-                                    <CardBody className="h-screen p-0">
-                                        <ScrollShadow className="h-full">
+                                    <CardBody className="h-[calc(100vh-48px)] p-0">
+                                        <ScrollShadow className="pb-6">
                                             {flattenArray(data).map((item, index, array) => {
                                                 // Determine if the current item is within a method-entry and method-exit block
                                                 let additionalIndent = 0;
