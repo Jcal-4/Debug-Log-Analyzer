@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
 import "./index.css"; // Import the CSS file
-import { Input, CheckboxGroup, Checkbox, Card, CardBody } from "@heroui/react";
+import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -12,6 +12,9 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
     const [matchingCount, setMatchingCount] = useState(0);
+    const [fatalErrorsCount, setFatalErrorsCount] = useState(0);
+    const [exceptionCount, setExceptionCount] = useState(0);
+    const [userDebugCount, setuserDebugCount] = useState(0);
     const [matchingItems, setMatchingItems] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
@@ -43,6 +46,31 @@ const App = () => {
         };
     }, []);
 
+    // Add a useEffect to calculate total errors when `data` changes
+    useEffect(() => {
+        let fatalErrorCount = 0;
+        let exceptionCount = 0;
+        let userDebugCount = 0;
+        if (data) {
+            const flattenedData = flattenArray(data);
+            flattenedData.forEach((item) => {
+                if (item.isFatalError) {
+                    fatalErrorCount++;
+                }
+                if (item.isException) {
+                    exceptionCount++;
+                }
+                if (item.isUserDebug) {
+                    userDebugCount++;
+                }
+            });
+
+            setFatalErrorsCount(fatalErrorCount);
+            setExceptionCount(exceptionCount);
+            setuserDebugCount(userDebugCount);
+        }
+    }, [data]); // Dependency array ensures this runs when `data` changes
+
     /**
      * Recursively flattens a nested array or object structure into a flat array of key-value pairs.
      *
@@ -53,6 +81,7 @@ const App = () => {
      *   - `level`: The depth level of the value in the original structure.
      */
     const flattenArray = (nestedData, currentLevel = 0) => {
+        let errorCount = 0;
         let result = nestedData.reduce((flattenedArray, currentItem) => {
             if (Array.isArray(currentItem)) {
                 return flattenedArray.concat(processAndFlattenArray(currentItem, currentLevel));
@@ -64,7 +93,7 @@ const App = () => {
                 return flattenedArray.concat({ value: currentItem, level: currentLevel });
             }
         }, []);
-        // console.log("flattenArray Result: ", result);
+
         return result;
     };
 
@@ -107,7 +136,7 @@ const App = () => {
                         event: `${dataItem[0]}`,
                         value: `${dataItem[1]}`,
                         codeUnitStarted: isCodeUnitStarted,
-                        userDebug: includesUserDebug,
+                        isUserDebug: includesUserDebug,
                         isMethodEntry: includesMethodEntry,
                         isMethodExit: includesMethodExit,
                         isVariableAssignment: includesVariableAssignment,
@@ -444,7 +473,7 @@ const App = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className="data-filters">
+                            <div className="mt-2">
                                 <Card>
                                     <CardBody className="sticky top-0">
                                         <CheckboxGroup
@@ -469,6 +498,24 @@ const App = () => {
                                         </CheckboxGroup>
                                     </CardBody>
                                 </Card>
+                                <div className="mt-2">
+                                    <Card>
+                                        <CardBody className="">
+                                            <div>
+                                                <span className="error-count-label">Exceptions Thrown: </span>
+                                                <span className="error-count-value">{exceptionCount}</span>
+                                            </div>
+                                            <div className="error-count">
+                                                <span className="error-count-label">Fatal Errors: </span>
+                                                <span className="error-count-value">{fatalErrorsCount}</span>
+                                            </div>
+                                            <div>
+                                                <span className="error-count-label">User Debug: </span>
+                                                <span className="error-count-value">{userDebugCount}</span>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                </div>
                             </div>
                         </div>
                     </CardBody>
@@ -492,7 +539,7 @@ const App = () => {
                                         <div
                                             data-key={item.key || index}
                                             key={item.key}
-                                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.userDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
+                                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.isUserDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
                                             ref={(el) => (itemRefs.current[index] = el)}
                                             style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
                                         >
@@ -563,7 +610,9 @@ const App = () => {
                     </div>
                 </Card>
             ) : (
-                <p>Processing Data...</p>
+                <div className="flex justify-center items-center h-screen">
+                    <Spinner classNames={{ label: "text-foreground mt-4" }} label="Processing Data..." variant="gradient" />
+                </div>
             )}
         </div>
     );
