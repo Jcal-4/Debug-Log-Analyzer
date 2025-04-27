@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
 import "./index.css"; // Import the CSS file
-import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner, Code } from "@heroui/react";
+import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner, Code, Tabs, Tab, ScrollShadow } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -514,91 +514,109 @@ const App = () => {
                     </CardBody>
                     <div className="data-container">
                         <Card className="h-screen rounded-r-none">
-                            <CardBody>
-                                {/* <h1>Data Logged</h1> */}
-                                {flattenArray(data).map((item, index, array) => {
-                                    // Determine if the current item is within a method-entry and method-exit block
-                                    let additionalIndent = 0;
-                                    for (let i = index - 1; i >= 0; i--) {
-                                        if (array[i].isMethodEntry) {
-                                            additionalIndent += 20; // Add extra indentation for each nested method-entry
-                                        }
-                                        if (array[i].isMethodExit) {
-                                            additionalIndent -= 20; // Remove indentation for method-exit
-                                        }
-                                    }
+                            <Tabs
+                                classNames={{
+                                    tabList: "flex justify-center gap-6 w-full relative rounded-none p-0 border-b border-divider",
+                                    cursor: "w-full bg-[#22d3ee]",
+                                    tab: "max-w-fit px-0 h-12",
+                                    tabContent: "group-data-[selected=true]:text-customBlue",
+                                    flex: "flex justify-center"
+                                }}
+                                aria-label="Tabs variants"
+                                variant="underlined"
+                            >
+                                <Tab title="Analyzed Debug Log">
+                                    <CardBody className="h-screen p-0">
+                                        <ScrollShadow className="h-full">
+                                            {flattenArray(data).map((item, index, array) => {
+                                                // Determine if the current item is within a method-entry and method-exit block
+                                                let additionalIndent = 0;
+                                                for (let i = index - 1; i >= 0; i--) {
+                                                    if (array[i].isMethodEntry) {
+                                                        additionalIndent += 20; // Add extra indentation for each nested method-entry
+                                                    }
+                                                    if (array[i].isMethodExit) {
+                                                        additionalIndent -= 20; // Remove indentation for method-exit
+                                                    }
+                                                }
 
-                                    return (
-                                        <div
-                                            data-key={item.key || index}
-                                            key={item.key}
-                                            className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.isUserDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
-                                            ref={(el) => (itemRefs.current[index] = el)}
-                                            style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
-                                        >
-                                            {item.codeUnitStarted && (
-                                                <span className={`data-event code-unit-started`}>
-                                                    {(() => {
-                                                        let splitString = item.event.split(":");
-                                                        let firstPart = splitString.slice(0, 2).join(":");
-                                                        return highlightSearchTerm(firstPart, searchTerm);
-                                                    })()}
-                                                </span>
-                                            )}
-                                            {item.codeUnitStarted && (
-                                                <span className={`data-value code-unit-started`}>
-                                                    {(() => {
-                                                        let splitString = item.event.split(":");
-                                                        let firstPart = splitString.slice(2).join(":");
-                                                        return highlightSearchTerm(firstPart, searchTerm);
-                                                    })()}
-                                                </span>
-                                            )}
-                                            {!item.codeUnitStarted && !item.isVariableAssignment && (
-                                                <span className={`data-event`}>{highlightSearchTerm(item.event, searchTerm)}</span>
-                                            )}
-                                            {!item.codeUnitStarted && !item.isVariableAssignment && (
-                                                <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
-                                            )}
+                                                return (
+                                                    <div
+                                                        data-key={item.key || index}
+                                                        key={item.key}
+                                                        className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.isUserDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
+                                                        ref={(el) => (itemRefs.current[index] = el)}
+                                                        style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
+                                                    >
+                                                        {item.codeUnitStarted && (
+                                                            <span className={`data-event code-unit-started`}>
+                                                                {(() => {
+                                                                    let splitString = item.event.split(":");
+                                                                    let firstPart = splitString.slice(0, 2).join(":");
+                                                                    return highlightSearchTerm(firstPart, searchTerm);
+                                                                })()}
+                                                            </span>
+                                                        )}
+                                                        {item.codeUnitStarted && (
+                                                            <span className={`data-value code-unit-started`}>
+                                                                {(() => {
+                                                                    let splitString = item.event.split(":");
+                                                                    let firstPart = splitString.slice(2).join(":");
+                                                                    return highlightSearchTerm(firstPart, searchTerm);
+                                                                })()}
+                                                            </span>
+                                                        )}
+                                                        {!item.codeUnitStarted && !item.isVariableAssignment && (
+                                                            <span className={`data-event`}>{highlightSearchTerm(item.event, searchTerm)}</span>
+                                                        )}
+                                                        {!item.codeUnitStarted && !item.isVariableAssignment && (
+                                                            <span className="data-value">{highlightSearchTerm(item.value, searchTerm)}</span>
+                                                        )}
 
-                                            {!item.nested && codeUnitStarted && (
-                                                <button className="top-level-button" onClick={handleCodeStartedButtonClick}>
-                                                    Hide All
-                                                </button>
-                                            )}
-                                            {item.codeUnitStarted && item.nested && (
-                                                <button className="inner-level-button" onClick={handleInnerCodeStartedButtonClick}>
-                                                    Hide All
-                                                </button>
-                                            )}
-                                            {item.isMethodEntry && (
-                                                <button className="inner-level-button" onClick={handleMethodEntryButtonClick}>
-                                                    Hide All
-                                                </button>
-                                            )}
-                                            {item.isVariableAssignment && (
-                                                <>
-                                                    <span className={`data-event`}>
-                                                        {(() => {
-                                                            const firstPart = item.event.split(")")[0] + ") - ";
-                                                            return highlightSearchTerm(firstPart, searchTerm);
-                                                        })()}
-                                                    </span>
-                                                    <span className={`data-variable-name`}>
-                                                        {(() => {
-                                                            const match = item.event.match(/\(([^)]+)\).*?\(([^)]+)\)/);
-                                                            if (match && match[2]) {
-                                                                return highlightSearchTerm("(" + match[2] + ") ", searchTerm);
-                                                            }
-                                                        })()}
-                                                    </span>
-                                                    <span className={`data-value`}>{highlightSearchTerm(item.value, searchTerm)}</span>
-                                                </>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </CardBody>
+                                                        {!item.nested && codeUnitStarted && (
+                                                            <button className="top-level-button" onClick={handleCodeStartedButtonClick}>
+                                                                Hide All
+                                                            </button>
+                                                        )}
+                                                        {item.codeUnitStarted && item.nested && (
+                                                            <button className="inner-level-button" onClick={handleInnerCodeStartedButtonClick}>
+                                                                Hide All
+                                                            </button>
+                                                        )}
+                                                        {item.isMethodEntry && (
+                                                            <button className="inner-level-button" onClick={handleMethodEntryButtonClick}>
+                                                                Hide All
+                                                            </button>
+                                                        )}
+                                                        {item.isVariableAssignment && (
+                                                            <>
+                                                                <span className={`data-event`}>
+                                                                    {(() => {
+                                                                        const firstPart = item.event.split(")")[0] + ") - ";
+                                                                        return highlightSearchTerm(firstPart, searchTerm);
+                                                                    })()}
+                                                                </span>
+                                                                <span className={`data-variable-name`}>
+                                                                    {(() => {
+                                                                        const match = item.event.match(/\(([^)]+)\).*?\(([^)]+)\)/);
+                                                                        if (match && match[2]) {
+                                                                            return highlightSearchTerm("(" + match[2] + ") ", searchTerm);
+                                                                        }
+                                                                    })()}
+                                                                </span>
+                                                                <span className={`data-value`}>{highlightSearchTerm(item.value, searchTerm)}</span>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </ScrollShadow>
+                                    </CardBody>
+                                </Tab>
+                                <Tab title="User Debugs">
+                                    <div>Hi</div>
+                                </Tab>
+                            </Tabs>
                         </Card>
                     </div>
                 </Card>
