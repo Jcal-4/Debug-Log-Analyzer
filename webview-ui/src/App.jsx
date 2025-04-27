@@ -140,8 +140,17 @@ const App = () => {
         let nextElement = e.currentTarget.parentElement.nextElementSibling;
 
         while (nextElement && nextElement.classList.contains("data-item") && nextElement.classList.contains("nested-array")) {
-            // patch for top level button to show/hide nested values
-            nextElement.style.display = isExpandAll ? "block" : "none";
+            if (isExpandAll && nextElement.classList.contains("hide")) {
+                nextElement.classList.remove("hide");
+            } else if (!isExpandAll && !nextElement.classList.contains("hide")) {
+                nextElement.classList.add("hide");
+            }
+            // Disable the button inside the nextElement
+            const nextElementButton = nextElement.querySelector("button");
+            if (isExpandAll && nextElementButton?.innerHTML === "Expand All") {
+                nextElementButton.innerHTML = "Hide All";
+                nextElementButton.classList.remove("button-clicked");
+            }
 
             nextElement = nextElement.nextElementSibling;
         }
