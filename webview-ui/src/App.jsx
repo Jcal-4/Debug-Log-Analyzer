@@ -516,7 +516,7 @@ const App = () => {
                         <Card className="h-screen rounded-r-none">
                             <Tabs
                                 classNames={{
-                                    tabList: "flex justify-center gap-6 w-full rounded-none p-0 border-b border-divider",
+                                    tabList: "flex justify-center gap-6 w-full rounded-none p-0 border-divider",
                                     cursor: "w-full bg-[#22d3ee]",
                                     tab: "max-w-fit px-0 h-9",
                                     tabContent: "group-data-[selected=true]:text-customBlue",
