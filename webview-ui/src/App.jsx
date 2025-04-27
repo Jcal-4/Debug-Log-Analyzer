@@ -1,7 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
 import "./index.css"; // Import the CSS file
-import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner, Code, Tabs, Tab, ScrollShadow } from "@heroui/react";
+import {
+    Input,
+    CheckboxGroup,
+    Checkbox,
+    Card,
+    CardBody,
+    Spinner,
+    Code,
+    Tabs,
+    Tab,
+    ScrollShadow,
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell
+} from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -614,7 +631,41 @@ const App = () => {
                                     </CardBody>
                                 </Tab>
                                 <Tab title="User Debugs">
-                                    <div>Hi</div>
+                                    <h1>In development...</h1>
+                                    <Table
+                                        aria-label="Example static collection table"
+                                        color="primary"
+                                        defaultSelectedKeys={["1"]}
+                                        selectionMode="single"
+                                    >
+                                        <TableHeader>
+                                            <TableColumn>NAME</TableColumn>
+                                            <TableColumn>ROLE</TableColumn>
+                                            <TableColumn>STATUS</TableColumn>
+                                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow key="1">
+                                                <TableCell>Tony Reichert</TableCell>
+                                                <TableCell>CEO</TableCell>
+                                                <TableCell>Active</TableCell>
+                                            </TableRow>
+                                            <TableRow key="2">
+                                                <TableCell>Zoey Lang</TableCell>
+                                                <TableCell>Technical Lead</TableCell>
+                                                <TableCell>Paused</TableCell>
+                                            </TableRow>
+                                            <TableRow key="3">
+                                                <TableCell>Jane Fisher</TableCell>
+                                                <TableCell>Senior Developer</TableCell>
+                                                <TableCell>Active</TableCell>
+                                            </TableRow>
+                                            <TableRow key="4">
+                                                <TableCell>William Howard</TableCell>
+                                                <TableCell>Community Manager</TableCell>
+                                                <TableCell>Vacation</TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
                                 </Tab>
                             </Tabs>
                         </Card>
