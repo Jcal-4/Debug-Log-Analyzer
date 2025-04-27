@@ -643,8 +643,8 @@ const App = () => {
                                             <TableColumn>ROLE</TableColumn>
                                             <TableColumn>STATUS</TableColumn>
                                         </TableHeader>
-                                        <TableBody>
-                                            <TableRow key="1">
+                                        <TableBody emptyContent={"No debugs to display."}>
+                                            {/* <TableRow key="1">
                                                 <TableCell>Tony Reichert</TableCell>
                                                 <TableCell>CEO</TableCell>
                                                 <TableCell>Active</TableCell>
@@ -663,7 +663,7 @@ const App = () => {
                                                 <TableCell>William Howard</TableCell>
                                                 <TableCell>Community Manager</TableCell>
                                                 <TableCell>Vacation</TableCell>
-                                            </TableRow>
+                                            </TableRow> */}
                                         </TableBody>
                                     </Table>
                                 </Tab>
