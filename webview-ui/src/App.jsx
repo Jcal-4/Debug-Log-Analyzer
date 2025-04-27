@@ -384,7 +384,7 @@ const App = () => {
         if (matchingItems.length > 0) {
             const nearestIndex = matchingItems[currentIndex % matchingItems.length].index;
             if (itemRefs.current[nearestIndex]) {
-                itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+                itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
             }
         } else {
             setMatchingCount(0); // Reset the matching count if search term is empty
@@ -516,7 +516,7 @@ const App = () => {
                         <Card className="h-screen rounded-r-none">
                             <Tabs
                                 classNames={{
-                                    tabList: "flex justify-center gap-6 w-full rounded-none p-0 border-divider",
+                                    tabList: "flex justify-center relative gap-6 w-full rounded-none p-0 border-divider",
                                     cursor: "w-full bg-[#22d3ee]",
                                     tab: "max-w-fit px-0 h-9",
                                     tabContent: "group-data-[selected=true]:text-customBlue",
@@ -527,7 +527,7 @@ const App = () => {
                             >
                                 <Tab title="Analyzed Debug Log">
                                     <CardBody className="h-[calc(100vh-48px)] p-0">
-                                        <ScrollShadow className="pb-6">
+                                        <ScrollShadow className="pb-6" size={10}>
                                             {flattenArray(data).map((item, index, array) => {
                                                 // Determine if the current item is within a method-entry and method-exit block
                                                 let additionalIndent = 0;
