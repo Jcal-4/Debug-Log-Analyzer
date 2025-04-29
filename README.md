@@ -46,6 +46,10 @@ These features are all designed to streamline your debugging process and help yo
 
 Users appreciate release notes as you update your extension.
 
+### 0.5.0
+
+* Implemented User Debugs tab for easier System Debug access
+
 ### 0.4.0
 
 * Improved readability and fixed minor bugs

@@ -38,7 +38,7 @@ const UserDebugs = ({ flattenedData }) => {
                             (item, index) =>
                                 item.isUserDebug && (
                                     <TableRow key={index}>
-                                        <TableCell className="whitespace-nowrap text-[#ffa500] font-bold">{item.event}</TableCell>
+                                        <TableCell className="whitespace-nowrap text-[#ffa500] font-bold align-top">{item.event}</TableCell>
                                         <TableCell className="text-[#5497c3]">{item.value}</TableCell>
                                     </TableRow>
                                 )
