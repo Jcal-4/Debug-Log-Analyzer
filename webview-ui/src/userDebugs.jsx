@@ -28,18 +28,18 @@ const UserDebugs = ({ flattenedData }) => {
     return (
         <div className="userDebugs overflow-y-scroll h-[calc(100vh-49px)] px-0">
             {userDebugs && userDebugs.length > 0 ? (
-                <Table isStriped aria-label="Example static collection table" color="primary">
+                <Table className="rounded-none" isStriped aria-label="Example static collection table" color="primary">
                     <TableHeader>
-                        <TableColumn>Line</TableColumn>
-                        <TableColumn>Log</TableColumn>
+                        <TableColumn className="font-bold">Line</TableColumn>
+                        <TableColumn className="font-bold">Log</TableColumn>
                     </TableHeader>
                     <TableBody emptyContent={"No debugs to display."}>
                         {userDebugs.map(
                             (item, index) =>
                                 item.isUserDebug && (
                                     <TableRow key={index}>
-                                        <TableCell>{item.event}</TableCell>
-                                        <TableCell>{item.value}</TableCell>
+                                        <TableCell className="whitespace-nowrap text-[#ffa500] font-bold">{item.event}</TableCell>
+                                        <TableCell className="text-[#5497c3]">{item.value}</TableCell>
                                     </TableRow>
                                 )
                         )}

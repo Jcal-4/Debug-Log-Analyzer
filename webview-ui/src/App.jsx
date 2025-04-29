@@ -546,7 +546,7 @@ const App = () => {
                                 aria-label="Tabs variants"
                                 variant="underlined"
                             >
-                                <Tab title="Analyzed Debug Log">
+                                <Tab className="font-bold" title="Analyzed Debug Log">
                                     <CardBody className="h-[calc(100vh-49px)] p-0">
                                         <ScrollShadow className="pb-6" size={10}>
                                             {flattenedData.map((item, index, array) => {
@@ -634,7 +634,7 @@ const App = () => {
                                         </ScrollShadow>
                                     </CardBody>
                                 </Tab>
-                                <Tab className="px-0" title="User Debugs">
+                                <Tab className="px-0 font-bold" title="User Debugs">
                                     <UserDebugs className="px-0" flattenedData={flattenedData} />
                                 </Tab>
                             </Tabs>
