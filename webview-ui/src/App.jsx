@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
+import UserDebugs from "./userDebugs.jsx"; // Import the UserDebugs component
 import "./index.css"; // Import the CSS file
 import {
     Input,
@@ -25,6 +26,7 @@ import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 const App = () => {
     console.log("App component re-rendered");
     const [data, setData] = useState(null);
+    const [flattenedData, setFlattenedData] = useState([]);
     const [codeUnitStarted, setCodeUnitStarted] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -82,6 +84,8 @@ const App = () => {
                 }
             });
 
+            console.log("flattenArray result", flattenedData);
+            setFlattenedData(flattenedData);
             setFatalErrorsCount(fatalErrorCount);
             setExceptionCount(exceptionCount);
             setuserDebugCount(userDebugCount);
@@ -543,9 +547,9 @@ const App = () => {
                                 variant="underlined"
                             >
                                 <Tab title="Analyzed Debug Log">
-                                    <CardBody className="h-[calc(100vh-48px)] p-0">
+                                    <CardBody className="h-[calc(100vh-49px)] p-0">
                                         <ScrollShadow className="pb-6" size={10}>
-                                            {flattenArray(data).map((item, index, array) => {
+                                            {flattenedData.map((item, index, array) => {
                                                 // Determine if the current item is within a method-entry and method-exit block
                                                 let additionalIndent = 0;
                                                 for (let i = index - 1; i >= 0; i--) {
@@ -630,42 +634,8 @@ const App = () => {
                                         </ScrollShadow>
                                     </CardBody>
                                 </Tab>
-                                <Tab title="User Debugs">
-                                    <h1>In development...</h1>
-                                    <Table
-                                        aria-label="Example static collection table"
-                                        color="primary"
-                                        defaultSelectedKeys={["1"]}
-                                        selectionMode="single"
-                                    >
-                                        <TableHeader>
-                                            <TableColumn>NAME</TableColumn>
-                                            <TableColumn>ROLE</TableColumn>
-                                            <TableColumn>STATUS</TableColumn>
-                                        </TableHeader>
-                                        <TableBody emptyContent={"No debugs to display."}>
-                                            {/* <TableRow key="1">
-                                                <TableCell>Tony Reichert</TableCell>
-                                                <TableCell>CEO</TableCell>
-                                                <TableCell>Active</TableCell>
-                                            </TableRow>
-                                            <TableRow key="2">
-                                                <TableCell>Zoey Lang</TableCell>
-                                                <TableCell>Technical Lead</TableCell>
-                                                <TableCell>Paused</TableCell>
-                                            </TableRow>
-                                            <TableRow key="3">
-                                                <TableCell>Jane Fisher</TableCell>
-                                                <TableCell>Senior Developer</TableCell>
-                                                <TableCell>Active</TableCell>
-                                            </TableRow>
-                                            <TableRow key="4">
-                                                <TableCell>William Howard</TableCell>
-                                                <TableCell>Community Manager</TableCell>
-                                                <TableCell>Vacation</TableCell>
-                                            </TableRow> */}
-                                        </TableBody>
-                                    </Table>
+                                <Tab className="px-0" title="User Debugs">
+                                    <UserDebugs className="px-0" flattenedData={flattenedData} />
                                 </Tab>
                             </Tabs>
                         </Card>
