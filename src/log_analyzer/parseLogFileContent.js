@@ -40,7 +40,7 @@ function parseLogFileContent(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") " + methodKey + " ", methodName, methodKey]);
+                codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") " + methodKey + " - ", methodName, methodKey]);
             }
         } else if (line.includes("|METHOD_EXIT|")) {
             let parts = line.split("|");
@@ -54,7 +54,7 @@ function parseLogFileContent(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_EXIT" + "(Line: " + currentLineNumber + ") " + methodKey + " ", methodName, methodKey]);
+                codeUnitArray.push(["METHOD_EXIT" + "(Line: " + currentLineNumber + ") " + methodKey + " - ", methodName, methodKey]);
             }
         } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
             let parts = line.split("|");
@@ -168,13 +168,13 @@ function parseLogFileContent(fileContent) {
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
             let apexLine = parts[2];
-            codeUnitArray.push(["SOQL_EXECUTE_BEGIN " + apexLine + " ", methodName]);
+            codeUnitArray.push(["SOQL_EXECUTE_BEGIN " + apexLine + " - ", methodName]);
         } else if (line.includes("SOQL_EXECUTE_END")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
             let apexLine = parts[2];
-            codeUnitArray.push(["SOQL_EXECUTE_END " + apexLine + " ", methodName]);
+            codeUnitArray.push(["SOQL_EXECUTE_END " + apexLine + " - ", methodName]);
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             // codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter} : ${methodName}`, methodName]);
 

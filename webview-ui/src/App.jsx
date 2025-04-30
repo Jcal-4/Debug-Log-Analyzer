@@ -574,7 +574,7 @@ const App = () => {
                                                                 {(() => {
                                                                     let splitString = item.event.split(":");
                                                                     let firstPart = splitString.slice(0, 2).join(":");
-                                                                    return highlightSearchTerm(firstPart, searchTerm);
+                                                                    return highlightSearchTerm(`${firstPart} -`, searchTerm);
                                                                 })()}
                                                             </span>
                                                         )}
@@ -582,8 +582,8 @@ const App = () => {
                                                             <span className={`data-value code-unit-started`}>
                                                                 {(() => {
                                                                     let splitString = item.event.split(":");
-                                                                    let firstPart = splitString.slice(2).join(":");
-                                                                    return highlightSearchTerm(firstPart, searchTerm);
+                                                                    let secondPart = splitString.slice(2).join(":");
+                                                                    return highlightSearchTerm(secondPart, searchTerm);
                                                                 })()}
                                                             </span>
                                                         )}
@@ -619,9 +619,9 @@ const App = () => {
                                                                 </span>
                                                                 <span className={`data-variable-name`}>
                                                                     {(() => {
-                                                                        const match = item.event.match(/\(([^)]+)\).*?\(([^)]+)\)/);
-                                                                        if (match && match[2]) {
-                                                                            return highlightSearchTerm("(" + match[2] + ") ", searchTerm);
+                                                                        const match = item.event.match(/\(([^)]+)\)/g);
+                                                                        if (match) {
+                                                                            return highlightSearchTerm(`${match} `, searchTerm);
                                                                         }
                                                                     })()}
                                                                 </span>
