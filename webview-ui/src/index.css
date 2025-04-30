@@ -58,7 +58,7 @@ h1 {
 
 span.data-event.code-unit-started {
     color: #66fcf1;
-    font-weight: bolder;
+    font-weight: bold;
 }
 
 /* New styles for nested arrays */

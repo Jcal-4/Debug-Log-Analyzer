@@ -613,7 +613,7 @@ const App = () => {
                                                             <>
                                                                 <span className={`data-event`}>
                                                                     {(() => {
-                                                                        const firstPart = item.event.split(")")[0] + ") - ";
+                                                                        const firstPart = item.event.split("]")[0] + "] - ";
                                                                         return highlightSearchTerm(firstPart, searchTerm);
                                                                     })()}
                                                                 </span>

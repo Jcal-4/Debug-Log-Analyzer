@@ -30,7 +30,7 @@ const UserDebugs = ({ flattenedData }) => {
             {userDebugs && userDebugs.length > 0 ? (
                 <Table className="rounded-none" isStriped aria-label="Example static collection table" color="primary">
                     <TableHeader>
-                        <TableColumn className="font-bold">Line</TableColumn>
+                        <TableColumn className="font-bold">DebugLine</TableColumn>
                         <TableColumn className="font-bold">Log</TableColumn>
                     </TableHeader>
                     <TableBody emptyContent={"No debugs to display."}>

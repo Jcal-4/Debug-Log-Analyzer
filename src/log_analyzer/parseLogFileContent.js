@@ -40,7 +40,7 @@ function parseLogFileContent(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") ", methodName, methodKey]);
+                codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") " + methodKey + " ", methodName, methodKey]);
             }
         } else if (line.includes("|METHOD_EXIT|")) {
             let parts = line.split("|");
@@ -54,7 +54,7 @@ function parseLogFileContent(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_EXIT" + "(Line: " + currentLineNumber + ") ", methodName, methodKey]);
+                codeUnitArray.push(["METHOD_EXIT" + "(Line: " + currentLineNumber + ") " + methodKey + " ", methodName, methodKey]);
             }
         } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
             let parts = line.split("|");
@@ -144,13 +144,15 @@ function parseLogFileContent(fileContent) {
         } else if (line.includes("USER_DEBUG")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
+            let apexLine = parts[2];
             let methodNameLowercase = methodName.toLowerCase();
 
-            codeUnitArray.push(["USER_DEBUG" + "(Line: " + currentLineNumber + ") ", methodName]);
+            codeUnitArray.push(["USER_DEBUG" + "(Line: " + currentLineNumber + ") " + apexLine + " ", methodName]);
         } else if (line.includes("VARIABLE_ASSIGNMENT")) {
             let parts = line.split("|");
             let variableName = "";
             let variableValue = "";
+            let apexLine = parts[2];
             if (parts.length == 6) {
                 variableName = parts[parts.length - 3];
                 variableValue = parts[parts.length - 2];
@@ -158,28 +160,24 @@ function parseLogFileContent(fileContent) {
                 variableName = parts[parts.length - 2];
                 variableValue = parts[parts.length - 1];
             }
-            if (
-                variableName != "this" &&
-                variableName != "t" &&
-                variableName != "handler" &&
-                variableName != "field" &&
-                variableName != "tName" &&
-                !variableName.includes("this.")
-            ) {
-                codeUnitArray.push(["VARIABLE_ASSIGNMENT" + "(Line: " + currentLineNumber + ") " + "- (" + variableName + ") ", variableValue]);
+            if (variableName != "this" && variableName != "t" && variableName != "handler" && variableName != "field" && variableName != "tName") {
+                codeUnitArray.push([
+                    "VARIABLE_ASSIGNMENT" + "(Line: " + currentLineNumber + ") " + apexLine + " - (" + variableName + ") ",
+                    variableValue
+                ]);
             }
         } else if (line.includes("SOQL_EXECUTE_BEGIN")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-
-            codeUnitArray.push(["SOQL_EXECUTE_BEGIN" + "(Line: " + currentLineNumber + ") ", methodName]);
+            let apexLine = parts[2];
+            codeUnitArray.push(["SOQL_EXECUTE_BEGIN" + "(Line: " + currentLineNumber + ") " + apexLine + " ", methodName]);
         } else if (line.includes("SOQL_EXECUTE_END")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let methodNameLowercase = methodName.toLowerCase();
-
-            codeUnitArray.push(["SOQL_EXECUTE_END" + "(Line: " + currentLineNumber + ") ", methodName]);
+            let apexLine = parts[2];
+            codeUnitArray.push(["SOQL_EXECUTE_END" + "(Line: " + currentLineNumber + ") " + apexLine + " ", methodName]);
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             // codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter} : ${methodName}`, methodName]);
 
