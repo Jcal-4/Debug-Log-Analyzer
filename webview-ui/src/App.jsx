@@ -547,7 +547,7 @@ const App = () => {
                                 variant="underlined"
                             >
                                 <Tab className="font-bold" title="Analyzed Debug Log">
-                                    <CardBody className="h-[calc(100vh-49px)] p-0">
+                                    <CardBody className="h-[calc(100vh-49px)] p-0 font-normal">
                                         <ScrollShadow className="pb-6" size={10}>
                                             {flattenedData.map((item, index, array) => {
                                                 // Determine if the current item is within a method-entry and method-exit block
