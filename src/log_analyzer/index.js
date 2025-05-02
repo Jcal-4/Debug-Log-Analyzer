@@ -27,7 +27,7 @@ function analyzeDebugLog(context) {
                 if (result.parsedContent.length === 0) {
                     vscode.window.showInformationMessage("No components found in the log file");
                 } else {
-                    sendMessageToWebview(context, result.parsedContent, result.codeUnitStarted);
+                    sendMessageToWebview(context, result.parsedContent, result.codeUnitStarted, fileContent);
                 }
             });
         } catch (error) {
@@ -49,7 +49,7 @@ async function readFile(URI) {
  * Creates a webview panel to display the log analysis results.
  * @param {Array} parsedContent - The restructured components to send to webview.
  */
-function sendMessageToWebview(context, parsedContent, codeUnitStarted) {
+function sendMessageToWebview(context, parsedContent, codeUnitStarted, fileContent) {
     console.log("parsedContent: ", parsedContent);
     const panel = vscode.window.createWebviewPanel("logAnalyzer", "Log Analyzer", vscode.ViewColumn.One, {
         retainContextWhenHidden: true,
@@ -83,7 +83,11 @@ function sendMessageToWebview(context, parsedContent, codeUnitStarted) {
                     }
                 });
             } else if (message.command === "getDebugLevels") {
-                retrieveDebugLevels()
+                let debugLevelsObj = retrieveDebugLevels(fileContent);
+                panel.webview.postMessage({
+                    command: "debugLevels",
+                    data: debugLevelsObj
+                });
             } else if (message.command === "error") {
                 console.log("Error: ", "error Received");
             }

@@ -58,6 +58,10 @@ const App = () => {
                 let newArray = message.data.executedComponents;
                 setData(newArray);
                 setCodeUnitStarted(message.data.codeUnitStarted || false);
+            } else if (message.command === "debugLevels") {
+                console.log("debugLevels Received", message.data);
+            } else if (message.command === "error") {
+                console.log("Error: ", "error Received");
             }
         });
 
