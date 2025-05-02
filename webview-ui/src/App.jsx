@@ -26,6 +26,7 @@ import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 const App = () => {
     console.log("App component re-rendered");
     const [data, setData] = useState(null);
+    const [debugLevels, setDebugLevels] = useState(null);
     const [flattenedData, setFlattenedData] = useState([]);
     const [codeUnitStarted, setCodeUnitStarted] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -60,6 +61,7 @@ const App = () => {
                 setCodeUnitStarted(message.data.codeUnitStarted || false);
             } else if (message.command === "debugLevels") {
                 console.log("debugLevels Received", message.data);
+                setDebugLevels(message.data);
             } else if (message.command === "error") {
                 console.log("Error: ", "error Received");
             }
@@ -467,7 +469,7 @@ const App = () => {
 
     return (
         <div>
-            {data ? (
+            {data && debugLevels ? (
                 <Card className="h-screen flex flex-row rounded-none">
                     <CardBody className="filter-container h-screen overflow-y-auto relative">
                         <div className="sticky top-0">
@@ -552,6 +554,13 @@ const App = () => {
                                 variant="underlined"
                             >
                                 <Tab className="font-bold" title="Analyzed Debug Log">
+                                    <div className="flex flex-wrap justify-center gap-2 mx-2 my-2">
+                                        {Object.entries(debugLevels)?.map(([key, value]) => (
+                                            <Code>
+                                                {key} - {value}
+                                            </Code>
+                                        ))}
+                                    </div>
                                     <CardBody className="h-[calc(100vh-49px)] p-0 font-normal">
                                         <ScrollShadow className="pb-6" size={10}>
                                             {flattenedData.map((item, index, array) => {
