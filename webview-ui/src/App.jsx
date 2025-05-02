@@ -18,7 +18,9 @@ import {
     TableColumn,
     TableBody,
     TableRow,
-    TableCell
+    TableCell,
+    Divider,
+    Chip
 } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
@@ -526,15 +528,27 @@ const App = () => {
                                         </CheckboxGroup>
                                     </CardBody>
                                 </Card>
-                                <div className="mt-2 mb-2">
+                                <div className="flex flex-col justify-center mt-2 mb-2">
+                                    <Chip color="warning" variant="faded">
+                                        Statistics
+                                    </Chip>
+                                    <Divider className="my-2" />
                                     <Code className="mt-0" color="danger">
                                         Exceptions Thrown: {exceptionCount}
                                     </Code>
                                     <Code className="mt-2" color="danger">
                                         Fatal Errors: {fatalErrorsCount}
                                     </Code>
+                                    <Divider className="mt-2" />
                                     <Code className="mt-2" color="warning">
                                         User Debugs: {userDebugCount}
+                                    </Code>
+                                    <Divider className="mt-2" />
+                                    <Code className="mt-2" color="primary">
+                                        SOQL Operations: 0
+                                    </Code>
+                                    <Code className="mt-2" color="primary">
+                                        DML Statements: 0
                                     </Code>
                                 </div>
                             </div>
