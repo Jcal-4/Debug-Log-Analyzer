@@ -59,64 +59,46 @@ function parseLogFileContent(fileContent) {
         } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["FLOW_START_INTERVIEW_BEGIN - ", methodName]);
         } else if (line.includes("NAMED_CREDENTIAL_REQUEST")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["NAMED_CREDENTIAL_REQUEST - ", methodName]);
         } else if (line.includes("NAMED_CREDENTIAL_RESPONSE")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["NAMED_CREDENTIAL_RESPONSE - ", methodName]);
         } else if (line.includes("FLOW_START_INTERVIEWS_ERROR")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
 
             codeUnitArray.push(["FLOW_START_INTERVIEWS_ERROR - ", methodName]);
         } else if (line.includes("CALLOUT_REQUEST")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["CALLOUT_REQUEST - ", methodName]);
         } else if (line.includes("CALLOUT_RESPONSE")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
-            let shouldIgnoreMethod = false;
 
             codeUnitArray.push(["CALLOUT_RESPONSE - ", methodName]);
         } else if (line.includes("EXCEPTION_THROWN")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["EXCEPTION_THROWN - ", methodName]);
         } else if (line.includes("FATAL_ERROR")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["FATAL_ERROR - ", methodName]);
         } else if (line.includes("VALIDATION_FAIL")) {
-            let parts = line.split("|");
-            let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
-
             codeUnitArray.push(["VALIDATION_FAIL", ""]);
         } else if (line.includes("VALIDATION_PASS")) {
-            let parts = line.split("|");
-            let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
-
             codeUnitArray.push(["VALIDATION_PASS", ""]);
         } else if (line.includes("VALIDATION_FORMULA")) {
             let parts = line.split("|");
@@ -132,20 +114,17 @@ function parseLogFileContent(fileContent) {
         } else if (line.includes("VALIDATION_RULE")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["VALIDATION_RULE - ", methodName]);
         } else if (line.includes("VALIDATION_ERROR")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["VALIDATION_ERROR - ", methodName]);
         } else if (line.includes("USER_DEBUG")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let apexLine = parts[2];
-            let methodNameLowercase = methodName.toLowerCase();
 
             codeUnitArray.push(["USER_DEBUG " + apexLine + " ", methodName]);
         } else if (line.includes("VARIABLE_ASSIGNMENT")) {
@@ -166,13 +145,11 @@ function parseLogFileContent(fileContent) {
         } else if (line.includes("SOQL_EXECUTE_BEGIN")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
             let apexLine = parts[2];
             codeUnitArray.push(["SOQL_EXECUTE_BEGIN " + apexLine + " - ", methodName]);
         } else if (line.includes("SOQL_EXECUTE_END")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
-            let methodNameLowercase = methodName.toLowerCase();
             let apexLine = parts[2];
             codeUnitArray.push(["SOQL_EXECUTE_END " + apexLine + " - ", methodName]);
         } else if (line.includes("CODE_UNIT_FINISHED")) {

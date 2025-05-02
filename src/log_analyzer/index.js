@@ -2,6 +2,7 @@ const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
 const parseLogFileContent = require("./parseLogFileContent");
+const retrieveDebugLevels = require("./retrieveDebugLevels");
 
 /**
  * Analyzes the debug log by reading the active text editor's content
@@ -19,9 +20,7 @@ function analyzeDebugLog(context) {
             readFile(fileUri).then((fileData) => {
                 const fileContent = new TextDecoder().decode(fileData);
                 if (!fileUri.fsPath.endsWith(".log")) {
-                    vscode.window.showInformationMessage(
-                        " The active file is not a log file. Please open a .log file to analyze."
-                    );
+                    vscode.window.showInformationMessage(" The active file is not a log file. Please open a .log file to analyze.");
                     return;
                 }
                 let result = parseLogFileContent(fileContent);
@@ -63,10 +62,7 @@ function sendMessageToWebview(context, parsedContent, codeUnitStarted) {
     let htmlContent = fs.readFileSync(htmlFilePath, "utf8");
 
     // Convert the local file path to a webview URI
-    const webviewUri = (file) =>
-        panel.webview.asWebviewUri(
-            vscode.Uri.file(path.join(context.extensionPath, "webview-ui", "build", "assets", file))
-        );
+    const webviewUri = (file) => panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "webview-ui", "build", "assets", file)));
     // Replace the placeholder in the HTML with the webview URI
     htmlContent = htmlContent
         .replace(/src="\/assets\/index\.js"/g, `src="${webviewUri("index.js")}"`)
@@ -86,6 +82,8 @@ function sendMessageToWebview(context, parsedContent, codeUnitStarted) {
                         codeUnitStarted: codeUnitStarted
                     }
                 });
+            } else if (message.command === "getDebugLevels") {
+                retrieveDebugLevels()
             } else if (message.command === "error") {
                 console.log("Error: ", "error Received");
             }

@@ -48,6 +48,7 @@ const App = () => {
         const vscode = acquireVsCodeApi();
 
         vscode.postMessage({ command: "webviewLoaded" });
+        vscode.postMessage({ command: "getDebugLevels" });
 
         // Listen for response from the extension
         window.addEventListener("message", (event) => {

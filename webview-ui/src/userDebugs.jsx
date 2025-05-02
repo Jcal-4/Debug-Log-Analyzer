@@ -10,7 +10,7 @@ const UserDebugs = ({ flattenedData }) => {
             flattenedData.forEach((element) => {
                 if (element.isUserDebug) {
                     // Extract the value inside parentheses
-                    const match = element.event.match(/\(([^)]+)\)/);
+                    const match = element.event.match(/\[([^\]]+)\]/);
                     if (match) {
                         userDebugs.push({
                             event: match[1],
@@ -22,6 +22,7 @@ const UserDebugs = ({ flattenedData }) => {
                     console.log("isUserDebug: ", element);
                 }
             });
+            console.log("userDebugs: ", userDebugs);
             setUserDebugs(userDebugs);
         }
     }, [flattenedData]);
@@ -30,8 +31,8 @@ const UserDebugs = ({ flattenedData }) => {
             {userDebugs && userDebugs.length > 0 ? (
                 <Table className="rounded-none" isStriped aria-label="Example static collection table" color="primary">
                     <TableHeader>
-                        <TableColumn className="font-bold">DebugLine</TableColumn>
-                        <TableColumn className="font-bold">Log</TableColumn>
+                        <TableColumn className="font-bold">Apex Line</TableColumn>
+                        <TableColumn className="font-bold">Debug Value</TableColumn>
                     </TableHeader>
                     <TableBody emptyContent={"No debugs to display."}>
                         {userDebugs.map(
@@ -49,8 +50,8 @@ const UserDebugs = ({ flattenedData }) => {
                 <div>
                     <Table aria-label="Example static collection table" color="primary" defaultSelectedKeys={["1"]} selectionMode="single">
                         <TableHeader>
-                            <TableColumn>Line</TableColumn>
-                            <TableColumn>Log</TableColumn>
+                            <TableColumn>Apex Line</TableColumn>
+                            <TableColumn>Debug Value</TableColumn>
                         </TableHeader>
                         <TableBody emptyContent={"No debugs to display."}></TableBody>
                     </Table>
