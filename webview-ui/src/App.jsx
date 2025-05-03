@@ -37,6 +37,7 @@ const App = () => {
     const [fatalErrorsCount, setFatalErrorsCount] = useState(0);
     const [exceptionCount, setExceptionCount] = useState(0);
     const [userDebugCount, setuserDebugCount] = useState(0);
+    const [SOQLCount, setSOQLCount] = useState(0);
     const [matchingItems, setMatchingItems] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
@@ -62,7 +63,7 @@ const App = () => {
                 setData(newArray);
                 setCodeUnitStarted(message.data.codeUnitStarted || false);
             } else if (message.command === "debugLevels") {
-                console.log("debugLevels Received", message.data);
+                // console.log("debugLevels Received", message.data);
                 setDebugLevels(message.data);
             } else if (message.command === "error") {
                 console.log("Error: ", "error Received");
@@ -79,6 +80,8 @@ const App = () => {
         let fatalErrorCount = 0;
         let exceptionCount = 0;
         let userDebugCount = 0;
+        let SOQLCount = 0;
+        let DMLCount = 0;
         if (data) {
             const flattenedData = flattenArray(data);
             flattenedData.forEach((item) => {
@@ -91,13 +94,21 @@ const App = () => {
                 if (item.isUserDebug) {
                     userDebugCount++;
                 }
+                if (item.isSOQL) {
+                    SOQLCount++;
+                }
             });
 
-            console.log("flattenArray result", flattenedData);
+            if (SOQLCount > 0 && SOQLCount % 2 === 0) {
+                SOQLCount = SOQLCount / 2;
+            }
+
+            // console.log("flattenArray result", flattenedData);
             setFlattenedData(flattenedData);
             setFatalErrorsCount(fatalErrorCount);
             setExceptionCount(exceptionCount);
             setuserDebugCount(userDebugCount);
+            setSOQLCount(SOQLCount);
         }
     }, [data]); // Dependency array ensures this runs when `data` changes
 
@@ -238,7 +249,7 @@ const App = () => {
             let computedStyle = window.getComputedStyle(nextElement);
 
             // Check if nextElement value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
-            console.log("nextElementValue", nextElementValue);
+            // console.log("nextElementValue", nextElementValue);
             if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + codeUnitVal)) {
                 nextElementMatchesCurrent = true;
                 nextElement.classList.toggle("hide");
@@ -389,7 +400,7 @@ const App = () => {
         }
 
         const flattenedData = flattenArray(data);
-        console.log("Flattened Data:", flattenedData); // Log the flattened data
+        // console.log("Flattened Data:", flattenedData); // Log the flattened data
         const matchingItems = flattenedData
             .map((item, index) => ({ item, index }))
             .filter(({ item, index }) => {
@@ -429,7 +440,7 @@ const App = () => {
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % matchingItems.length);
-        console.log("handleNext", currentIndex);
+        // console.log("handleNext", currentIndex);
     };
 
     const handlePrevious = () => {
@@ -438,8 +449,8 @@ const App = () => {
 
     const handleCheckboxChange = (e) => {
         const { checked, value } = e.target;
-        console.log(e.target);
-        console.log("value -->", value, "checked-->", checked);
+        // console.log(e.target);
+        // console.log("value -->", value, "checked-->", checked);
         let assignmentVariables = [];
 
         if (checked) {
@@ -542,7 +553,7 @@ const App = () => {
                                         </Code>
                                         <Divider className="mt-1" />
                                         <Code className="mt-1 w-min" color="primary">
-                                            SOQL Operations: 0
+                                            SOQL Operations: {SOQLCount}
                                         </Code>
                                         <Code className="mt-2 w-min" color="primary">
                                             DML Statements: 0
