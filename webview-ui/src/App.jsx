@@ -528,29 +528,27 @@ const App = () => {
                                         </CheckboxGroup>
                                     </CardBody>
                                 </Card>
-                                <div className="flex flex-col justify-center mt-2 mb-2">
-                                    <Chip color="warning" variant="faded">
-                                        Statistics
-                                    </Chip>
-                                    <Divider className="my-2" />
-                                    <Code className="mt-0" color="danger">
-                                        Exceptions Thrown: {exceptionCount}
-                                    </Code>
-                                    <Code className="mt-2" color="danger">
-                                        Fatal Errors: {fatalErrorsCount}
-                                    </Code>
-                                    <Divider className="mt-2" />
-                                    <Code className="mt-2" color="warning">
-                                        User Debugs: {userDebugCount}
-                                    </Code>
-                                    <Divider className="mt-2" />
-                                    <Code className="mt-2" color="primary">
-                                        SOQL Operations: 0
-                                    </Code>
-                                    <Code className="mt-2" color="primary">
-                                        DML Statements: 0
-                                    </Code>
-                                </div>
+                                <Card className="mt-2 mb-2">
+                                    <CardBody>
+                                        <Code className="mt-0 w-min" color="danger">
+                                            Exceptions Thrown: {exceptionCount}
+                                        </Code>
+                                        <Code className="mt-2 w-min" color="danger">
+                                            Fatal Errors: {fatalErrorsCount}
+                                        </Code>
+                                        <Divider className="mt-1" />
+                                        <Code className="mt-1 w-min" color="warning">
+                                            User Debugs: {userDebugCount}
+                                        </Code>
+                                        <Divider className="mt-1" />
+                                        <Code className="mt-1 w-min" color="primary">
+                                            SOQL Operations: 0
+                                        </Code>
+                                        <Code className="mt-2 w-min" color="primary">
+                                            DML Statements: 0
+                                        </Code>
+                                    </CardBody>
+                                </Card>
                             </div>
                         </div>
                     </CardBody>
