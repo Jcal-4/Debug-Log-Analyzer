@@ -527,9 +527,12 @@ const App = () => {
                                 <Card>
                                     <CardBody className="sticky top-0">
                                         <CheckboxGroup
-                                            defaultValue={["flow", "method-entry", "validation-rule", "variable-assignment", "soql"]}
-                                            label="Select Elements"
+                                            defaultValue={["flow", "method-entry", "validation-rule", "variable-assignment", "soql", "dml"]}
+                                            label="Select Events to Filter"
                                         >
+                                            <Checkbox value="dml" onChange={handleCheckboxChange}>
+                                                DML
+                                            </Checkbox>
                                             <Checkbox value="flow" onChange={handleCheckboxChange}>
                                                 Flows
                                             </Checkbox>
@@ -542,7 +545,7 @@ const App = () => {
                                             <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
                                                 Validations
                                             </Checkbox>
-                                            <Checkbox className="text-customBlue" value="variable-assignment" onChange={handleCheckboxChange}>
+                                            <Checkbox value="variable-assignment" onChange={handleCheckboxChange}>
                                                 Variable Assignment
                                             </Checkbox>
                                         </CheckboxGroup>
@@ -611,7 +614,7 @@ const App = () => {
                                                     <div
                                                         data-key={item.key || index}
                                                         key={item.key}
-                                                        className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.isUserDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
+                                                        className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.isUserDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""} ${item.isDML ? "dml" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
                                                         ref={(el) => (itemRefs.current[index] = el)}
                                                         style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
                                                     >
