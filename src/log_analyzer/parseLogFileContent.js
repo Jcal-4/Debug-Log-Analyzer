@@ -152,6 +152,16 @@ function parseLogFileContent(fileContent) {
             let methodName = parts[parts.length - 1];
             let apexLine = parts[2];
             codeUnitArray.push(["SOQL_EXECUTE_END " + apexLine + " - ", methodName]);
+        } else if (line.includes("DML_BEGIN")) {
+            let parts = line.split("|");
+            let methodName = parts.slice(3).join("|");
+            let apexLine = parts[2];
+            codeUnitArray.push(["DML_BEGIN " + apexLine + " - ", methodName]);
+        } else if (line.includes("DML_END")) {
+            let parts = line.split("|");
+            // let methodName = parts[parts.length - 1];
+            let apexLine = parts[2];
+            codeUnitArray.push(["DML_END " + apexLine, ""]);
         } else if (line.includes("CODE_UNIT_FINISHED")) {
             // codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter} : ${methodName}`, methodName]);
 
