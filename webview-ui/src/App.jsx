@@ -38,6 +38,7 @@ const App = () => {
     const [exceptionCount, setExceptionCount] = useState(0);
     const [userDebugCount, setuserDebugCount] = useState(0);
     const [SOQLCount, setSOQLCount] = useState(0);
+    const [DMLCount, setDMLCount] = useState(0);
     const [matchingItems, setMatchingItems] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
@@ -88,19 +89,24 @@ const App = () => {
                 if (item.isFatalError) {
                     fatalErrorCount++;
                 }
-                if (item.isException) {
+                else if (item.isException) {
                     exceptionCount++;
                 }
-                if (item.isUserDebug) {
+                else if (item.isUserDebug) {
                     userDebugCount++;
                 }
-                if (item.isSOQL) {
+                else if (item.isSOQL) {
                     SOQLCount++;
+                } else if (item.isDML) {
+                    DMLCount++;
                 }
             });
 
             if (SOQLCount > 0 && SOQLCount % 2 === 0) {
                 SOQLCount = SOQLCount / 2;
+            }
+            if (DMLCount > 0 && DMLCount % 2 === 0) {
+                DMLCount = DMLCount / 2;
             }
 
             // console.log("flattenArray result", flattenedData);
@@ -109,6 +115,7 @@ const App = () => {
             setExceptionCount(exceptionCount);
             setuserDebugCount(userDebugCount);
             setSOQLCount(SOQLCount);
+            setDMLCount(DMLCount);
         }
     }, [data]); // Dependency array ensures this runs when `data` changes
 
@@ -157,9 +164,10 @@ const App = () => {
             const includesUserDebug = dataItem[0].includes("USER_DEBUG");
             const includesFlow = dataItem[0].includes("FLOW_");
             const includesValidation = dataItem[0].includes("VALIDATION");
-            const includesSOQL = dataItem[0].includes("SOQL");
+            const includesSOQL = dataItem[0].includes("SOQL_EXECUTE");
             const includesException = dataItem[0].includes("EXCEPTION_THROWN");
             const includesFatalError = dataItem[0].includes("FATAL_ERROR");
+            const includesDML = dataItem[0].includes("DML_");
             const isCodeUnitStarted = isValueArray && includesCodeUnitStarted;
 
             if (Array.isArray(dataItem[1])) {
@@ -186,6 +194,7 @@ const App = () => {
                         isSOQL: includesSOQL,
                         isException: includesException,
                         isFatalError: includesFatalError,
+                        isDML: includesDML,
                         level: currentLevel
                     }
                 ];
@@ -556,7 +565,7 @@ const App = () => {
                                             SOQL Operations: {SOQLCount}
                                         </Code>
                                         <Code className="mt-2 w-min" color="primary">
-                                            DML Statements: 0
+                                            DML Statements: {DMLCount}
                                         </Code>
                                     </CardBody>
                                 </Card>
