@@ -79,7 +79,8 @@ const App = () => {
         let DMLCount = 0;
         if (data) {
             const flattenedData = flattenArray(data);
-            flattenedData.forEach((item) => {
+            flattenedData.forEach((item, index) => {
+                item.index = index; // Add index to each item
                 if (item.isFatalError) {
                     fatalErrorCount++;
                 }
@@ -103,7 +104,7 @@ const App = () => {
                 DMLCount = DMLCount / 2;
             }
 
-            // console.log("flattenArray result", flattenedData);
+            console.log("flattenArray result", flattenedData);
             setFlattenedData(flattenedData);
             setFatalErrorsCount(fatalErrorCount);
             setExceptionCount(exceptionCount);
@@ -169,7 +170,7 @@ const App = () => {
                     ...item,
                     nested: true
                 }));
-                return [{ event: `${dataItem[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level: currentLevel }, ...nestedItems];
+                return [{ event: `${dataItem[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level: currentLevel}, ...nestedItems];
             } else if (typeof dataItem[1] === "string") {
                 // Case: [string, string]
                 let result = [
@@ -422,7 +423,10 @@ const App = () => {
     // Effect to handle scrolling to the current index of the matching items
     useEffect(() => {
         if (matchingItems.length > 0) {
-            const nearestIndex = matchingItems[currentIndex % matchingItems.length].index;
+            console.log('matching Items:', matchingItems);
+            console.log('itemRefs:', itemRefs);
+            const nearestIndex = matchingItems[currentIndex % matchingItems.length].index; // isn't currentIndex always 0 since it gets reset to 0 when the search term changes?
+            console.log("nearestIndex:", nearestIndex);
             if (itemRefs.current[nearestIndex]) {
                 itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
             }
