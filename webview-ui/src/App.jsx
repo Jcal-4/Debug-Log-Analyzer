@@ -424,8 +424,10 @@ const App = () => {
     // function to scroll into view when redirected from userDebugs
     const scrollToElement = (index) => {
         const attemptScroll = () => {
-            if (itemRefs.current[index]) {
-                itemRefs.current[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+            const element = itemRefs.current[index];
+            if (element) {
+                console.log("Scrolling to element:", element);
+                element.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
             } else {
                 setTimeout(attemptScroll, 50); // Retry after 100ms if the element is not found
             }
@@ -485,7 +487,7 @@ const App = () => {
     return (
         <div>
             {flattenedData && debugLevels ? (
-                <Card className="h-screen flex flex-row rounded-none">
+                <Card className="h-screen flex flex-row rounded-none ">
                     <CardBody className="filter-container h-screen overflow-y-auto relative">
                         <div className="sticky top-0">
                             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
@@ -569,7 +571,7 @@ const App = () => {
                         </div>
                     </CardBody>
                     <div className="data-container">
-                        <Card className="h-screen rounded-r-none">
+                        <Card className="h-screen rounded-r-none p-0">
                             <Tabs
                                 classNames={{
                                     tabList: "flex justify-center relative gap-6 w-full rounded-none p-0 border-divider",
@@ -578,21 +580,22 @@ const App = () => {
                                     tabContent: "group-data-[selected=true]:text-customBlue",
                                     flex: "flex justify-center"
                                 }}
+                                className="p-0"
                                 aria-label="Tabs variants"
                                 variant="underlined"
                                 selectedKey={selectedTab}
                                 onSelectionChange={setSelectedTab}
                             >
-                                <Tab key="analyzedDebugLogs" className="font-bold" title="Analyzed Debug Log">
-                                    <div className="flex flex-wrap justify-center gap-2 mx-2 my-2">
+                                <Tab key="analyzedDebugLogs" className="font-bold p-0" title="Analyzed Debug Log">
+                                    <div className="flex flex-wrap justify-center gap-2 my-2">
                                         {Object.entries(debugLevels)?.map(([key, value]) => (
-                                            <Code key={key}>
-                                                {key} - {value}
+                                            <Code className="text-xs" key={key}>
+                                                {key}: {value}
                                             </Code>
                                         ))}
                                     </div>
-                                    <CardBody className="h-[calc(100vh-49px)] p-0 font-normal">
-                                        <ScrollShadow className="pb-6" size={10}>
+                                    <CardBody className="h-[calc(100vh-68px)] p-0 font-normal">
+                                        <ScrollShadow className="p-0" size={10}>
                                             {flattenedData.map((item, index, array) => {
                                                 // Determine if the current item is within a method-entry and method-exit block
                                                 let additionalIndent = 0;
@@ -609,7 +612,7 @@ const App = () => {
                                                     <div
                                                         data-key={item.key || index}
                                                         key={item.key}
-                                                        className={`data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.isUserDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""} ${item.isDML ? "dml" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
+                                                        className={` data-item ${item.nested ? "nested-array" : ""} ${item.codeUnitStarted ? "code-unit-started" : ""} ${item.isUserDebug ? "user-debug" : ""} ${item.isMethodEntry ? "method-entry" : ""} ${item.isVariableAssignment ? "variable-assignment" : ""} ${item.isFlow ? "flow" : ""} ${item.isValidation ? "validation-rule" : ""} ${item.isSOQL ? "soql" : ""} ${item.isDML ? "dml" : ""}  ${item.isMethodExit ? "method-exit" : ""} ${item.isException ? "exception-thrown" : ""} ${item.isFatalError ? "fatal-error" : ""} ${index === matchingItems[currentIndex]?.index ? "current-index" : ""}`}
                                                         ref={(el) => (itemRefs.current[index] = el)}
                                                         style={{ marginLeft: `${item.level * 20 + additionalIndent}px` }} // Indent based on nesting level
                                                     >

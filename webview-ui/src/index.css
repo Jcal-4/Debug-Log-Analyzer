@@ -27,7 +27,6 @@ h1 {
 }
 
 .data-container {
-    height: calc(100vh - 48px);
     padding: 0;
     margin: 0;
     max-width: calc(100% - 250px);
@@ -38,6 +37,7 @@ h1 {
     margin: 5px 0;
     padding: 5px;
     border-bottom: 1px solid #1f2833;
+    scroll-margin-top: 400px;
     /* max-height: 500px; */
     /* transition: all 0.3s ease; */
 }
@@ -192,4 +192,5 @@ input[type="text"] {
     color: #ffa500;
     font-weight: bold;
     font-style: italic;
+    scroll-margin-top: 400px;
 }
