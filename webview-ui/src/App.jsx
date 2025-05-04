@@ -562,11 +562,9 @@ const App = () => {
                                         <Code className="mt-1 w-min" color="danger">
                                             Fatal Errors: {fatalErrorsCount}
                                         </Code>
-                                        {/* <Divider className="mt-1" /> */}
                                         <Code className="mt-1 w-min" color="warning">
                                             User Debugs: {userDebugCount}
                                         </Code>
-                                        {/* <Divider className="mt-1" /> */}
                                         <Code className="mt-1 w-min" color="primary">
                                             SOQL Operations: {SOQLCount}
                                         </Code>
@@ -689,7 +687,7 @@ const App = () => {
                                         </ScrollShadow>
                                     </CardBody>
                                 </Tab>
-                                <Tab key="userDebugs" className="px-0 font-bold" title="User Debugs">
+                                <Tab key="userDebugs" className="px-0 font-bold" title="Debugs & Errors">
                                     <UserDebugs
                                         className="px-0"
                                         flattenedData={flattenedData}

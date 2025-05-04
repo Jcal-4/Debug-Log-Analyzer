@@ -4,7 +4,7 @@ import pluginReact from "eslint-plugin-react";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-    { files: ["**/*.{js,cjs,jsx,tsx}"] },
+    { files: ["**/*.{js,cjs,jsx,tsx,mjs}"] },
     { languageOptions: { globals: { ...globals.browser, ...globals.node }, ecmaVersion: 2021, sourceType: "module" } },
     pluginJs.configs.recommended,
     pluginReact.configs.flat.recommended,

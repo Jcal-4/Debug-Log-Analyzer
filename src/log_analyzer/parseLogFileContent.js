@@ -89,8 +89,9 @@ function parseLogFileContent(fileContent) {
         } else if (line.includes("EXCEPTION_THROWN")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
+            let apexLine = parts[2];
 
-            codeUnitArray.push(["EXCEPTION_THROWN - ", methodName]);
+            codeUnitArray.push(["EXCEPTION_THROWN " + apexLine + " - ", methodName]);
         } else if (line.includes("FATAL_ERROR")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
@@ -126,7 +127,7 @@ function parseLogFileContent(fileContent) {
             let methodName = parts[parts.length - 1];
             let apexLine = parts[2];
 
-            codeUnitArray.push(["USER_DEBUG " + apexLine + " ", methodName]);
+            codeUnitArray.push(["USER_DEBUG " + apexLine + " - ", methodName]);
         } else if (line.includes("VARIABLE_ASSIGNMENT")) {
             let parts = line.split("|");
             let variableName = "";

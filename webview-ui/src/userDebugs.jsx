@@ -1,6 +1,20 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
+import {
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    addToast,
+    ToastProvider,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
+    Button
+} from "@heroui/react";
 
 const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
     const [userDebugs, setUserDebugs] = useState([]);
@@ -9,7 +23,10 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
         let userDebugs = [];
         if (flattenedData) {
             flattenedData.forEach((element) => {
-                if (element.isUserDebug) {
+                if (element.isUserDebug || element.isException) {
+                    if (element.isException) {
+                        console.log("elementException: ", element);
+                    }
                     // Extract the value inside parentheses
                     const match = element.event.match(/\[([^\]]+)\]/);
                     if (match) {
@@ -17,9 +34,18 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
                             event: match[1],
                             value: element.value, // The value inside parentheses
                             isUserDebug: element.isUserDebug,
+                            isException: element.isException,
                             index: element.index
                         });
                     }
+                } else if (element.isFatalError) {
+                    console.log("elementFatal: ", element);
+                    userDebugs.push({
+                        event: element.event,
+                        value: element.value,
+                        isFatalError: element.isFatalError,
+                        index: element.index
+                    });
                 }
             });
             console.log("userDebugs: ", userDebugs);
@@ -27,31 +53,89 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
         }
     }, [flattenedData]);
 
-    const handleClick = (event) => {
-        const key = event.target.getAttribute("data-key").split(".")[0];
-        console.log("key: ", key);
-        setSelectedTab("analyzedDebugLogs");
-        scrollToElement(key);
+    const handleClick = (index) => {
+        addToast({
+            title: "Success",
+            description: "Your changes have been saved successfully."
+        });
+        console.log("index: ", index);
+        // const key = event.target.parentElement.getAttribute("data-key").split(".")[0];
+        // setSelectedTab("analyzedDebugLogs");
+        // scrollToElement(key);
     };
 
     return (
         <div className="userDebugs overflow-y-scroll h-[calc(100vh-49px)] px-0">
+            <ToastProvider />
             {userDebugs && userDebugs.length > 0 ? (
                 <Table className="rounded-none" isStriped aria-label="Example static collection table" color="primary">
                     <TableHeader>
-                        <TableColumn className="font-bold">Apex Line</TableColumn>
+                        <TableColumn className="font-bold">Line #</TableColumn>
+                        <TableColumn className="font-bold">Log Type</TableColumn>
                         <TableColumn className="font-bold">Debug Value</TableColumn>
+                        <TableColumn className="font-bold">Actions</TableColumn>
                     </TableHeader>
                     <TableBody emptyContent={"No debugs to display."}>
-                        {userDebugs.map(
-                            (item) =>
-                                item.isUserDebug && (
-                                    <TableRow key={item.index} data-key={item.index} className="cursor-pointer" onClick={handleClick}>
-                                        <TableCell className="whitespace-nowrap text-[#ffa500] font-bold align-top">{item.event}</TableCell>
-                                        <TableCell className="text-[#5497c3]">{item.value}</TableCell>
+                        {userDebugs.map((item) => {
+                            if (item.isUserDebug || item.isException) {
+                                return (
+                                    <TableRow key={item.index} data-key={item.index}>
+                                        <TableCell className={`whitespace-nowrap font-bold align-top`}>{item.event}</TableCell>
+                                        <TableCell
+                                            className={`whitespace-nowrap ${item.isException ? "text-[#ed7c66]" : "text-[#5497c3]"} font-bold align-top`}
+                                        >
+                                            {item.isUserDebug ? "User Debug" : "Exception Thrown"}
+                                        </TableCell>
+                                        <TableCell className={`${item.isUserDebug ? "text-[#5497c3]" : "text-[#ed7c66]"} font-bold align-top`}>
+                                            {item.value}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="relative flex justify-end items-center gap-2">
+                                                <Dropdown>
+                                                    <DropdownTrigger>
+                                                        <Button isIconOnly size="sm" variant="light">
+                                                            <VerticalDotsIcon className="text-default-300" />
+                                                        </Button>
+                                                    </DropdownTrigger>
+                                                    <DropdownMenu>
+                                                        <DropdownItem key="view">Copy</DropdownItem>
+                                                        <DropdownItem key="edit" onClick={() => {handleClick(item.index)}}>
+                                                            Go to Log Location
+                                                        </DropdownItem>
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                            </div>
+                                        </TableCell>
                                     </TableRow>
-                                )
-                        )}
+                                );
+                            } else if (item.isFatalError) {
+                                return (
+                                    <TableRow key={item.index} data-key={item.index} className="cursor-pointer">
+                                        <TableCell className="whitespace-nowrap text-[#ed7c66] font-bold align-top"></TableCell>
+                                        <TableCell className="whitespace-nowrap text-[#ed7c66] font-bold align-top">Fatal Error</TableCell>
+                                        <TableCell className="text-[#ed7c66] font-bold">{item.value}</TableCell>
+                                        <TableCell>
+                                            <div className="relative flex justify-end items-center gap-2">
+                                                <Dropdown>
+                                                    <DropdownTrigger>
+                                                        <Button isIconOnly size="sm" variant="light">
+                                                            <VerticalDotsIcon className="text-default-300" />
+                                                        </Button>
+                                                    </DropdownTrigger>
+                                                    <DropdownMenu>
+                                                        <DropdownItem key="view">Copy</DropdownItem>
+                                                        <DropdownItem key="edit" onClick={handleClick}>
+                                                            Go to Log Location
+                                                        </DropdownItem>
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            }
+                            return null;
+                        })}
                     </TableBody>
                 </Table>
             ) : (
@@ -66,6 +150,26 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
                 </div>
             )}
         </div>
+    );
+};
+
+export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
+    return (
+        <svg
+            aria-hidden="true"
+            fill="none"
+            focusable="false"
+            height={size || height}
+            role="presentation"
+            viewBox="0 0 24 24"
+            width={size || width}
+            {...props}
+        >
+            <path
+                d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                fill="currentColor"
+            />
+        </svg>
     );
 };
 

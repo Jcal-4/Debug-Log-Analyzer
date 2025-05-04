@@ -1,5 +1,7 @@
 # Debug-Log-Analyzer
-
+```python
+print()
+```
 Drowning in debug logs? Spending too much time sifting through endless lines of text? Debug-Log-Analyzer might be the solution you're looking for.
 
 This personal project is designed to help you declutter and analyze your debug logs more efficiently. It aims to highlight important information and present it in a more manageable format.
