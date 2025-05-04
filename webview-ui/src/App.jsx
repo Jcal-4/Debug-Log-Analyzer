@@ -2,19 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
 import UserDebugs from "./userDebugs.jsx"; // Import the UserDebugs component
 import "./index.css"; // Import the CSS file
-import {
-    Input,
-    CheckboxGroup,
-    Checkbox,
-    Card,
-    CardBody,
-    Spinner,
-    Code,
-    Tabs,
-    Tab,
-    ScrollShadow,
-    Divider
-} from "@heroui/react";
+import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner, Code, Tabs, Tab, ScrollShadow, Divider } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -84,14 +72,11 @@ const App = () => {
                 item.index = index; // Add index to each item
                 if (item.isFatalError) {
                     fatalErrorCount++;
-                }
-                else if (item.isException) {
+                } else if (item.isException) {
                     exceptionCount++;
-                }
-                else if (item.isUserDebug) {
+                } else if (item.isUserDebug) {
                     userDebugCount++;
-                }
-                else if (item.isSOQL) {
+                } else if (item.isSOQL) {
                     SOQLCount++;
                 } else if (item.isDML) {
                     DMLCount++;
@@ -171,7 +156,7 @@ const App = () => {
                     ...item,
                     nested: true
                 }));
-                return [{ event: `${dataItem[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level: currentLevel}, ...nestedItems];
+                return [{ event: `${dataItem[0]}`, nested: false, codeUnitStarted: isCodeUnitStarted, level: currentLevel }, ...nestedItems];
             } else if (typeof dataItem[1] === "string") {
                 // Case: [string, string]
                 let result = [
@@ -373,7 +358,7 @@ const App = () => {
 
     // Effect used to handle search bar input and debounce the search term.
     useEffect(() => {
-        if (searchTerm ) {
+        if (searchTerm) {
             const handler = debounce(() => {
                 setDebouncedSearchTerm(searchTerm);
             }, 400); // Debounce the search term for 300ms
@@ -424,8 +409,8 @@ const App = () => {
     // Effect to handle scrolling to the current index of the matching items
     useEffect(() => {
         if (matchingItems.length > 0) {
-            console.log('matching Items:', matchingItems);
-            console.log('itemRefs:', itemRefs);
+            console.log("matching Items:", matchingItems);
+            console.log("itemRefs:", itemRefs);
             const nearestIndex = matchingItems[currentIndex % matchingItems.length].index; // isn't currentIndex always 0 since it gets reset to 0 when the search term changes?
             console.log("nearestIndex:", nearestIndex);
             if (itemRefs.current[nearestIndex]) {
@@ -435,6 +420,19 @@ const App = () => {
             setMatchingCount(0); // Reset the matching count if search term is empty
         }
     }, [currentIndex, matchingItems]);
+
+    // function to scroll into view when redirected from userDebugs
+    const scrollToElement = (index) => {
+        const attemptScroll = () => {
+            if (itemRefs.current[index]) {
+                itemRefs.current[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+            } else {
+                setTimeout(attemptScroll, 50); // Retry after 100ms if the element is not found
+            }
+        };
+
+        attemptScroll();
+    };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
@@ -681,7 +679,12 @@ const App = () => {
                                     </CardBody>
                                 </Tab>
                                 <Tab key="userDebugs" className="px-0 font-bold" title="User Debugs">
-                                    <UserDebugs className="px-0" flattenedData={flattenedData} setSelectedTab={setSelectedTab} />
+                                    <UserDebugs
+                                        className="px-0"
+                                        flattenedData={flattenedData}
+                                        setSelectedTab={setSelectedTab}
+                                        scrollToElement={scrollToElement}
+                                    />
                                 </Tab>
                             </Tabs>
                         </Card>

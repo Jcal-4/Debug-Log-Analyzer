@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 
-const UserDebugs = ({ flattenedData, setSelectedTab }) => {
+const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
     const [userDebugs, setUserDebugs] = useState([]);
     useEffect(() => {
         console.log("flattenedData: ", flattenedData);
@@ -28,12 +28,10 @@ const UserDebugs = ({ flattenedData, setSelectedTab }) => {
     }, [flattenedData]);
 
     const handleClick = (event) => {
-        console.log("event data: ", event.target);
-        // console.log("event: ", event.target.parentElement);
-
         const key = event.target.getAttribute("data-key").split(".")[0];
         console.log("key: ", key);
         setSelectedTab("analyzedDebugLogs");
+        scrollToElement(key);
     };
 
     return (
