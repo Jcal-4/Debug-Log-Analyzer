@@ -555,11 +555,11 @@ const App = () => {
                                             Fatal Errors: {fatalErrorsCount}
                                         </Code>
                                         {/* <Divider className="mt-1" /> */}
-                                        <Code className="mt-2 w-min" color="warning">
+                                        <Code className="mt-1 w-min" color="warning">
                                             User Debugs: {userDebugCount}
                                         </Code>
                                         {/* <Divider className="mt-1" /> */}
-                                        <Code className="mt-2 w-min" color="primary">
+                                        <Code className="mt-1 w-min" color="primary">
                                             SOQL Operations: {SOQLCount}
                                         </Code>
                                         <Code className="mt-1 w-min" color="primary">
@@ -594,7 +594,7 @@ const App = () => {
                                             </Code>
                                         ))}
                                     </div>
-                                    <CardBody className="h-[calc(100vh-68px)] p-0 font-normal">
+                                    <CardBody className="h-[calc(100vh-76px)] p-0 font-normal">
                                         <ScrollShadow className="p-0" size={10}>
                                             {flattenedData.map((item, index, array) => {
                                                 // Determine if the current item is within a method-entry and method-exit block
