@@ -35,6 +35,7 @@ const App = () => {
     const [matchingItems, setMatchingItems] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
+    const [selectedTab, setSelectedTab] = useState("analyzedDebugLogs");
     const itemRefs = useRef([]);
 
     /**
@@ -581,8 +582,10 @@ const App = () => {
                                 }}
                                 aria-label="Tabs variants"
                                 variant="underlined"
+                                selectedKey={selectedTab}
+                                onSelectionChange={setSelectedTab}
                             >
-                                <Tab className="font-bold" title="Analyzed Debug Log">
+                                <Tab key="analyzedDebugLogs" className="font-bold" title="Analyzed Debug Log">
                                     <div className="flex flex-wrap justify-center gap-2 mx-2 my-2">
                                         {Object.entries(debugLevels)?.map(([key, value]) => (
                                             <Code key={key}>
@@ -677,8 +680,8 @@ const App = () => {
                                         </ScrollShadow>
                                     </CardBody>
                                 </Tab>
-                                <Tab className="px-0 font-bold" title="User Debugs">
-                                    <UserDebugs className="px-0" flattenedData={flattenedData} />
+                                <Tab key="userDebugs" className="px-0 font-bold" title="User Debugs">
+                                    <UserDebugs className="px-0" flattenedData={flattenedData} setSelectedTab={setSelectedTab} />
                                 </Tab>
                             </Tabs>
                         </Card>

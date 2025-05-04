@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 
-const UserDebugs = ({ flattenedData }) => {
+const UserDebugs = ({ flattenedData, setSelectedTab }) => {
     const [userDebugs, setUserDebugs] = useState([]);
     useEffect(() => {
         console.log("flattenedData: ", flattenedData);
@@ -15,7 +16,8 @@ const UserDebugs = ({ flattenedData }) => {
                         userDebugs.push({
                             event: match[1],
                             value: element.value, // The value inside parentheses
-                            isUserDebug: element.isUserDebug
+                            isUserDebug: element.isUserDebug,
+                            index: element.index
                         });
                     }
                 }
@@ -24,6 +26,16 @@ const UserDebugs = ({ flattenedData }) => {
             setUserDebugs(userDebugs);
         }
     }, [flattenedData]);
+
+    const handleClick = (event) => {
+        console.log("event data: ", event.target);
+        // console.log("event: ", event.target.parentElement);
+
+        const key = event.target.getAttribute("data-key").split(".")[0];
+        console.log("key: ", key);
+        setSelectedTab("analyzedDebugLogs");
+    };
+
     return (
         <div className="userDebugs overflow-y-scroll h-[calc(100vh-49px)] px-0">
             {userDebugs && userDebugs.length > 0 ? (
@@ -36,7 +48,7 @@ const UserDebugs = ({ flattenedData }) => {
                         {userDebugs.map(
                             (item) =>
                                 item.isUserDebug && (
-                                    <TableRow key={item.index} index="1111" className="hi">
+                                    <TableRow key={item.index} data-key={item.index} className="cursor-pointer" onClick={handleClick}>
                                         <TableCell className="whitespace-nowrap text-[#ffa500] font-bold align-top">{item.event}</TableCell>
                                         <TableCell className="text-[#5497c3]">{item.value}</TableCell>
                                     </TableRow>
