@@ -13,14 +13,7 @@ import {
     Tabs,
     Tab,
     ScrollShadow,
-    Table,
-    TableHeader,
-    TableColumn,
-    TableBody,
-    TableRow,
-    TableCell,
-    Divider,
-    Chip
+    Divider
 } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
@@ -129,7 +122,6 @@ const App = () => {
      *   - `level`: The depth level of the value in the original structure.
      */
     const flattenArray = (nestedData, currentLevel = 0) => {
-        let errorCount = 0;
         let result = nestedData.reduce((flattenedArray, currentItem) => {
             if (Array.isArray(currentItem)) {
                 return flattenedArray.concat(processAndFlattenArray(currentItem, currentLevel));
@@ -255,17 +247,14 @@ const App = () => {
             !nextElementMatchesCurrent
         ) {
             let nextElementValue = nextElement.querySelector(".data-event").innerHTML;
-            let computedStyle = window.getComputedStyle(nextElement);
 
             // Check if nextElement value CODE_UNIT_FINISHED matches CODE_UNIT_STARTED
-            // console.log("nextElementValue", nextElementValue);
             if (nextElementValue && nextElementValue.includes("CODE_UNIT_FINISHED_" + codeUnitVal)) {
                 nextElementMatchesCurrent = true;
                 nextElement.classList.toggle("hide");
 
                 break;
             } else {
-                // nextElement.classList.toggle("hide");
                 if (isExpandAll && nextElement.classList.contains("hide")) {
                     nextElement.classList.remove("hide");
                 } else if (!isExpandAll && !nextElement.classList.contains("hide")) {
@@ -300,7 +289,6 @@ const App = () => {
         while (nextElement && nextElement.classList.contains("data-item") && !nextElementMatchesCurrent) {
             let nextElementKey = nextElement.getAttribute("data-key");
             let nextElementValue = nextElement.querySelector(".data-value").innerHTML;
-            let computedStyle = window.getComputedStyle(nextElement);
             // Count for method entries matching the methodValue
             if (nextElementKey === methodKey && methodValue.includes(nextElementValue) && nextElement.classList.contains("method-entry")) {
                 methodEntryCounter++;
@@ -398,7 +386,7 @@ const App = () => {
 
     // Effect to handle the debounced search term
     useEffect(() => {
-        if (!data) return;
+        if (!data && !flattenedData) return;
 
         if (!debouncedSearchTerm || debouncedSearchTerm.length < 3) {
             // Clear matching items and reset matching count if search term is invalid
@@ -407,8 +395,9 @@ const App = () => {
             setCurrentIndex(0);
             return;
         }
+        // why do we continue to flatten the data? we already have the flattened data. It should be saved in the state.
+        // const flattenedData = flattenArray(data);
 
-        const flattenedData = flattenArray(data);
         // console.log("Flattened Data:", flattenedData); // Log the flattened data
         const matchingItems = flattenedData
             .map((item, index) => ({ item, index }))
@@ -491,7 +480,7 @@ const App = () => {
 
     return (
         <div>
-            {data && debugLevels ? (
+            {flattenedData && debugLevels ? (
                 <Card className="h-screen flex flex-row rounded-none">
                     <CardBody className="filter-container h-screen overflow-y-auto relative">
                         <div className="sticky top-0">
@@ -556,18 +545,18 @@ const App = () => {
                                         <Code className="mt-0 w-min" color="danger">
                                             Exceptions Thrown: {exceptionCount}
                                         </Code>
-                                        <Code className="mt-2 w-min" color="danger">
+                                        <Code className="mt-1 w-min" color="danger">
                                             Fatal Errors: {fatalErrorsCount}
                                         </Code>
-                                        <Divider className="mt-1" />
-                                        <Code className="mt-1 w-min" color="warning">
+                                        {/* <Divider className="mt-1" /> */}
+                                        <Code className="mt-2 w-min" color="warning">
                                             User Debugs: {userDebugCount}
                                         </Code>
-                                        <Divider className="mt-1" />
-                                        <Code className="mt-1 w-min" color="primary">
+                                        {/* <Divider className="mt-1" /> */}
+                                        <Code className="mt-2 w-min" color="primary">
                                             SOQL Operations: {SOQLCount}
                                         </Code>
-                                        <Code className="mt-2 w-min" color="primary">
+                                        <Code className="mt-1 w-min" color="primary">
                                             DML Statements: {DMLCount}
                                         </Code>
                                     </CardBody>
@@ -591,7 +580,7 @@ const App = () => {
                                 <Tab className="font-bold" title="Analyzed Debug Log">
                                     <div className="flex flex-wrap justify-center gap-2 mx-2 my-2">
                                         {Object.entries(debugLevels)?.map(([key, value]) => (
-                                            <Code>
+                                            <Code key={key}>
                                                 {key} - {value}
                                             </Code>
                                         ))}

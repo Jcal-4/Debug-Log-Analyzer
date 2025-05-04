@@ -17,9 +17,7 @@ const UserDebugs = ({ flattenedData }) => {
                             value: element.value, // The value inside parentheses
                             isUserDebug: element.isUserDebug
                         });
-                        console.log("Extracted Value: ", match[1]); // Logs the value inside parentheses
                     }
-                    console.log("isUserDebug: ", element);
                 }
             });
             console.log("userDebugs: ", userDebugs);
