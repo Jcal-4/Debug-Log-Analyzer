@@ -71,6 +71,7 @@ const App = () => {
 
     // Add a useEffect to calculate total errors when `data` changes
     useEffect(() => {
+        console.log("Initializing data UseEffect");
         let fatalErrorCount = 0;
         let exceptionCount = 0;
         let userDebugCount = 0;
@@ -370,7 +371,7 @@ const App = () => {
 
     // Effect used to handle search bar input and debounce the search term.
     useEffect(() => {
-        if (searchTerm && searchTerm.length > 2) {
+        if (searchTerm ) {
             const handler = debounce(() => {
                 setDebouncedSearchTerm(searchTerm);
             }, 400); // Debounce the search term for 300ms
@@ -386,7 +387,7 @@ const App = () => {
 
     // Effect to handle the debounced search term
     useEffect(() => {
-        if (!data && !flattenedData) return;
+        if (!data && !flattenedData && flattenedData.length > 0) return;
 
         if (!debouncedSearchTerm || debouncedSearchTerm.length < 3) {
             // Clear matching items and reset matching count if search term is invalid
