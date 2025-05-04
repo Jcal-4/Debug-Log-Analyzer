@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
 import UserDebugs from "./userDebugs.jsx"; // Import the UserDebugs component
 import "./index.css"; // Import the CSS file
-import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner, Code, Tabs, Tab, ScrollShadow, Divider } from "@heroui/react";
+import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner, Code, Tabs, Tab, ScrollShadow } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -32,6 +32,7 @@ const App = () => {
      */
     useEffect(() => {
         // we can't import vscode api directly so we need to use acquireVsCodeApi
+        // eslint-disable-next-line no-undef
         const vscode = acquireVsCodeApi();
 
         vscode.postMessage({ command: "webviewLoaded" });
@@ -383,8 +384,6 @@ const App = () => {
             setCurrentIndex(0);
             return;
         }
-        // why do we continue to flatten the data? we already have the flattened data. It should be saved in the state.
-        // const flattenedData = flattenArray(data);
 
         // console.log("Flattened Data:", flattenedData); // Log the flattened data
         const matchingItems = flattenedData
@@ -402,8 +401,8 @@ const App = () => {
                 );
             });
 
-        setMatchingItems(matchingItems); // Update the matching items
-        setMatchingCount(matchingItems.length); // Update the matching count
+        setMatchingItems(matchingItems);
+        setMatchingCount(matchingItems.length);
     }, [debouncedSearchTerm, filterChangeTrigger]);
 
     // Effect to handle scrolling to the current index of the matching items
@@ -428,6 +427,15 @@ const App = () => {
             if (element) {
                 console.log("Scrolling to element:", element);
                 element.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+                // Add the class to highlight the element
+                setTimeout(() => {
+                    element.classList.add("current-index");
+                }, 1000);
+
+                // Remove the class after a short delay
+                setTimeout(() => {
+                    element.classList.remove("current-index");
+                }, 2500);
             } else {
                 setTimeout(attemptScroll, 50); // Retry after 100ms if the element is not found
             }
@@ -595,7 +603,7 @@ const App = () => {
                                         ))}
                                     </div>
                                     <CardBody className="h-[calc(100vh-76px)] p-0 font-normal">
-                                        <ScrollShadow className="p-0" size={10}>
+                                        <ScrollShadow className="p-0" size={5}>
                                             {flattenedData.map((item, index, array) => {
                                                 // Determine if the current item is within a method-entry and method-exit block
                                                 let additionalIndent = 0;
