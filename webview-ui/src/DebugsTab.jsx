@@ -16,7 +16,7 @@ import {
     Button
 } from "@heroui/react";
 
-const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement }) => {
+const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement, highlightSearchTerm, searchTerm }) => {
     const [userDebugs, setUserDebugs] = useState([]);
     useEffect(() => {
         console.log("flattenedData: ", flattenedData);
@@ -104,7 +104,7 @@ const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement }) => {
                                             {item.isUserDebug ? "User Debug" : "Exception Thrown"}
                                         </TableCell>
                                         <TableCell className={`${item.isUserDebug ? "text-[#5497c3]" : "text-[#ed7c66]"} font-bold align-top`}>
-                                            {item.value}
+                                            {highlightSearchTerm(item.value, searchTerm)}
                                         </TableCell>
                                         <TableCell className="align-top">
                                             <div className="relative flex justify-end items-center gap-2">

@@ -420,7 +420,7 @@ const App = () => {
         }
     }, [currentIndex, matchingItems]);
 
-    // function to scroll into view when redirected from userDebugs
+    // function to scroll into view when redirected from Debugs & Errors tab
     const scrollToElement = (index) => {
         const attemptScroll = () => {
             const element = itemRefs.current[index];
@@ -515,7 +515,7 @@ const App = () => {
                                         }
                                     }}
                                     onKeyDown={handleKeyDown}
-                                    isDisabled={selectedTab === "analyzedDebugLogs" ? false : true}
+                                    isDisabled={selectedTab !== "analyzedDebugLogs" ? true : false}
                                 />
                             </div>
                             {searchTerm.length > 2 && (
@@ -695,6 +695,8 @@ const App = () => {
                                         flattenedData={flattenedData}
                                         setSelectedTab={setSelectedTab}
                                         scrollToElement={scrollToElement}
+                                        highlightSearchTerm={highlightSearchTerm}
+                                        searchTerm={searchTerm}
                                     />
                                 </Tab>
                             </Tabs>
