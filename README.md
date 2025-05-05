@@ -46,7 +46,14 @@ These features are all designed to streamline your debugging process and help yo
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.7.0
+
+* Inclusion of Errors: The User Debugs tab now includes a section for errors, allowing users to view and address issues directly within the debugging interface.
+* Redirect Feature: Users can now easily redirect from the debug tab to the main tab. This streamlines the process of searching and finding more information or related issues.
+* Debug Log Levels Display: The top of the User Debugs tab now features a clear display of debug log levels, making it easier for users to understand what information will be available
+* Statistics Panel: On the left-hand side, there is now a statistics panel that provides information on the number of SOQL queries, DML operations, debug logs, and errors that have occurred. This feature enhances visibility and allows users to monitor the system's performance effectively.
+
+These updates should enhance user experience by making debugging more efficient and informative
 
 ### 0.5.0
 
