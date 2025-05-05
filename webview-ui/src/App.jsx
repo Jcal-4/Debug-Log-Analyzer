@@ -515,6 +515,7 @@ const App = () => {
                                         }
                                     }}
                                     onKeyDown={handleKeyDown}
+                                    isDisabled={selectedTab === "analyzedDebugLogs" ? false : true}
                                 />
                             </div>
                             {searchTerm.length > 2 && (
@@ -532,6 +533,7 @@ const App = () => {
                                         <CheckboxGroup
                                             defaultValue={["flow", "method-entry", "validation-rule", "variable-assignment", "soql", "dml"]}
                                             label="Select Events to Filter"
+                                            isDisabled={selectedTab === "analyzedDebugLogs" ? false : true}
                                         >
                                             <Checkbox value="dml" onChange={handleCheckboxChange}>
                                                 DML
