@@ -22,7 +22,7 @@ const App = () => {
     const [DMLCount, setDMLCount] = useState(0);
     const [matchingItems, setMatchingItems] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-    const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
+    // const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
     const [selectedTab, setSelectedTab] = useState("analyzedDebugLogs");
     const itemRefs = useRef([]);
 
@@ -379,6 +379,7 @@ const App = () => {
 
         if (!debouncedSearchTerm || debouncedSearchTerm.length < 3) {
             // Clear matching items and reset matching count if search term is invalid
+            console.log("search term is empty");
             setMatchingItems([]);
             setMatchingCount(0);
             setCurrentIndex(0);
@@ -403,7 +404,7 @@ const App = () => {
 
         setMatchingItems(matchingItems);
         setMatchingCount(matchingItems.length);
-    }, [debouncedSearchTerm, filterChangeTrigger]);
+    }, [debouncedSearchTerm]);
 
     // Effect to handle scrolling to the current index of the matching items
     useEffect(() => {
@@ -411,7 +412,8 @@ const App = () => {
             console.log("matching Items:", matchingItems);
             console.log("itemRefs:", itemRefs);
             const nearestIndex = matchingItems[currentIndex % matchingItems.length].index; // isn't currentIndex always 0 since it gets reset to 0 when the search term changes?
-            console.log("nearestIndex:", nearestIndex);
+            console.log("matchingItem: ", matchingItems)
+            console.log("nearestIndex: ", nearestIndex);
             if (itemRefs.current[nearestIndex]) {
                 itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
             }
@@ -489,7 +491,7 @@ const App = () => {
             }
         }
 
-        setFilterChangeTrigger((prev) => prev + 1); // Trigger a re-render to update the UI
+        // setFilterChangeTrigger((prev) => prev + 1); // Trigger a re-render to update the UI
     };
 
     return (
