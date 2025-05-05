@@ -16,7 +16,7 @@ import {
     Button
 } from "@heroui/react";
 
-const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
+const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement }) => {
     const [userDebugs, setUserDebugs] = useState([]);
     useEffect(() => {
         console.log("flattenedData: ", flattenedData);
@@ -53,15 +53,32 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
         }
     }, [flattenedData]);
 
-    const handleClick = (index) => {
-        addToast({
-            title: "Success",
-            description: "Your changes have been saved successfully."
-        });
+    const handleRedirectionClick = (index) => {
         console.log("index: ", index);
-        // const key = event.target.parentElement.getAttribute("data-key").split(".")[0];
-        // setSelectedTab("analyzedDebugLogs");
-        // scrollToElement(key);
+        setSelectedTab("analyzedDebugLogs");
+        scrollToElement(index);
+    };
+
+    const handleCopyClick = (value) => {
+        let description = "";
+        if (value.length <= 68) {
+            description = value;
+        }
+
+        navigator.clipboard.writeText(value).then(
+            () => {
+                addToast({
+                    title: "Copied to clipboard",
+                    description: description,
+                    color: "success",
+                    timeout: 4000,
+                    shouldShowTimeoutProgress: true
+                });
+            },
+            (err) => {
+                console.error("Could not copy text: ", err);
+            }
+        );
     };
 
     return (
@@ -89,7 +106,7 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
                                         <TableCell className={`${item.isUserDebug ? "text-[#5497c3]" : "text-[#ed7c66]"} font-bold align-top`}>
                                             {item.value}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="align-top">
                                             <div className="relative flex justify-end items-center gap-2">
                                                 <Dropdown>
                                                     <DropdownTrigger>
@@ -98,8 +115,20 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
                                                         </Button>
                                                     </DropdownTrigger>
                                                     <DropdownMenu>
-                                                        <DropdownItem key="view">Copy</DropdownItem>
-                                                        <DropdownItem key="edit" onClick={() => {handleClick(item.index)}}>
+                                                        <DropdownItem
+                                                            key="view"
+                                                            onClick={() => {
+                                                                handleCopyClick(item.value);
+                                                            }}
+                                                        >
+                                                            Copy
+                                                        </DropdownItem>
+                                                        <DropdownItem
+                                                            key="edit"
+                                                            onClick={() => {
+                                                                handleRedirectionClick(item.index);
+                                                            }}
+                                                        >
                                                             Go to Log Location
                                                         </DropdownItem>
                                                     </DropdownMenu>
@@ -110,7 +139,7 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
                                 );
                             } else if (item.isFatalError) {
                                 return (
-                                    <TableRow key={item.index} data-key={item.index} className="cursor-pointer">
+                                    <TableRow key={item.index} data-key={item.index}>
                                         <TableCell className="whitespace-nowrap text-[#ed7c66] font-bold align-top"></TableCell>
                                         <TableCell className="whitespace-nowrap text-[#ed7c66] font-bold align-top">Fatal Error</TableCell>
                                         <TableCell className="text-[#ed7c66] font-bold">{item.value}</TableCell>
@@ -123,8 +152,20 @@ const UserDebugs = ({ flattenedData, setSelectedTab, scrollToElement }) => {
                                                         </Button>
                                                     </DropdownTrigger>
                                                     <DropdownMenu>
-                                                        <DropdownItem key="view">Copy</DropdownItem>
-                                                        <DropdownItem key="edit" onClick={handleClick}>
+                                                        <DropdownItem
+                                                            key="view"
+                                                            onClick={() => {
+                                                                handleCopyClick(item.value);
+                                                            }}
+                                                        >
+                                                            Copy
+                                                        </DropdownItem>
+                                                        <DropdownItem
+                                                            key="edit"
+                                                            onClick={() => {
+                                                                handleRedirectionClick(item.index);
+                                                            }}
+                                                        >
                                                             Go to Log Location
                                                         </DropdownItem>
                                                     </DropdownMenu>
@@ -173,4 +214,4 @@ export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
     );
 };
 
-export default UserDebugs;
+export default DebugsTab;

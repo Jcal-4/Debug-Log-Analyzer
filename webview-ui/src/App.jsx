@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
-import UserDebugs from "./userDebugs.jsx"; // Import the UserDebugs component
+import DebugsTab from "./DebugsTab.jsx"; // Import the UserDebugs component
 import "./index.css"; // Import the CSS file
 import { Input, CheckboxGroup, Checkbox, Card, CardBody, Spinner, Code, Tabs, Tab, ScrollShadow } from "@heroui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -688,7 +688,7 @@ const App = () => {
                                     </CardBody>
                                 </Tab>
                                 <Tab key="userDebugs" className="px-0 font-bold" title="Debugs & Errors">
-                                    <UserDebugs
+                                    <DebugsTab
                                         className="px-0"
                                         flattenedData={flattenedData}
                                         setSelectedTab={setSelectedTab}
