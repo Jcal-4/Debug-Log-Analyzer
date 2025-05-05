@@ -6,7 +6,7 @@ const ignoreList = require("./ignoreList");
  * @returns {Array<Array>} - An array of arrays representing executed components.
  */
 function parseLogFileContent(fileContent) {
-    const lines = fileContent.split("\n");
+    const lines = fileContent
     let executedComponents = [];
     let stack = [];
     let codeUnitArray = [];
@@ -14,7 +14,7 @@ function parseLogFileContent(fileContent) {
 
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
-        let currentLineNumber = i + 1;
+        // let currentLineNumber = i + 1;
         if (line.includes("CODE_UNIT_STARTED")) {
             let methodName = "";
             codeUnitCounter += 1;
@@ -24,7 +24,7 @@ function parseLogFileContent(fileContent) {
             } else {
                 methodName = parts[parts.length - 1];
             }
-            codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter}(Line: ${currentLineNumber}) : ${methodName}`, methodName]);
+            codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter} - ${methodName}`, methodName]);
             // codeUnitArray.push(["CODE_UNIT_STARTED_" + codeUnitCounter, methodName]);
 
             stack.push({ methodName, codeUnitCounter });
@@ -40,7 +40,7 @@ function parseLogFileContent(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_ENTRY" + "(Line: " + currentLineNumber + ") " + methodKey + " - ", methodName, methodKey]);
+                codeUnitArray.push(["METHOD_ENTRY " + methodKey + " - ", methodName, methodKey]);
             }
         } else if (line.includes("|METHOD_EXIT|")) {
             let parts = line.split("|");
@@ -54,7 +54,7 @@ function parseLogFileContent(fileContent) {
                 }
             });
             if (!shouldIgnoreMethod) {
-                codeUnitArray.push(["METHOD_EXIT" + "(Line: " + currentLineNumber + ") " + methodKey + " - ", methodName, methodKey]);
+                codeUnitArray.push(["METHOD_EXIT " + methodKey + " - ", methodName, methodKey]);
             }
         } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
             let parts = line.split("|");
@@ -193,7 +193,7 @@ function parseLogFileContent(fileContent) {
                     codeUnitCounter -= 1;
                 } else if (lastMethod.methodName == methodName) {
                     // Store the method details in the array with a unique key
-                    codeUnitArray.push(["CODE_UNIT_FINISHED_" + lastMethod.codeUnitCounter + "(Line: " + currentLineNumber + ") ", methodName]);
+                    codeUnitArray.push(["CODE_UNIT_FINISHED_" + lastMethod.codeUnitCounter + " - ", methodName]);
                 }
             }
             if (stack.length === 0) {

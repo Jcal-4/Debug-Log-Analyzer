@@ -22,6 +22,7 @@ const App = () => {
     const [DMLCount, setDMLCount] = useState(0);
     const [matchingItems, setMatchingItems] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+    const [elapsedTime, setElapsedTime] = useState("");
     // const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
     const [selectedTab, setSelectedTab] = useState("analyzedDebugLogs");
     const itemRefs = useRef([]);
@@ -37,6 +38,7 @@ const App = () => {
 
         vscode.postMessage({ command: "webviewLoaded" });
         vscode.postMessage({ command: "getDebugLevels" });
+        vscode.postMessage({ command: "getElapsedTime" });
 
         // Listen for response from the extension
         window.addEventListener("message", (event) => {
@@ -49,6 +51,8 @@ const App = () => {
             } else if (message.command === "debugLevels") {
                 // console.log("debugLevels Received", message.data);
                 setDebugLevels(message.data);
+            } else if (message.command === "elapsedTime") {
+                setElapsedTime(message.data);
             } else if (message.command === "error") {
                 console.log("Error: ", "error Received");
             }
@@ -412,7 +416,7 @@ const App = () => {
             console.log("matching Items:", matchingItems);
             console.log("itemRefs:", itemRefs);
             const nearestIndex = matchingItems[currentIndex % matchingItems.length].index; // isn't currentIndex always 0 since it gets reset to 0 when the search term changes?
-            console.log("matchingItem: ", matchingItems)
+            console.log("matchingItem: ", matchingItems);
             console.log("nearestIndex: ", nearestIndex);
             if (itemRefs.current[nearestIndex]) {
                 itemRefs.current[nearestIndex].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
@@ -577,6 +581,7 @@ const App = () => {
                                         </Code>
                                     </CardBody>
                                 </Card>
+                                <Code className="text-xs">{elapsedTime}</Code>
                             </div>
                         </div>
                     </CardBody>
@@ -630,8 +635,8 @@ const App = () => {
                                                             <span className={`data-event code-unit-started`}>
                                                                 {(() => {
                                                                     let splitString = item.event.split(":");
-                                                                    let firstPart = splitString.slice(0, 2).join(":");
-                                                                    return highlightSearchTerm(`${firstPart} -`, searchTerm);
+                                                                    let firstPart = splitString.slice(0, 2).join("-");
+                                                                    return highlightSearchTerm(`${firstPart} `, searchTerm);
                                                                 })()}
                                                             </span>
                                                         )}

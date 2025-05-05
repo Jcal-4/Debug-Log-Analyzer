@@ -1,6 +1,6 @@
 function retrieveDebugLevels(fileContent) {
     console.log("Retrieving debug levels...");
-    const debugLevels = fileContent.split("\n", 1)[0];
+    const debugLevels = fileContent[0];
     const splitDebugLevels = debugLevels.split(";");
     let debugLevelsObj = {};
 

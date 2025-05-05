@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const parseLogFileContent = require("./parseLogFileContent");
 const retrieveDebugLevels = require("./retrieveDebugLevels");
+const extractTime = require("./extractTime");
 
 /**
  * Analyzes the debug log by reading the active text editor's content
@@ -18,7 +19,8 @@ function analyzeDebugLog(context) {
         console.log("fileUri: ", fileUri);
         try {
             readFile(fileUri).then((fileData) => {
-                const fileContent = new TextDecoder().decode(fileData);
+                let fileContent = new TextDecoder().decode(fileData);
+                fileContent = fileContent.split("\n");
                 if (!fileUri.fsPath.endsWith(".log")) {
                     vscode.window.showInformationMessage(" The active file is not a log file. Please open a .log file to analyze.");
                     return;
@@ -88,7 +90,15 @@ function sendMessageToWebview(context, parsedContent, codeUnitStarted, fileConte
                     command: "debugLevels",
                     data: debugLevelsObj
                 });
-            } else if (message.command === "error") {
+            } else if (message.command === "getElapsedTime") {
+                let elapsedTime = extractTime(fileContent);
+                panel.webview.postMessage({
+                    command: "elapsedTime",
+                    data: elapsedTime
+                });
+            }
+            
+            else if (message.command === "error") {
                 console.log("Error: ", "error Received");
             }
         },
