@@ -25,6 +25,16 @@ const App = () => {
     const [elapsedTime, setElapsedTime] = useState("");
     // const [filterChangeTrigger, setFilterChangeTrigger] = useState(0);
     const [selectedTab, setSelectedTab] = useState("analyzedDebugLogs");
+    const [selectedCheckbox, setSelectedCheckbox] = useState([
+        "flow",
+        "method-entry",
+        "method-exit",
+        "validation-rule",
+        "variable-assignment",
+        "soql",
+        "dml",
+        "user-debug"
+    ]);
     const itemRefs = useRef([]);
 
     /**
@@ -536,9 +546,11 @@ const App = () => {
                             <div className="mt-2 text-customBlue">
                                 <Card>
                                     <CardBody className="sticky top-0">
+                                        {/* <p>Selected: {selectedCheckbox.join(", ")}</p> */}
                                         <CheckboxGroup
-                                            defaultValue={["flow", "method-entry", "validation-rule", "variable-assignment", "soql", "dml"]}
-                                            label="Select Events to Filter"
+                                            value={selectedCheckbox}
+                                            onValueChange={setSelectedCheckbox}
+                                            label="Filter by Events"
                                             isDisabled={selectedTab === "analyzedDebugLogs" ? false : true}
                                         >
                                             <Checkbox value="dml" onChange={handleCheckboxChange}>
@@ -548,10 +560,16 @@ const App = () => {
                                                 Flows
                                             </Checkbox>
                                             <Checkbox value="method-entry" onChange={handleCheckboxChange}>
-                                                Method Entry/Exit
+                                                Method Entry
+                                            </Checkbox>
+                                            <Checkbox value="method-exit" onChange={handleCheckboxChange}>
+                                                Method Exit
                                             </Checkbox>
                                             <Checkbox value="soql" onChange={handleCheckboxChange}>
                                                 SOQL
+                                            </Checkbox>
+                                            <Checkbox value="user-debug" onChange={handleCheckboxChange}>
+                                                User Debug
                                             </Checkbox>
                                             <Checkbox value="validation-rule" onChange={handleCheckboxChange}>
                                                 Validations
