@@ -85,12 +85,30 @@ const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement, highlightSe
         <div className="userDebugs overflow-y-scroll h-[calc(100vh-49px)] px-0">
             <ToastProvider />
             {userDebugs && userDebugs.length > 0 ? (
-                <Table className="rounded-none" isStriped aria-label="Example static collection table" color="primary">
+                <Table
+                    classNames={{
+                        base: "max-w-full",
+                        td: "max-w-[800px] break-words whitespace-normal", // Added word break and normal whitespace
+                        th: "max-w-[50px]" // Added for header cells too
+                    }}
+                    className="rounded-none"
+                    isStriped
+                    aria-label="Example static collection table"
+                    color="primary"
+                >
                     <TableHeader>
-                        <TableColumn className="font-bold">Line #</TableColumn>
-                        <TableColumn className="font-bold">Log Type</TableColumn>
-                        <TableColumn className="font-bold">Debug Value</TableColumn>
-                        <TableColumn className="font-bold">Actions</TableColumn>
+                        <TableColumn width={100} className="font-bold">
+                            Line #
+                        </TableColumn>
+                        <TableColumn width={100} className="font-bold">
+                            Log Type
+                        </TableColumn>
+                        <TableColumn width={800} className="font-bold">
+                            Debug Value
+                        </TableColumn>
+                        <TableColumn width={100} className="font-bold">
+                            Actions
+                        </TableColumn>
                     </TableHeader>
                     <TableBody emptyContent={"No debugs to display."}>
                         {userDebugs.map((item) => {
@@ -103,8 +121,10 @@ const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement, highlightSe
                                         >
                                             {item.isUserDebug ? "User Debug" : "Exception Thrown"}
                                         </TableCell>
-                                        <TableCell className={`${item.isUserDebug ? "text-[#5497c3]" : "text-[#ed7c66]"} font-bold align-top`}>
-                                            {highlightSearchTerm(item.value, searchTerm)}
+                                        <TableCell
+                                            className={`${item.isUserDebug ? "text-[#5497c3]" : "text-[#ed7c66]"} font-bold`}
+                                        >
+                                            {item.value}
                                         </TableCell>
                                         <TableCell className="align-top">
                                             <div className="relative flex justify-end items-center gap-2">
