@@ -602,9 +602,9 @@ const App = () => {
                                 onSelectionChange={setSelectedTab}
                             >
                                 <Tab key="analyzedDebugLogs" className="font-bold p-0" title="Analyzed Debug Log">
-                                    <div className="flex flex-wrap justify-center gap-2 my-2">
+                                    <div className="flex flex-wrap justify-center gap-1 my-2">
                                         {Object.entries(debugLevels)?.map(([key, value]) => (
-                                            <Code className="text-xs" key={key}>
+                                            <Code className="text-xxs-custom font-bold" key={key}>
                                                 {key}: {value}
                                             </Code>
                                         ))}

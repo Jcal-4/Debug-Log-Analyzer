@@ -9,6 +9,9 @@ export default {
         extend: {
             colors: {
                 customBlue: "#66fcf1"
+            },
+            fontSize: {
+                "xxs-custom": "9.5px"
             }
         }
     },

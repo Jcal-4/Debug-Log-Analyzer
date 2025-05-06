@@ -88,8 +88,8 @@ const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement, highlightSe
                 <Table
                     classNames={{
                         base: "max-w-full",
-                        td: "max-w-[800px] break-words whitespace-normal", // Added word break and normal whitespace
-                        th: "max-w-[50px]" // Added for header cells too
+                        td: "max-w-[700px] break-words whitespace-normal", // Added word break and normal whitespace
+                        th: "max-w-[75px]" // Added for header cells too
                     }}
                     className="rounded-none"
                     isStriped
@@ -103,10 +103,10 @@ const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement, highlightSe
                         <TableColumn width={100} className="font-bold">
                             Log Type
                         </TableColumn>
-                        <TableColumn width={800} className="font-bold">
+                        <TableColumn width={700} className="font-bold">
                             Debug Value
                         </TableColumn>
-                        <TableColumn width={100} className="font-bold">
+                        <TableColumn width={75} className="font-bold">
                             Actions
                         </TableColumn>
                     </TableHeader>
@@ -121,12 +121,10 @@ const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement, highlightSe
                                         >
                                             {item.isUserDebug ? "User Debug" : "Exception Thrown"}
                                         </TableCell>
-                                        <TableCell
-                                            className={`${item.isUserDebug ? "text-[#5497c3]" : "text-[#ed7c66]"} font-bold`}
-                                        >
+                                        <TableCell className={`${item.isUserDebug ? "text-[#5497c3]" : "text-[#ed7c66]"} font-bold`}>
                                             {item.value}
                                         </TableCell>
-                                        <TableCell className="align-top">
+                                        <TableCell className="whitespace-nowrap align-top">
                                             <div className="relative flex justify-end items-center gap-2">
                                                 <Dropdown>
                                                     <DropdownTrigger>
