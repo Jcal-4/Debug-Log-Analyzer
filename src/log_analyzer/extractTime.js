@@ -1,7 +1,18 @@
 function extractTime(fileContent) {
     console.log('fileContent: ', fileContent.length);
-    let firstStr = fileContent[1];
-    let lastStr = fileContent[fileContent.length - 2];
+    const timeStampRegex = /^\d{2}:\d{2}:\d{2}\.\d{1}/;
+    let i = 1
+    while (!fileContent[i].match(timeStampRegex)) {
+        i++;
+    }
+
+    let firstStr = fileContent[i];
+
+    let j = fileContent.length - 1;
+    while(!fileContent[j].match(timeStampRegex)) {
+        j--;
+    }
+    let lastStr = fileContent[j];
     console.log("firstStr: ", firstStr);
     console.log("lastStr: ", lastStr);
     // Convert both times to milliseconds
