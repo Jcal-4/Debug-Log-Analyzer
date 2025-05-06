@@ -16,7 +16,7 @@ import {
     Button
 } from "@heroui/react";
 
-const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement, highlightSearchTerm, searchTerm }) => {
+const DebugsTab = ({ flattenedData, setSelectedTab, scrollToElement }) => {
     const [userDebugs, setUserDebugs] = useState([]);
     useEffect(() => {
         console.log("flattenedData: ", flattenedData);
