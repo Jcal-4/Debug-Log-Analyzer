@@ -56,7 +56,7 @@ function parseLogFileContent(fileContent) {
             if (!shouldIgnoreMethod) {
                 codeUnitArray.push(["METHOD_EXIT " + methodKey + " - ", methodName, methodKey]);
             }
-        } else if (line.includes("FLOW_START_INTERVIEW_BEGIN")) {
+        } else if (line.includes("|FLOW_START_INTERVIEW_BEGIN|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
 
@@ -66,69 +66,69 @@ function parseLogFileContent(fileContent) {
             let methodName = parts[parts.length - 1];
 
             codeUnitArray.push(["NAMED_CREDENTIAL_REQUEST - ", methodName]);
-        } else if (line.includes("NAMED_CREDENTIAL_RESPONSE")) {
+        } else if (line.includes("|NAMED_CREDENTIAL_RESPONSE|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
 
             codeUnitArray.push(["NAMED_CREDENTIAL_RESPONSE - ", methodName]);
-        } else if (line.includes("FLOW_START_INTERVIEWS_ERROR")) {
+        } else if (line.includes("|FLOW_START_INTERVIEWS_ERROR|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
 
             codeUnitArray.push(["FLOW_START_INTERVIEWS_ERROR - ", methodName]);
-        } else if (line.includes("CALLOUT_REQUEST")) {
+        } else if (line.includes("|CALLOUT_REQUEST|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
 
             codeUnitArray.push(["CALLOUT_REQUEST - ", methodName]);
-        } else if (line.includes("CALLOUT_RESPONSE")) {
+        } else if (line.includes("|CALLOUT_RESPONSE|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
 
             codeUnitArray.push(["CALLOUT_RESPONSE - ", methodName]);
-        } else if (line.includes("EXCEPTION_THROWN")) {
+        } else if (line.includes("|EXCEPTION_THROWN|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let apexLine = parts[2];
 
             codeUnitArray.push(["EXCEPTION_THROWN " + apexLine + " - ", methodName]);
-        } else if (line.includes("FATAL_ERROR")) {
+        } else if (line.includes("|FATAL_ERROR|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
 
             codeUnitArray.push(["FATAL_ERROR - ", methodName]);
-        } else if (line.includes("VALIDATION_FAIL")) {
+        } else if (line.includes("|VALIDATION_FAIL")) {
             codeUnitArray.push(["VALIDATION_FAIL", ""]);
-        } else if (line.includes("VALIDATION_PASS")) {
+        } else if (line.includes("|VALIDATION_PASS")) {
             codeUnitArray.push(["VALIDATION_PASS", ""]);
-        } else if (line.includes("VALIDATION_FORMULA")) {
+        } else if (line.includes("|VALIDATION_FORMULA|")) {
             let parts = line.split("|");
 
             let validationFormula = parts.slice(2).join("|");
             let nextLine = lines[i + 1];
-            while (!nextLine.includes("VALIDATION_PASS") && !nextLine.includes("VALIDATION_FAIL")) {
+            while (!nextLine.includes("|VALIDATION_PASS") && !nextLine.includes("|VALIDATION_FAIL")) {
                 i++;
                 validationFormula += "\n" + nextLine;
                 nextLine = lines[i + 1];
             }
             codeUnitArray.push(["VALIDATION_FORMULA - ", validationFormula]);
-        } else if (line.includes("VALIDATION_RULE")) {
+        } else if (line.includes("|VALIDATION_RULE|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
 
             codeUnitArray.push(["VALIDATION_RULE - ", methodName]);
-        } else if (line.includes("VALIDATION_ERROR")) {
+        } else if (line.includes("|VALIDATION_ERROR|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
 
             codeUnitArray.push(["VALIDATION_ERROR - ", methodName]);
-        } else if (line.includes("USER_DEBUG")) {
+        } else if (line.includes("|USER_DEBUG|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let apexLine = parts[2];
 
             codeUnitArray.push(["USER_DEBUG " + apexLine + " - ", methodName]);
-        } else if (line.includes("VARIABLE_ASSIGNMENT")) {
+        } else if (line.includes("|VARIABLE_ASSIGNMENT|")) {
             let parts = line.split("|");
             let variableName = "";
             let variableValue = "";
@@ -143,27 +143,27 @@ function parseLogFileContent(fileContent) {
             if (variableName != "this" && variableName != "t" && variableName != "handler" && variableName != "field" && variableName != "tName") {
                 codeUnitArray.push(["VARIABLE_ASSIGNMENT " + apexLine + " - (" + variableName + ") ", variableValue]);
             }
-        } else if (line.includes("SOQL_EXECUTE_BEGIN")) {
+        } else if (line.includes("|SOQL_EXECUTE_BEGIN|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let apexLine = parts[2];
             codeUnitArray.push(["SOQL_EXECUTE_BEGIN " + apexLine + " - ", methodName]);
-        } else if (line.includes("SOQL_EXECUTE_END")) {
+        } else if (line.includes("|SOQL_EXECUTE_END|")) {
             let parts = line.split("|");
             let methodName = parts[parts.length - 1];
             let apexLine = parts[2];
             codeUnitArray.push(["SOQL_EXECUTE_END " + apexLine + " - ", methodName]);
-        } else if (line.includes("DML_BEGIN")) {
+        } else if (line.includes("|DML_BEGIN|")) {
             let parts = line.split("|");
             let methodName = parts.slice(3).join("|");
             let apexLine = parts[2];
             codeUnitArray.push(["DML_BEGIN " + apexLine + " - ", methodName]);
-        } else if (line.includes("DML_END")) {
+        } else if (line.includes("|DML_END|")) {
             let parts = line.split("|");
             // let methodName = parts[parts.length - 1];
             let apexLine = parts[2];
             codeUnitArray.push(["DML_END " + apexLine, ""]);
-        } else if (line.includes("CODE_UNIT_FINISHED")) {
+        } else if (line.includes("|CODE_UNIT_FINISHED|")) {
             // codeUnitArray.push([`CODE_UNIT_STARTED_${codeUnitCounter} : ${methodName}`, methodName]);
 
             let parts = line.split("|");
